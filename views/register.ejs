@@ -1,0 +1,22 @@
+<form method="POST" action="">
+    <input type="name" name="userName" placeholder="Username" value="<%= ((val) => val || '')(userName);%>"/>
+    <div>
+        <input type="name" name="firstName" placeholder="First Name" value="<%= ((val) => val || '')(firstName);%>"/>
+        <input type="name" name="lastName" placeholder="Last Name" value="<%= ((val) => val || '')(lastName); %>"/>
+    </div>
+    <input type="email" name="email" placeholder="E-mail" value="<%= ((val) => val || '')(email);%>"/>
+    <input type="password" name="password" placeholder="Password"/>
+    <input type="password" name="confirmPassword" placeholder="Confirm Password"/>
+    <button type="submit">Register</button>
+</form>
+<ul>
+<% for(let val of errors) {%>
+    <li><%= val.msg %></li>
+<% } %>
+<% for(let val of errorsCustom) {%>
+    <li><%= val.msg %></li>
+<% } %>
+</ul>
+
+
+<a href="/users/login">Already have an account?</a>
