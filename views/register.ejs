@@ -10,13 +10,12 @@
     <button type="submit">Register</button>
 </form>
 <ul>
-<% for(let val of errors) {%>
-    <li><%= val.msg %></li>
-<% } %>
-<% for(let val of errorsCustom) {%>
-    <li><%= val.msg %></li>
-<% } %>
+        <% for(let val of errors) {%>
+            <li><%= val.msg %></li>
+        <% } %>
+        <% for(let val of errorsCustom) {%>
+            <li><%= val.msg %></li>
+        <% } %>
 </ul>
-
 
 <a href="/users/login">Already have an account?</a>

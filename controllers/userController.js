@@ -20,46 +20,62 @@ exports.create_User = [
     sanitizeBody(`password`).escape(),
 
     (req, res, next) => {
-        //Deconstruct variables
-        let {userName, firstName, lastName, email, password, confirmPassword}  = req.body;
-        //Custom Validation for password
-        let customValid = [];
-        
+        //Initialize validation
         let errors = validationResult(req);
 
-        if (!( errors.isEmpty() && (customValid.length > 0) )) {
+        //Deconstruct variables
+        let {userName, firstName, lastName, email, password, confirmPassword}  = req.body;
 
-            if (password !== confirmPassword) {
-                customValid.push({ msg: `Passwords do not match` });
-                res.render(`register`, {errors: errors.array(), errorsCustom: customValid, userName, firstName, lastName, email });
-            }
-            else {
-                //Data is Valid
-                console.log(password + " " + confirmPassword);
-                let user = new User({
-                    username: req.body.userName,
-                    firstName: req.body.firstName,
-                    lastName: req.body.lastName,
-                    email: req.body.email,
-                    password: req.body.password,
-                    portfolioUrl: `Not Set`
-                });
+        //Custom Validation for password
+        let customValid = [];
 
-                //Hash Password
-                bcrypt.genSalt(10, function(err, salt) {
-                    bcrypt.hash(user.password, salt, function(err, hash) {
-                        if (err) {return next(err);}
-                        user.password = hash;
-                        //Save User with hashed Password
-                        user.save(function(err) {
+        // Object props for render
+        let userLocal = {errors: errors.array(), errorsCustom: customValid, userName, firstName, lastName, email };
+        
+        //If any errors occur run the if statement
+        if (!( errors.isEmpty() && (password === confirmPassword) )) {
+            customValid.push({ msg: `Passwords do not match` });
+            res.render(`register`, userLocal);
+            return;
+        }
+        //Data is Valid
+        else {
+            let user = new User({
+                username: req.body.userName,
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                email: req.body.email,
+                password: req.body.password,
+                portfolioUrl: `Not Set`
+            });
+
+            //Check if user already exists
+            User.findOne({"email": req.body.email}).exec(function(err, results) {
+                if (err) {return next(err);}
+        
+                if (results) {
+                    customValid.push({ msg: `That email already exists` });
+                    console.log(`Duplicate Check`);
+                    res.render(`register`, userLocal);
+                }
+
+                else {
+                    //Hash Password
+                    bcrypt.genSalt(10, function(err, salt) {
+                        bcrypt.hash(user.password, salt, function(err, hash) {
                             if (err) {return next(err);}
-            
-                            res.send(`User saved`);
+                            user.password = hash;
+                            //Save User with hashed Password
+                            user.save(function(err) {
+                                if (err) {return next(err);}
+                                //Go back to login after saving
+                                req.flash(`success`, `Successfully registered`);
+                                res.redirect(`/users/login`);
+                            });
                         });
-
                     });
-                });
-            }
+                }
+            });
         }
     },
 ]

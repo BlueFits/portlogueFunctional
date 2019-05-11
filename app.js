@@ -4,6 +4,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var expressLayouts = require('express-ejs-layouts');
+const flash = require(`connect-flash`);
+const session = require(`express-session`);
+const passport = require(`passport`);
 
 
 var indexRouter = require('./routes/index');
@@ -24,6 +27,28 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+//Express Session Middleware
+app.use(session({
+  secret: 'A',
+  resave: true,
+  saveUninitialized: true,
+}));
+
+//Flash Middleware
+app.use(flash());
+//Success and Error Flashes
+app.use(function(req, res, next) {
+  res.locals.success_msg = req.flash(`success`);
+  res.locals.error_msg = req.flash(`error`);
+  res.locals.error = req.flash(`error_msg`);
+  next();
+});
+
+//Passport and Config Middleware insert after express-session 
+app.use(passport.initialize());
+app.use(passport.session());
+require(`./config/passportConfig`)(passport);
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
