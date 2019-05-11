@@ -8,7 +8,13 @@ const UserSchema = new Schema({
     lastName: {type: String, required: true},
     email: {type: String, required: true},
     password: {type: String, min: 6, required: true},
-    portfolioUrl: {type:String, required: false},
+    country: {type: String, required: true},
+    emailDisplay: {type: String, required: true},
+    phone: {type: String, required: false},
+    postalCode: {type: String, requried: true},
+    occupation: {type: String, required: false},
+    bio: {type: String, max: 160, required: false},
+    portfolioUrl: {type:String, required: true},
     dateJoined: {type: Date, default: Date.now}
 });
 

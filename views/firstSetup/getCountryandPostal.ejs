@@ -1,0 +1,31 @@
+<header>
+    <img alt="PortLogue-icon"/>
+</header>
+
+<section>
+    <div>
+        <div>
+            <h1>Welcome, <%= User.firstName %></h1>
+            <p>Let's setup your profile, tell us which country you hail from!</p>
+        </div>
+        <form method="POST" action="">
+            <label for='country'>Country/Region</label>
+            <select name='country'>
+
+                <% for(let val of selectCountry) {%>
+                    <option value="<%= val %>"><%= val%></option>
+                <% } %>
+
+            </select>
+            <label for='postalCode'>Postal Code</label>
+            <input name="postalCode" type="name"/>
+            <button type="submit">Next</button>
+        </form>
+    </div>
+</section>
+
+<ul>
+        <% for(let val of errors) {%>
+            <li><%= val.msg %></li>
+        <% } %>
+</ul>
