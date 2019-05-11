@@ -14,7 +14,7 @@ module.exports = function(passport) {
 
             if (!results) {
 
-                return done(null, false, {message:`Account does not exist`});
+                return done(null, false, {message:`Incorrect email or password.`});
 
             }
 
@@ -30,7 +30,7 @@ module.exports = function(passport) {
 
                 else {
 
-                    return done(null, false, {message: "Incorrect Password"});
+                    return done(null, false, {message: "Incorrect email or password."});
 
                 }
 
