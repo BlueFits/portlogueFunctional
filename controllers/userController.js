@@ -4,12 +4,65 @@ const async = require(`async`);
 const { check,body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 
+
 const User = require(`../models/User`);
+
+exports.POST_first_Setup_Avatar = function(req, res, next) {
+
+}
+
+exports.POST_first_Setup_Profile = [
+    //Validate all fields
+    body(`emailDisplay`).isEmail().withMessage(`Email is invalid`),
+    body(`phone`).optional({ checkFalsy: true }).trim(),
+    body(`occupation`).isLength({ min:1 }).trim().withMessage(`Occupation is required`),
+    body(`bio`).isLength({ min: 3, max: 160 }).optional({ checkFalsy: true }).withMessage(`Max characters of 160`),
+    //Santize fields
+    sanitizeBody(`emailDisplay`).escape(),
+    sanitizeBody(`phone`).escape(),
+    sanitizeBody(`occupation`).escape(),
+    sanitizeBody(`bio`).escape(),
+
+    (req, res, next) => {
+        //Initialize validation
+        let errors = validationResult(req);
+
+        //If any errors occur run the if statement
+        if (!errors.isEmpty()) {
+            console.log(`there are errors`);
+            res.render(`firstSetup/setupProfile`, { errors: errors.array(), User: req.user });
+            return;
+        }
+
+        else {
+            let user = new User({
+                _id: req.user._id,
+                username: req.user.userName,
+                firstName: req.user.firstName,
+                lastName: req.user.lastName,
+                email: req.user.email,
+                password: req.user.password,
+                country: req.user.country,
+                emailDisplay: req.body.emailDisplay,
+                phone: req.body.phone || `NOT SET`,
+                postalCode: req.user.postalCode,
+                occupation: req.body.occupation,
+                bio: req.body.bio || `NOT SET`,
+                portfolioUrl: `NOT SET`
+            });
+
+            User.findByIdAndUpdate(req.user._id, user, {}, function(err, results) {
+                if (err) {return next(err);}
+                res.redirect(`/users/first_time_setup_avatar`);
+            });
+        }
+    }
+]
 
 exports.POST_first_Setup_CountryandPostal = [ 
     //Validate
-    body(`country`).trim().withMessage(`Please select a country`),
-    body(`postalCode`).trim().withMessage(`There is an error with your postal code`),
+    body(`country`).isLength({ min: 1 }).trim().withMessage(`Please select a country`),
+    body(`postalCode`).isLength({ min: 1 }).trim().withMessage(`There is an error with your postal code`),
     //Sanitize 
     sanitizeBody(`country`).escape(),
     sanitizeBody(`postalCode`).escape(),
@@ -45,7 +98,7 @@ exports.POST_first_Setup_CountryandPostal = [
 
             User.findByIdAndUpdate(req.user._id, user, {}, function(err, results) {
                 if (err) {return next(err);}
-                res.redirect(`/`);
+                res.redirect(`/users/first_time_setup_profile`);
             });
         }
     }

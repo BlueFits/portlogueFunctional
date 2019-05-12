@@ -1,0 +1,29 @@
+<header>
+        <img alt="PortLogue-icon"/>
+</header>
+
+<section>
+    <div>
+        <h1>Add a profile photo</h1>
+        <p>Help people recognize you</p>
+    </div>
+    <div>
+        <div>
+                <img alt="non yet"/>
+        </div>
+        <div>
+            <h2><%= User.fullName %></h2>
+            <p><%= User.occupation %></p>
+            <p><%= User.country %></p>
+        </div>
+    </div>
+
+    <div>
+        <form method="POST" action="" enctype="multipart/form-data">
+            <input type="file" name="avatar"/>
+            <button type="submit">Add photo</button>
+        </form>
+        <a href="/users/first_time_setup_portfolio">Skip</a>
+    </div>
+
+</section>

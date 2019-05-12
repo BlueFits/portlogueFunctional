@@ -9,16 +9,20 @@
             <p>Let's setup your profile, tell us which country you hail from!</p>
         </div>
         <form method="POST" action="">
-            <label for='country'>Country/Region</label>
-            <select name='country'>
+            <div>
+                <label for='country'>Country/Region</label>
+                <select name='country'>
 
-                <% for(let val of selectCountry) {%>
-                    <option value="<%= val %>"><%= val%></option>
-                <% } %>
+                    <% for(let val of selectCountry) {%>
+                        <option value="<%= val %>"><%= val%></option>
+                    <% } %>
 
-            </select>
-            <label for='postalCode'>Postal Code</label>
-            <input name="postalCode" type="name"/>
+                </select>
+            </div>
+            <div>
+                <label for='postalCode'>Postal Code</label>
+                <input name="postalCode" type="name"/>
+            </div>
             <button type="submit">Next</button>
         </form>
     </div>

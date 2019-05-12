@@ -1,0 +1,36 @@
+<header>
+    <img alt="PortLogue-icon"/>
+</header>
+
+<section>
+    <div>
+        <h1>Setup your profile</h1>
+        <p>Tell people who you are, what you do, and how they can reach you</p>
+    </div>
+    <form method="POST" action="">
+        <div>
+            <label for="emailDisplay">Email</label>
+            <input type="email" name="emailDisplay"/>
+        </div>
+        <div>
+                <label for="phone">Phone</label>
+                <input type="text" name="phone" placeholder="Optional"/>
+        </div>
+        <div>
+                <label for="occupation">Occupation</label>
+                <input type="text" name="occupation"/>
+        </div>
+        <div>
+                <label for="bio">Bio</label>
+                <textarea name="bio" maxlength="160"></textarea>
+                <p>Max: 160</p>
+        </div>
+        <button type="submit">Next</button>
+    </form>
+</section>
+
+<ul>
+        <% for(let val of errors) {%>
+            <li><%= val.msg %></li>
+        <% } %>
+</ul>

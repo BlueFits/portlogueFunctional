@@ -25,10 +25,22 @@ router.get(`/logout`, passportController.logoutUser);
 
 /* Initial Setup */
 
+/* POST request to initial setup COUNTRY & POSTAL*/
+router.post(`/first_time_setup`, ensureAuth, userController.POST_first_Setup_CountryandPostal);
+
 /* GET request to initial setup COUNTRY & POSTAL */
 router.get(`/first_time_setup`, ensureAuth, routeController.GET_first_Setup_CountryandPostal);
 
-/* POST request to initial setup COUNTRY & POSTAL*/
-router.post(`/first_time_setup`, ensureAuth, userController.POST_first_Setup_CountryandPostal);
+/* POST request to intitial setup PROFILE SETUP */
+router.post(`/first_time_setup_profile`, ensureAuth, userController.POST_first_Setup_Profile);
+
+/* GET request to initial setup PROFILE SETUP*/
+router.get(`/first_time_setup_profile`, ensureAuth, routeController.GET_first_Setup_Profile);
+
+/* POST request to initial setup AVATAR */
+router.post(`/first_time_setup_avatar`, ensureAuth, userController.POST_first_Setup_Avatar);
+
+/* GET request to initial setup AVATAR */
+router.get(`/first_time_setup_avatar`, ensureAuth, routeController.GET_first_Setup_Avatar);
 
 module.exports = router;

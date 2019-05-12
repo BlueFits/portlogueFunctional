@@ -8,7 +8,6 @@ const flash = require(`connect-flash`);
 const session = require(`express-session`);
 const passport = require(`passport`);
 
-
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
@@ -37,6 +36,7 @@ app.use(session({
 
 //Flash Middleware
 app.use(flash());
+
 //Success and Error Flashes
 app.use(function(req, res, next) {
   res.locals.success_msg = req.flash(`success`);

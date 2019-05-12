@@ -10,10 +10,10 @@ const UserSchema = new Schema({
     password: {type: String, min: 6, required: true},
     country: {type: String, required: true},
     emailDisplay: {type: String, required: true},
-    phone: {type: String, required: false},
-    postalCode: {type: String, requried: true},
+    phone: {type: String, required: false, max: 10},
+    postalCode: {type: String, requried: true, max: 32},
     occupation: {type: String, required: false},
-    bio: {type: String, max: 160, required: false},
+    bio: {type: String, min: 3, max: 160, required: false},
     portfolioUrl: {type:String, required: true},
     dateJoined: {type: Date, default: Date.now}
 });

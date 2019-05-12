@@ -17,7 +17,6 @@ exports.renderRegister = function(req, res, next) {
 //Home Page Route
 
 exports.renderHome = function(req, res, next) {
-
     //Check for first time users
     User.findOne({"email":req.user.email}).exec(function(err, results) {
 
@@ -35,10 +34,19 @@ exports.renderHome = function(req, res, next) {
 
     });
 
-}
+};
 
 //GET function for first time setup
 exports.GET_first_Setup_CountryandPostal = function(req, res, next) {
     //Pulls from array list
-    res.render(`firstSetup/getCountryandPostal`, {errors: [],User: req.user, selectCountry: require(`../arrayList/arrays`).countryList});
-}
+    res.render(`firstSetup/getCountryandPostal`, { errors: [],User: req.user, selectCountry: require(`../arrayList/arrays`).countryList });
+
+};
+
+exports.GET_first_Setup_Profile = function(req, res, next) {
+    res.render(`firstSetup/setupProfile`, { errors: [], User: req.user });
+};
+
+exports.GET_first_Setup_Avatar = function(req, res, next) {
+    res.render(`firstSetup/setupAvatar`, { errors:[], User: req.user });
+};
