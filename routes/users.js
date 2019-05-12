@@ -13,7 +13,7 @@ const { upload } = require(`../config/multerConfig`);
 const { ensureAuth } = require(`../config/authenticate`);
 
 //Generate User Avatar
-router.get(`/userAvatar`, ensureAuth, uploadContoller.userAvatar);
+router.get(`/userAvatar`, ensureAuth, uploadContoller.userAvatar)
 
 /* Login Routes */
 
@@ -45,7 +45,7 @@ router.post(`/first_time_setup_profile`, ensureAuth, userController.POST_first_S
 router.get(`/first_time_setup_profile`, ensureAuth, routeController.GET_first_Setup_Profile);
 
 /* POST request to initial setup AVATAR */
-router.post(`/first_time_setup_avatar`, ensureAuth, userController.POST_first_Setup_Avatar);
+router.post(`/first_time_setup_avatar`, ensureAuth, upload.single(`avatar`), userController.POST_first_Setup_Avatar);
 
 /* GET request to initial setup AVATAR */
 router.get(`/first_time_setup_avatar`, ensureAuth, routeController.GET_first_Setup_Avatar);
