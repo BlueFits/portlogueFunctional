@@ -5,33 +5,13 @@ const { check,body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 const Grid = require('gridfs-stream');
 
-
 const User = require(`../models/User`);
 
-//
+exports.POST_first_Setup_Avatar = function (req, res, next) {
 
-const conn = mongoose.createConnection(require(`../config/config`).devLogin, {useNewUrlParser: true});
-
-let gfs;
-
-conn.once('open', () => {
-  // Init stream
-  gfs = Grid(conn.db, mongoose.mongo);
-  gfs.collection('uploads');
-});
-
-//
-
-exports.POST_first_Setup_Avatar = function(req, res, next) {
-
-    gfs.files.find().toArray(function(err, files) {
-        if (!files || files.length === 0) {
-            return res.status(404).json({err: `NO files exist`});
-        }
-        return res.json(files);
-    });
-
-}
+    res.render(`firstSetup/setupAvatar`, { errors:[], User: req.user, avatar: `/users/userAvatar`});
+  
+  }
 
 exports.POST_first_Setup_Profile = [
     //Validate all fields
