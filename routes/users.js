@@ -5,6 +5,9 @@ const routeController = require(`../controllers/routeController`);
 const userController = require(`../controllers/userController`);
 const passportController = require(`../controllers/passportController`);
 
+//Multer upload property
+const { upload } = require(`../config/multerConfig`);
+
 //Protect Routes
 const { ensureAuth } = require(`../config/authenticate`);
 
@@ -38,7 +41,7 @@ router.post(`/first_time_setup_profile`, ensureAuth, userController.POST_first_S
 router.get(`/first_time_setup_profile`, ensureAuth, routeController.GET_first_Setup_Profile);
 
 /* POST request to initial setup AVATAR */
-router.post(`/first_time_setup_avatar`, ensureAuth, userController.POST_first_Setup_Avatar);
+router.post(`/first_time_setup_avatar`, ensureAuth, upload.single(`avatar`), userController.POST_first_Setup_Avatar);
 
 /* GET request to initial setup AVATAR */
 router.get(`/first_time_setup_avatar`, ensureAuth, routeController.GET_first_Setup_Avatar);

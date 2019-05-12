@@ -48,5 +48,5 @@ exports.GET_first_Setup_Profile = function(req, res, next) {
 };
 
 exports.GET_first_Setup_Avatar = function(req, res, next) {
-    res.render(`firstSetup/setupAvatar`, { errors:[], User: req.user });
+    res.render(`firstSetup/setupAvatar`, { errors:[], User: req.user});
 };
