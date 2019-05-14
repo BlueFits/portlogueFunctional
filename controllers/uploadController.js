@@ -19,7 +19,7 @@ conn.once('open', () => {
 //GET user public avatar
 exports.GET_publicAvtr = function(req, res, next) {
 
-  gfs.files.findOne({ filename: `${req.params.email}:avatar` }, function(err, results) {
+  gfs.files.findOne({ filename: `${req.params.email}-avatar` }, function(err, results) {
     if (err) throw `uploadController publicAvtr`;
 
     if (!results) {
@@ -29,6 +29,23 @@ exports.GET_publicAvtr = function(req, res, next) {
 
     const readstream = gfs.createReadStream(results.filename);
     readstream.pipe(res);
+
+  });
+
+};
+
+//GET function for rendering first setup avatar
+exports.GET_first_Setup_Avatar = function(req, res, next) {
+  
+  gfs.files.findOne({ filename: `${req.user.email}-avatar` }, (err, result) => {
+    if (err) {return next(err);}
+
+    if (!result) {
+      res.render(`firstSetup/setupAvatar`, { errors:[], User: req.user, avatar: `/assets/avatars/placeholder.png`});
+      return;
+    }
+
+    res.redirect(`/users/first_time_setup_link`);
 
   });
 

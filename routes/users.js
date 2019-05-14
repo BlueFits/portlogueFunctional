@@ -4,7 +4,7 @@ var router = express.Router();
 const routeController = require(`../controllers/routeController`);
 const userController = require(`../controllers/userController`);
 const passportController = require(`../controllers/passportController`);
-const uploadContoller = require(`../controllers/uploadController`);
+const uploadController = require(`../controllers/uploadController`);
 
 //Multer upload property
 const { upload } = require(`../config/multerConfig`);
@@ -45,7 +45,7 @@ router.get(`/first_time_setup_profile`, ensureAuth, routeController.GET_first_Se
 router.post(`/first_time_setup_avatar`, ensureAuth, upload.single(`avatar`), userController.POST_first_Setup_Avatar);
 
 /* GET request to initial setup AVATAR */
-router.get(`/first_time_setup_avatar`, ensureAuth, routeController.GET_first_Setup_Avatar);
+router.get(`/first_time_setup_avatar`, ensureAuth, uploadController.GET_first_Setup_Avatar);
 
 /* POST request to initial setup website link*/
 router.post(`/first_time_setup_link`, ensureAuth, userController.POST_first_Setup_Link);

@@ -29,7 +29,7 @@ exports.renderLogin = function(req, res, next) {
 //Register Route
 
 exports.renderRegister = function(req, res, next) {
-    res.render(`register`, requiredObjects.registerLocals);
+    res.render(`register`, {layout: `homePage/homeLayout`, User: req.user});
 };
 
 //Home Page Route
@@ -47,7 +47,7 @@ exports.renderHome = function(req, res, next) {
 
         //Proceed Normally
         else {
-            res.render(`dashboard`, {User: req.user});
+            res.render(`homePage/homeNew`, {layout: `homePage/homeLayout`, User: req.user});
         }
 
     });
@@ -56,19 +56,37 @@ exports.renderHome = function(req, res, next) {
 
 //GET function for first time setup
 exports.GET_first_Setup_CountryandPostal = function(req, res, next) {
-    //Pulls from array list
-    res.render(`firstSetup/getCountryandPostal`, { errors: [],User: req.user, selectCountry: require(`../arrayList/arrays`).countryList });
-
+    //Only run when both oare not set (The user's first time)
+    if ((req.user.country ===`NOT SET`) && (req.user.postalCode === `NOT SET`)) {
+        res.render(`firstSetup/getCountryandPostal`, { errors: [],User: req.user, selectCountry: require(`../arrayList/arrays`).countryList });
+    }
+    else{
+        res.redirect(`/users/first_time_setup_profile`);
+    }
 };
 
 exports.GET_first_Setup_Profile = function(req, res, next) {
-    res.render(`firstSetup/setupProfile`, { errors: [], User: req.user });
-};
-
-exports.GET_first_Setup_Avatar = function(req, res, next) {
-    res.render(`firstSetup/setupAvatar`, { errors:[], User: req.user, avatar: `/assets/avatars/placeholder.png`});
+    //Only run on user's very first login
+    if ((req.user.emailDisplay === `NOT SET`) && (req.user.occupation === `NOT SET`)) {
+        res.render(`firstSetup/setupProfile`, { errors: [], User: req.user });
+    }
+    else {
+        res.redirect(`/users/first_time_setup_avatar`);
+    }
 };
 
 exports.GET_first_Setup_Link = function(req, res, next) {
-    res.render(`firstSetup/setupLink`, {errors: [], User: req.user});
+    //Only run on user's very first login
+    if ((req.user.portfolioUrl === `NOT SET`) && (req.user.portfolioType === `NOT SET`)) {
+        res.render(`firstSetup/setupLink`, {errors: [], User: req.user});
+    }
+    res.redirect(`/`);
+}
+
+exports.GET_discover_new = function(req, res, next) {
+    res.render(`homePage/homeNew`, {layout: `homePage/homeLayout`, User: req.user});
+}
+
+exports.GET_discover_highestRated = function(req, res, next) {
+    res.render(`homePage/homeHighestRated`, {layout: `homePage/homeLayout`, User: req.user});
 }

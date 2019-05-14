@@ -8,7 +8,7 @@ const storage = new GridFsStorage({
     file: (req, file) => {
         if (file.mimetype === 'image/jpeg' || file.mimetype === `image/png`) {
           return {
-            filename:`${req.user.email}:${file.fieldname}`,
+            filename:`${req.user.email}-${file.fieldname}`,
             bucketName: 'uploads'
           };
         } else {
