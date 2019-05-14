@@ -16,14 +16,23 @@ conn.once('open', () => {
 
 //
 
+//GET user public avatar
+exports.GET_publicAvtr = function(req, res, next) {
 
-exports.userAvatar = function(req, res, next) {
-  console.log(gfs);
-  gfs.files.findOne({ filename: `${req.user.email}:avatar` }, function(err, results) {
+  gfs.files.findOne({ filename: `${req.params.email}:avatar` }, function(err, results) {
+    if (err) throw `uploadController publicAvtr`;
+
+    if (!results) {
+      res.send(`CANNOT FIND AVATAR`);
+      return;
+    }
+
     const readstream = gfs.createReadStream(results.filename);
     readstream.pipe(res);
-});
-}
+
+  });
+
+};
 
 /*
 

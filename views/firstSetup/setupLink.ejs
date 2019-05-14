@@ -29,3 +29,7 @@
         </form>
     </div>
 </section>
+
+<% for(let val of errors) {%>
+    <li><%= val.msg %></li>
+<% } %>

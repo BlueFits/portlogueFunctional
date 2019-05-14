@@ -2,6 +2,24 @@ const requiredObjects = require(`../objecList/objects`);
 
 const User = require(`../models/User`);
 
+//GET user web thumb 
+exports.GET_webthumb =  function(req, res, next) {
+
+    User.findOne({"email":req.params.email}).exec((err, result) => {
+        if (err) {return next(err);}
+        
+        if (result) {
+            res.contentType(result.portfolioImg.contentType);
+            res.send(result.portfolioImg.data);
+            return;
+        }
+        else {
+            res.send(`NO IMAGES FOUND`);
+        }
+    });
+
+};
+
 //Login Route
 
 exports.renderLogin = function(req, res, next) {

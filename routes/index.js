@@ -3,23 +3,18 @@ var router = express.Router();
 
 const { ensureAuthHome, ensureAuth } = require(`../config/authenticate`);
 const routeController = require(`../controllers/routeController`);
+const uploadController = require(`../controllers/uploadController`);
 
 
 /* GET home page. */
 router.get('/', ensureAuthHome, routeController.renderHome);
 
-/*How to display User Thumbnail
 
-router.get(`/stream`, ensureAuth, (req, res, next) => {
-    //Remember To require User model
-    User.findOne({ "email" : req.user.email}).exec(function(err, results) {
-        if (err) {return next(err);}
+//GET user website thumbnail
+router.get(`/userWebThumb/:email`, routeController.GET_webthumb);
 
-        res.contentType(results.portfolioImg.contentType);
-        res.send(results.portfolioImg.data);
-    });;
-});
+//GET user avatar 
+router.get(`/publicAvatar/:email`, uploadController.GET_publicAvtr);
 
-*/
 
 module.exports = router;

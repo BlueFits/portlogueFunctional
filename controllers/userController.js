@@ -13,7 +13,7 @@ const User = require(`../models/User`);
 exports.POST_first_Setup_Link = [
     
     //Validate Fields
-    body(`link`).isURL().withMessage(`The link you hav entered is invalid`),
+    body(`link`).isURL().withMessage(`The link you have entered is invalid`),
     body(`websiteType`).isLength({ min: 1}).trim().withMessage(`Please choose a website type`),
 
     //Sanitize Fields
@@ -35,11 +35,11 @@ exports.POST_first_Setup_Link = [
                 (async function() {
                     console.log(`web thumb running`);
                     await new Pageres({delay: 0})
-                        .src(req.body.link, [`1920x1080`], {crop: true, filename: `${req.user.email}:webthumbnail`})
+                        .src(req.body.link, [`1920x1080`], {crop: true, filename: `${req.user.email}-webthumbnail`})
                         .dest(path.join(__dirname, `../portfolioThumb`))
                         .run();
                         console.log(`It ran`);
-                        console.log(`web thumb running`);
+                        console.log(`Saving User`);
                         let user = new User({
                             _id: req.user._id,
                             username: req.user.userName,
@@ -55,8 +55,15 @@ exports.POST_first_Setup_Link = [
                             bio: req.user.bio || `NOT SET`,
                             portfolioType: req.body.websiteType,
                             portfolioUrl: req.body.link,
-                            portfolioImg: {data: fs.readFileSync(path.join(__dirname, `../portfolioThumb/${req.user.email}:webthumbnail.png`)), contentType:`image/png` }
+                            portfolioImg: {data: fs.readFileSync(path.join(__dirname, `../portfolioThumb/${req.user.email}-webthumbnail.png`)), contentType:`image/png` }
                         });
+
+                        //Delete image after Upload
+                        fs.unlink(path.join(__dirname, `../portfolioThumb/${req.user.email}-webthumbnail.png`), (err) => {
+                            if (err) throw `Error at userController fs.unlink`;
+                            console.log(`File has been deleted`);
+                        });
+
                         //Update props
                         User.findByIdAndUpdate(req.user._id, user, {}, function(err, results) {
                             if (err) {return next(err);}
@@ -72,7 +79,7 @@ exports.POST_first_Setup_Link = [
 
 exports.POST_first_Setup_Avatar = function (req, res, next) {
 
-    res.render(`firstSetup/setupAvatar`, { errors:[], User: req.user, avatar: `/users/userAvatar`});
+    res.render(`firstSetup/setupAvatar`, { errors:[], User: req.user, avatar: `/publicAvatar/${req.user.email}`});
   
   }
 

@@ -12,9 +12,6 @@ const { upload } = require(`../config/multerConfig`);
 //Protect Routes
 const { ensureAuth } = require(`../config/authenticate`);
 
-//Generate User Avatar
-router.get(`/userAvatar`, ensureAuth, uploadContoller.userAvatar)
-
 /* Login Routes */
 
 router.post(`/login`, passportController.loginUser);
