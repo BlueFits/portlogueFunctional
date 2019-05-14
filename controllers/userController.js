@@ -3,9 +3,87 @@ const bcrypt = require(`bcrypt`);
 const async = require(`async`);
 const { check,body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
+const Pageres = require(`pageres`);
+const fs = require(`fs`);
+const path = require(`path`);
 const Grid = require('gridfs-stream');
 
 const User = require(`../models/User`);
+
+exports.POST_first_Setup_Link = [
+
+    //Validate Fields
+    body(`link`).isURL().withMessage(`The link you hav entered is invalid`),
+    body(`websiteType`).isLength({ min: 1}).trim().withMessage(`Please choose a website type`),
+
+    //Sanitize Fields
+    sanitizeBody(`link`),
+    sanitizeBody(`websiteType`).escape(),
+
+    (req, res, next) => {
+        //Initialize Validation
+        let errors = validationResult(req);
+
+        //Check for errors
+        if (!errors.isEmpty()) {
+            res.render(`firstSetup/setupLink`, { errors:errors.array(), User:req.user });
+            return;
+        }
+        
+        else {
+            //Take image of user website
+            console.log("-------"+req.body.link+"---------");
+            //Syncronous
+            async.series({
+
+                websiteThumb: (cb) => {
+                    console.log(`web thumb running`);
+                    new Pageres({delay: 0})
+                        .src(req.body.link, [`1920x1080`], {crop: true, filename: `${req.user.email}:webthumbnail`})
+                        .dest(path.join(__dirname, `../portfolioThumb`))
+                        .run();
+                        console.log(`It ran` + __dirname);
+                        cb(null, `websiteThumb ran`)
+                },
+
+                saveUser: (cb) => {
+                    setTimeout(()=> {
+
+                    console.log(`User declare ran`);
+                    let user = new User({
+                    _id: req.user._id,
+                    username: req.user.userName,
+                    firstName: req.user.firstName,
+                    lastName: req.user.lastName,
+                    email: req.user.email,
+                    password: req.user.password,
+                    country: req.user.country,
+                    emailDisplay: req.user.emailDisplay,
+                    phone: req.user.phone || `NOT SET`,
+                    postalCode: req.user.postalCode,
+                    occupation: req.user.occupation,
+                    bio: req.user.bio || `NOT SET`,
+                    portfolioType: req.body.websiteType,
+                    portfolioUrl: req.body.link,
+                    portfolioImg: {data: fs.readFileSync(path.join(__dirname, `../portfolioThumb/${req.user.email}:webthumbnail.png`)), contentType:`image/png` }
+                });
+                //Update props
+                User.findByIdAndUpdate(req.user._id, user, {}, function(err, results) {
+                    if (err) {return next(err);}
+                    res.redirect(`/`);
+                    cb(null, `update ran`);
+                });
+
+                    }, 3000);                
+                }
+            }, (err, results) => {
+                if (err) throw `Error in userController POST link`;
+            });
+        }
+    }
+]
+
+
 
 exports.POST_first_Setup_Avatar = function (req, res, next) {
 
@@ -50,7 +128,9 @@ exports.POST_first_Setup_Profile = [
                 postalCode: req.user.postalCode,
                 occupation: req.body.occupation,
                 bio: req.body.bio || `NOT SET`,
-                portfolioUrl: `NOT SET`
+                portfolioType: `NOT SET`,
+                portfolioUrl: `NOT SET`,
+                portfolioImg: {data: fs.readFileSync(path.join(__dirname, `../portfolioThumb/no-img.png`)), contentType:`image/png` }
             });
 
             User.findByIdAndUpdate(req.user._id, user, {}, function(err, results) {
@@ -93,7 +173,9 @@ exports.POST_first_Setup_CountryandPostal = [
                 postalCode: req.body.postalCode,
                 occupation: `NOT SET`,
                 bio: `NOT SET`,
-                portfolioUrl: `NOT SET`
+                portfolioType: `NOT SET`,
+                portfolioUrl: `NOT SET`,
+                portfolioImg: {data: fs.readFileSync(path.join(__dirname, `../portfolioThumb/no-img.png`)), contentType:`image/png` }
             });
 
             //Confirm country and POstal Code 
@@ -153,7 +235,10 @@ exports.create_User = [
                 postalCode: `NOT SET`,
                 occupation: `NOT SET`,
                 bio: `NOT SET`,
-                portfolioUrl: `NOT SET`
+                portfolioType: `NOT SET`,
+                portfolioUrl: `NOT SET`,
+                portfolioImg: {data: fs.readFileSync(path.join(__dirname, `../portfolioThumb/no-img.png`)), contentType:`image/png` }
+
             });
 
             //Check if user already exists

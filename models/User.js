@@ -15,6 +15,8 @@ const UserSchema = new Schema({
     occupation: {type: String, required: false},
     bio: {type: String, min: 3, max: 160, required: false},
     portfolioUrl: {type:String, required: true},
+    portfolioType: {type: String, required: true},
+    portfolioImg: {data: Buffer, contentType: String},
     dateJoined: {type: Date, default: Date.now}
 });
 

@@ -50,4 +50,10 @@ router.post(`/first_time_setup_avatar`, ensureAuth, upload.single(`avatar`), use
 /* GET request to initial setup AVATAR */
 router.get(`/first_time_setup_avatar`, ensureAuth, routeController.GET_first_Setup_Avatar);
 
+/* POST request to initial setup website link*/
+router.post(`/first_time_setup_link`, ensureAuth, userController.POST_first_Setup_Link);
+
+/* GET request to initial setup Portfolio Link */
+router.get(`/first_time_setup_link`, ensureAuth, routeController.GET_first_Setup_Link);
+
 module.exports = router;

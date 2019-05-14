@@ -16,7 +16,9 @@ conn.once('open', () => {
 
 //
 
+
 exports.userAvatar = function(req, res, next) {
+  console.log(gfs);
   gfs.files.findOne({ filename: `${req.user.email}:avatar` }, function(err, results) {
     const readstream = gfs.createReadStream(results.filename);
     readstream.pipe(res);

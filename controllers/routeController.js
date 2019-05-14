@@ -50,3 +50,7 @@ exports.GET_first_Setup_Profile = function(req, res, next) {
 exports.GET_first_Setup_Avatar = function(req, res, next) {
     res.render(`firstSetup/setupAvatar`, { errors:[], User: req.user, avatar: `/assets/avatars/placeholder.png`});
 };
+
+exports.GET_first_Setup_Link = function(req, res, next) {
+    res.render(`firstSetup/setupLink`, {errors: [], User: req.user});
+}
