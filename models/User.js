@@ -6,6 +6,7 @@ const UserSchema = new Schema({
     username: {type: String, required: true},
     firstName: {type: String, required: true},
     lastName: {type: String, required: true},
+    fullName: {type: String, required: true},
     email: {type: String, required: true},
     password: {type: String, min: 6, required: true},
     country: {type: String, required: true},
@@ -22,8 +23,12 @@ const UserSchema = new Schema({
 
 /* Virtual for user Schema */
 
-UserSchema.virtual(`fullName`).get(function() {
-    return this.firstName + " " + this.lastName;
+UserSchema.virtual(`fullNameDisplay`).get(function() {
+    let first = this.firstName.replace(this.firstName[0], this.firstName[0].toUpperCase());
+
+    let last = this.lastName.replace(this.lastName[0], this.lastName[0].toUpperCase());
+
+    return first + " " + last;
 });
 
 UserSchema.virtual(`url`).get(function() {

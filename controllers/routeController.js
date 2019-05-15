@@ -1,4 +1,7 @@
 const requiredObjects = require(`../objecList/objects`);
+const { body,validationResult } = require('express-validator/check');
+const { sanitizeBody } = require('express-validator/filter');
+const async = require(`async`);
 
 const User = require(`../models/User`);
 
@@ -23,13 +26,13 @@ exports.GET_webthumb =  function(req, res, next) {
 //Login Route
 
 exports.renderLogin = function(req, res, next) {
-    res.render(`login`);
+    res.render(`login`, requiredObjects.registerLocals);
 };
 
 //Register Route
 
 exports.renderRegister = function(req, res, next) {
-    res.render(`register`, {layout: `homePage/homeLayout`, User: req.user});
+    res.render(`register`, requiredObjects.registerLocals);
 };
 
 //Home Page Route
@@ -81,12 +84,93 @@ exports.GET_first_Setup_Link = function(req, res, next) {
         res.render(`firstSetup/setupLink`, {errors: [], User: req.user});
     }
     res.redirect(`/`);
-}
+};
+
+/* GET home page */
 
 exports.GET_discover_new = function(req, res, next) {
     res.render(`homePage/homeNew`, {layout: `homePage/homeLayout`, User: req.user});
-}
+};
 
 exports.GET_discover_highestRated = function(req, res, next) {
     res.render(`homePage/homeHighestRated`, {layout: `homePage/homeLayout`, User: req.user});
-}
+};
+
+exports.GET_discover_mostViewed = function(req, res, next) {
+    res.render(`homePage/homeMostViewed`, {layout: `homePage/homeLayout`, User: req.user});
+};
+
+exports.GET_discover_suggestions = function(req, res, next) {
+    res.render(`homePage/homeSuggestions`, {layout: `homePage/homeLayout`, User: req.user});
+};
+
+exports.GET_discover_friends = function(req, res, next) {
+    res.render(`homePage/homeFriends`, {layout: `homePage/homeLayout`, User: req.user});
+};
+
+//Search home
+exports.GET_search_home = [
+    //Validate
+    body(`q`).trim(),
+    //Sanitize
+    sanitizeBody(`q`).unescape(),
+    (req, res, next) => {
+        //Get rid of spaces
+        let searchQry = req.query.q.replace(/\s/g,'').toLowerCase();
+
+        //Search Algorithm
+        async.parallel({
+
+            qryOne: (cb) => {
+                User.find({ "fullName": searchQry }).exec(cb);
+            },
+            qryTwo: (cb) => {
+                User.find({"firstName":searchQry}).exec(cb);
+            },
+            qryThree: (cb) => {
+                User.find({"lastName":searchQry}).exec(cb);
+            },
+            qryFour: (cb) => {
+                User.find({"email":searchQry}).exec(cb);
+            },
+            qryFive: (cb) => {
+                User.find({"username":req.query.q}).exec(cb); //Case sensitive Search
+            },
+
+        }, function(err, results) {
+
+            if (err) {return next(err);}
+
+            if (results.qryOne.length !== 0) {
+                console.log(`qryOne`);
+                res.render(`searchPage`, {qUsers: results.qryOne, User: req.user});
+            }
+
+            if (results.qryTwo.length !== 0) {
+                console.log(`qry2`);
+                res.render(`searchPage`, {qUsers: results.qryTwo, User: req.user});
+            }
+
+            if (results.qryThree.length !== 0) {
+                console.log(`qry3`);
+                res.render(`searchPage`, {qUsers: results.qryThree, User: req.user});
+            }
+
+            if (results.qryFour.length !== 0) {
+                console.log(`qry4`);
+                res.render(`searchPage`, {qUsers: results.qryFour, User: req.user});
+            }
+
+            if (results.qryFive.length !== 0) {
+                console.log(`qry5`);
+                res.render(`searchPage`, {qUsers: results.qryFive, User: req.user});
+            }
+
+            else {
+                console.log(`qryNoResult`);
+                res.render(`searchPage`, {qUsers: [], User: req.user});
+            }
+
+        });
+    }
+];
