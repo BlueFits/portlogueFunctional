@@ -1,3 +1,121 @@
-<% for(let val of qUsers) {%>
-    <li><%= val.fullNameDisplay %></li>
-<% } %>
+<header>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/#discoverSection">Discover</a></li>
+            <li><a href="/willBeImplemented">Friends</a></li>
+        </ul>
+        <ul>
+            <li><a href="#"><div><img src="#"/></div></a></li>
+            <li><a href="#"><div><img src="#"/></div></a></li>
+            <li><a href="#"><div><img src="#" alt="profile-icon"/></div></a></li>
+        </ul>
+    </nav>
+
+    <div>
+        <div>
+            <h1>Search</h1>
+            <span>Search PortLogue users by their name, username, or email.</span>
+        </div>
+        <form method="GET" action="/search">
+            <button type="submit"><img src="#" alt="search-icon"/></button>
+            <input type="text" name="q"/>
+        </form>
+    </div>
+</header>
+
+
+<section>
+    <span><%- ((qUsers, qryFor)=>{ 
+        if (qUsers.length === 0) {
+            return `No results for <strong>${qryFor}</strong>`;
+        }
+        else {
+            return `Results for <strong>${qryFor}</strong>`;
+        }
+    })(qUsers, qryFor);%></span>
+
+    <div>
+        <ul>
+            <% for (let val of qUsers) { %>
+                <li>
+                    <a href="/users/<%= val.username %>">
+                        <div><img src="/publicAvatar/<%= val.email %>"></div>
+                        <div>
+                            <p><%=val.fullNameDisplay%></p>
+                            <p><%=val.username%>||<%=val.email%></p>
+                            <p><%=val.occupation%></p>
+                            <p><%val.country%></p>
+                        </div>
+                    </a>
+                    <div>
+                        <a href="/willBeImplemented">Add as friend</a>
+                        <a href="<%= val.portfolioUrl%>">Visit official website</a>
+                        <a href="/users/report/<%=val.username%>">Report</a>
+                    </div>
+                </li>
+                <%}%> 
+        </ul>
+    </div>
+</section>
+
+<div>
+    <span>End of results</span>
+</div>
+
+<footer>
+        <div>
+            <div><img src="#" alt="portlogue-icon"/></div>
+            <span>Sharing and browsing personal websites made easy!</span>
+            <p>Showcase and share your wordpress, wix,
+                weebly, and shopify websites with portlogue. Portlogue stores your websites in a single account and displays it upon clicking on your 
+                profile. Join a community where it's all about 
+                sharing and exploring personal websites.</p>
+            <div>
+                <div><img src="#" alt="facebook-icon"></div>
+                <div><img src="#" alt="youtube-icon"></div>
+                <div><img src="#" alt="linkedin-icon"></div>
+                <div><img src="#" alt="twitter-icon"></div>
+            </div>
+        </div>
+
+        <div>
+            <h3>PortLogue</h3>
+            <ul>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Help</a></li>
+                <li><a href="#"></a>Contact</li>
+                <li><a href="#">Privacy</a></li>
+            </ul>
+        </div>
+
+        <div>
+            <h3>Community</h3>
+            <ul>
+                <li><a href="#">Facebook</a></li>
+                <li><a href="#">Twitter</a></li>
+                <li><a href="#">Linkedin</a></li>
+                <li><a href="#">Youtube</a></li>
+            </ul>
+        </div>
+
+        <div>
+            <h3>Placeholder</h3>
+            <ul>
+                <li><a href="#">Facebook</a></li>
+                <li><a href="#">Twitter</a></li>
+                <li><a href="#">Linkedin</a></li>
+                <li><a href="#">Youtube</a></li>
+            </ul>
+        </div>
+
+        <div>
+            <h3>Placeholder</h3>
+            <ul>
+                <li><a href="#">Facebook</a></li>
+                <li><a href="#">Twitter</a></li>
+                <li><a href="#">Linkedin</a></li>
+                <li><a href="#">Youtube</a></li>
+            </ul>
+        </div>
+</footer>

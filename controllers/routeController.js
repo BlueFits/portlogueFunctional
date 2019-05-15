@@ -136,6 +136,9 @@ exports.GET_search_home = [
             qryFive: (cb) => {
                 User.find({"username":req.query.q}).exec(cb); //Case sensitive Search
             },
+            qrySix: (cb) => {
+                User.find({"portfolioType": req.query.q}).exec(cb);
+            }
 
         }, function(err, results) {
 
@@ -143,32 +146,43 @@ exports.GET_search_home = [
 
             if (results.qryOne.length !== 0) {
                 console.log(`qryOne`);
-                res.render(`searchPage`, {qUsers: results.qryOne, User: req.user});
+                res.render(`searchPage`, {qUsers: results.qryOne, User: req.user, qryFor: req.query.q});
+                return;
             }
 
             if (results.qryTwo.length !== 0) {
                 console.log(`qry2`);
-                res.render(`searchPage`, {qUsers: results.qryTwo, User: req.user});
+                res.render(`searchPage`, {qUsers: results.qryTwo, User: req.user, qryFor: req.query.q});
+                return;
             }
 
             if (results.qryThree.length !== 0) {
                 console.log(`qry3`);
-                res.render(`searchPage`, {qUsers: results.qryThree, User: req.user});
+                res.render(`searchPage`, {qUsers: results.qryThree, User: req.user, qryFor: req.query.q});
+                return;
             }
 
             if (results.qryFour.length !== 0) {
                 console.log(`qry4`);
-                res.render(`searchPage`, {qUsers: results.qryFour, User: req.user});
+                res.render(`searchPage`, {qUsers: results.qryFour, User: req.user, qryFor: req.query.q});
+                return;
             }
 
             if (results.qryFive.length !== 0) {
                 console.log(`qry5`);
-                res.render(`searchPage`, {qUsers: results.qryFive, User: req.user});
+                res.render(`searchPage`, {qUsers: results.qryFive, User: req.user, qryFor: req.query.q});
+                return;
+            }
+
+            if (results.qrySix.length !== 0) {
+                res.render(`searchPage`, {qUsers: results.qrySix, User: req.user, qryFor: req.query.q});
+                return;
             }
 
             else {
                 console.log(`qryNoResult`);
-                res.render(`searchPage`, {qUsers: [], User: req.user});
+                res.render(`searchPage`, {qUsers: [], User: req.user, qryFor: req.query.q});
+                return;
             }
 
         });

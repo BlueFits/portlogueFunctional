@@ -5,6 +5,10 @@ const { ensureAuthHome, ensureAuth } = require(`../config/authenticate`);
 const routeController = require(`../controllers/routeController`);
 const uploadController = require(`../controllers/uploadController`);
 
+router.get(`/willBeImplemented`, (req, res, next)=> {
+    res.send(`NOT IMPLEMEMTED`);
+});
+
 //GET user website thumbnail
 router.get(`/userWebThumb/:email`, routeController.GET_webthumb);
 
