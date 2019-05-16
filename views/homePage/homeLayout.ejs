@@ -56,9 +56,16 @@
                 </div>
             </div>
     
-            <!-- <span>Recently visited users</span> -->
+            <!-- <span>Friends quick access</span> -->
             <div>
                 <!-- Will be added -->
+                <ul>
+                    <% for(let val of User.friendList) {%>
+                        <li>
+                            <a href="/users/<%=val%>"><div><img src="/publicAvatar/<%=val%>"/></div></a>
+                        </li>
+                    <%}%>
+                </ul>
             </div>
         </div>
     

@@ -18,7 +18,9 @@ const UserSchema = new Schema({
     portfolioUrl: {type:String, required: true},
     portfolioType: {type: String, required: true},
     portfolioImg: {data: Buffer, contentType: String},
-    userHistory: {type: Schema.Types.ObjectId, ref: `UserHistory`, required: false},
+    portfolioLikes: {type: Number, requried: true},
+    portfolioViews: {type: Number, requried: true},
+    friendList: [{type:String, required: false}],
     dateJoined: {type: Date, default: Date.now}
 });
 

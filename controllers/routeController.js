@@ -23,6 +23,22 @@ exports.GET_webthumb =  function(req, res, next) {
 
 };
 
+//Email redirect
+exports.redirectEmail = function(req, res, next) {
+    User.findOne({"email": req.params.email}).exec((err, results)=>{
+        if (err) throw "routeController-redirectEmail";
+
+        if (!results) {
+            res.send(`USER NOT FOUND`);
+        }
+
+        else {
+            res.redirect(`/users/${results.username}`);
+        }
+
+    });
+}
+
 //Login Route
 
 exports.renderLogin = function(req, res, next) {
@@ -50,7 +66,11 @@ exports.renderHome = function(req, res, next) {
 
         //Proceed Normally
         else {
-            res.render(`homePage/homeNew`, {layout: `homePage/homeLayout`, User: req.user});
+            User.find({}).exec((err, results)=> {
+                if (err) throw `routeController > GET_discover_new`;
+                res.render(`homePage/homeNew`, {layout: `homePage/homeLayout`, User: req.user, qUsers: results});
+                return;
+            })
         }
 
     });
@@ -89,7 +109,12 @@ exports.GET_first_Setup_Link = function(req, res, next) {
 /* GET home page */
 
 exports.GET_discover_new = function(req, res, next) {
-    res.render(`homePage/homeNew`, {layout: `homePage/homeLayout`, User: req.user});
+
+    User.find({}).exec((err, results)=> {
+        if (err) throw `routeController > GET_discover_new`;
+        res.render(`homePage/homeNew`, {layout: `homePage/homeLayout`, User: req.user, qUsers: results});
+        return;
+    })
 };
 
 exports.GET_discover_highestRated = function(req, res, next) {

@@ -230,18 +230,41 @@ exports.create_User = [
                 bio: `NOT SET`,
                 portfolioType: `NOT SET`,
                 portfolioUrl: `NOT SET`,
-                portfolioImg: {data: fs.readFileSync(path.join(__dirname, `../portfolioThumb/no-img.png`)), contentType:`image/png` }
-
+                portfolioImg: {data: fs.readFileSync(path.join(__dirname, `../portfolioThumb/no-img.png`)), contentType:`image/png` },
+                portfolioLikes: 0,
+                portfolioViews: 0
             });
 
             //Check if user already exists
-            User.findOne({"email": req.body.email}).exec(function(err, results) {
-                if (err) {return next(err);}
-        
-                if (results) {
-                    customValid.push({ msg: `That email already exists` });
-                    console.log(`Duplicate Check`);
+
+            async.parallel({
+                check1: function(cb) {
+                    User.findOne({"email": req.body.email}).exec(cb);
+                },
+                check2: function(cb) {
+                    User.findOne({"username": req.body.userName}).exec(cb);
+                }
+            }, function(err, results) {
+
+                if (err) {return next(err);} 
+
+                if(results.check1 && results.check2) {
+                    customValid.push({  msg: `That email already exists`});
+                    customValid.push({ msg:`Username is taken` });
                     res.render(`register`, userLocal);
+                    return;
+                }
+
+                if (results.check1) {
+                    customValid.push({ msg:`That email already exists` });
+                    res.render(`register`, userLocal);
+                    return;
+                }
+
+                if (results.check2) {
+                    customValid.push({msg: `Username is taken`});
+                    res.render(`register`, userLocal);
+                    return;
                 }
 
                 else {
@@ -260,6 +283,9 @@ exports.create_User = [
                         });
                     });
                 }
+
+
+
             });
         }
     },

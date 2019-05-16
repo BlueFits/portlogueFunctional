@@ -9,3 +9,24 @@
                 </ul>
             </div>
 </section>
+
+<section>
+    <ul><!-- Custom Limited-->
+    <%- (function(qUsers) {
+        let newDisplay = [];
+        if (qUsers.length <= 10) {
+            for (let i = 0; i < qUsers.length; i++) {
+                newDisplay.push(`<li>${qUsers[i].email}</li>`);
+            }
+            return newDisplay.join('');
+        }
+        else {
+            for (let i = 0; i < 10; i++) {
+                newDisplay.push(`<li>${qUsers[i].email}</li>`);
+            }
+            return newDisplay.join('');
+        }
+    })(qUsers.reverse());%>
+    </ul>
+    <!-- Reverse to take advantage of mongo listing-->
+</section>

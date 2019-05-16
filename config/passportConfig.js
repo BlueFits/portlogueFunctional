@@ -8,7 +8,7 @@ module.exports = function(passport) {
 
     passport.use(new LocalStrat({ usernameField: `email` }, function(email, password, done) {
 
-        User.findOne({ "email": email }).exec(function(err, results) {
+        User.findOne({ "email": email.toLowerCase() }).exec(function(err, results) {
 
             if (err) throw err;
 
