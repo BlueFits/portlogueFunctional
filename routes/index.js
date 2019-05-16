@@ -5,12 +5,16 @@ const { ensureAuthHome, ensureAuth } = require(`../config/authenticate`);
 const routeController = require(`../controllers/routeController`);
 const uploadController = require(`../controllers/uploadController`);
 
+//Will be implemenged
+router.get(`/willBeImplemented`, (req, res, next)=> {
+    res.send(`Hazah`);
+});
+
 //GET user website thumbnail
 router.get(`/userWebThumb/:email`, routeController.GET_webthumb);
 
 //GET user avatar 
 router.get(`/publicAvatar/:email`, uploadController.GET_publicAvtr);
-
 
 
 /* GET home page. */
