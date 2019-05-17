@@ -122,13 +122,23 @@ exports.GET_discover_new = function(req, res, next) {
 
 exports.GET_discover_highestRated = function(req, res, next) {
 
-    res.render(`homePage/homeHighestRated`,{qUsersForRates: arrayToDisplay});
+    User.find({}).exec((err, results)=> {
+
+        let toDisplay = results.sort((a,b)=> { return b.portfolioLikes - a.portfolioLikes;});
+        res.render(`homePage/homeHighestRated`, {layout: `homePage/homeLayout`, qUsers: toDisplay, User:req.user});
+
+    });
 
 };
 
 exports.GET_discover_mostViewed = function(req, res, next) {
 
-    res.render(`homePage/homeMostViewed`, {qUsersForViews: arrayToDisplayforViews});
+    User.find({}).exec((err, results)=> {
+
+        let toDisplay = results.sort((a,b)=> { return b.portfolioViews - a.portfolioViews;});
+        res.render(`homePage/homeHighestRated`, {layout: `homePage/homeLayout`, qUsers: toDisplay, User:req.user});
+
+    });
 
 };
 
@@ -220,84 +230,3 @@ exports.GET_search_home = [
         });
     }
 ];
-
-
-//Initialize as global to make asyncrounous functions work
-
-let arrayFilter = [];
-
-let arrayToDisplay = [];
-
-User.find({}).exec((err, results)=> {
-    if (err) {return next(err);}
-
-    if (results) {
-            
-        for (val of results) {
-            arrayFilter.push(val.portfolioLikes)
-        }
-
-        //Get rid of duplicates
-        arrayFilter = [...new Set(arrayFilter)];
-
-        //Sort descending
-        arrayFilter = arrayFilter.sort((a, b)=>{return b-a});
-
-        //For loop to add users who have x amount of likes
-        for (val of arrayFilter) {
-            User.find({"portfolioLikes": val}).exec((err, results)=> {
-                if (err) throw err;
-
-                for (val of results) {
-                    arrayToDisplay.push(val);
-                }
-            });
-        }
-    }
-    else {
-        res.send(`Empty database`);
-        return;
-    }
-});
-//ENd of initialization
-
-//Initialize as global to make asyncrounous functions work
-
-let arrayFilterforViews = [];
-
-let arrayToDisplayforViews = [];
-
-User.find({}).exec((err, results)=> {
-    if (err) {return next(err);}
-
-    if (results) {
-            
-        for (val of results) {
-            arrayFilterforViews.push(val.portfolioViews)
-        }
-
-        //Get rid of duplicates
-        arrayFilterforViews = [...new Set(arrayFilterforViews)];
-
-        //Sort descending
-        arrayFilterforViews = arrayFilterforViews.sort((a, b)=>{return b-a});
-        console.log(arrayFilterforViews);
-
-        //For loop to add users who have x amount of likes
-        for (val of arrayFilterforViews) {
-            User.find({"portfolioViews": val}).exec((err, results)=> {
-                if (err) throw err;
-
-                for (val of results) {
-                    console.log(val+"---end of results value")
-                    arrayToDisplayforViews.push(val)
-                }
-            });
-        }
-    }
-    else {
-        res.send(`Empty database`);
-        return;
-    }
-});
-//ENd of initialization
