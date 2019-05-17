@@ -42,8 +42,10 @@
                         </div></a>
                         <div>
                             <div>
-                                <div><img src="/publicAvatar/${qUsers[i].email}"/></div>
-                                <a href="/users/${qUsers[i].username}">${qUsers[i].fullNameDisplay}</a>
+                                <a href="/users/${qUsers[i].username}">
+                                    <div><img src="/publicAvatar/${qUsers[i].email}"/></div>
+                                    <span>${qUsers[i].fullNameDisplay}</span>
+                                </a>
                             </div>
                             <span>${qUsers[i].occupation}</span>
                         </div>
@@ -53,5 +55,7 @@
         }
     })(qUsers.reverse());%>
     </ul>
+
+    <a href="/willBeImplemented">See more</a>
     <!-- Reverse to take advantage of mongo listing-->
 </section>

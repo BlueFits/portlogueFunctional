@@ -1,0 +1,58 @@
+<section id="discoverSection">
+        <div>
+                <ul>
+                    <li><a href="/discover/new#discoverSection">New</a></li>
+                    <li><a href="/discover/highest_rated#discoverSection">Highest Rated</a></li>
+                    <li><a href="/discover/most_viewed#discoverSection">Most Viewed</a></li>
+                    <li><a href="/discover/suggestions#discoverSection">Suggestions</a></li>
+                    <li><a href="/discover/friends#discoverSection">Friends</a></li>
+                </ul>
+            </div>
+</section>
+
+<section>
+    <ul>
+            <%- (function(qUsersForViews) {
+                let newDisplay = [];
+        
+                if (qUsersForViews.length <= 10) {
+                    for (let i = 0; i < qUsersForViews.length; i++) {
+                        newDisplay.push( `<li><a href="/users/${qUsersForViews[i].username}">
+                            <div>
+                                <div><!--Grey bar--></div>
+                                <div><img src="/userWebThumb/${qUsersForViews[i].email}"/></div>
+                            </div></a>
+                            <div>
+                                <div>
+                                    <div><img src="/publicAvatar/${qUsersForViews[i].email}"/></div>
+                                    <a href="/users/${qUsersForViews[i].username}">${qUsersForViews[i].fullNameDisplay}</a>
+                                </div>
+                                <span>${qUsersForViews[i].occupation}</span>
+                            </div>
+                        </li>`);
+                    }
+                    return newDisplay.join('');
+                }
+                else {
+                    for (let i = 0; i < 10; i++) {
+                        newDisplay.push( `<li><a href="/users/${qUsersForViews[i].username}">
+                                <div>
+                                    <div><!--Grey bar--></div>
+                                    <div><img src="/userWebThumb/${qUsersForViews[i].email}"/></div>
+                                </div></a>
+                                <div>
+                                    <div>
+                                        <a href="/users/${qUsersForViews[i].username}">
+                                            <div><img src="/publicAvatar/${qUsersForViews[i].email}"/></div>
+                                            <span>${qUsersForViews[i].fullNameDisplay}</span>
+                                        </a>
+                                    </div>
+                                    <span>${qUsersForViews[i].occupation}</span>
+                                </div>
+                            </li>`);
+                    }
+                    return newDisplay.join('');
+                }
+            })(qUsersForViews);%>
+    </ul>
+</section>
