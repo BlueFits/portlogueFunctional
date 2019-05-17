@@ -17,7 +17,7 @@
     
             if (qUsers.length < 10) {
                 for (let i = 0; i < qUsers.length; i++) {
-                    newDisplay.push( `<li><a href="/users/${qUsers[i].username}">
+                    newDisplay.push( `<li><a href="/users/profile/${qUsers[i].username}">
                         <div>
                             <div><!--Grey bar--></div>
                             <div><img src="/userWebThumb/${qUsers[i].email}"/></div>
@@ -25,7 +25,7 @@
                         <div>
                             <div>
                                 <div><img src="/publicAvatar/${qUsers[i].email}"/></div>
-                                <a href="/users/${qUsers[i].username}">${qUsers[i].fullNameDisplay}</a>
+                                <a href="/users/profile/${qUsers[i].username}">${qUsers[i].fullNameDisplay}</a>
                             </div>
                             <span>${qUsers[i].occupation}</span>
                         </div>
@@ -35,14 +35,14 @@
             }
             else {
                 for (let i = 0; i < 10; i++) {
-                    newDisplay.push( `<li><a href="/users/${qUsers[i].username}">
+                    newDisplay.push( `<li><a href="/users/profile/${qUsers[i].username}">
                             <div>
                                 <div><!--Grey bar--></div>
                                 <div><img src="/userWebThumb/${qUsers[i].email}"/></div>
                             </div></a>
                             <div>
                                 <div>
-                                    <a href="/users/${qUsers[i].username}">
+                                    <a href="/users/profile/${qUsers[i].username}">
                                         <div><img src="/publicAvatar/${qUsers[i].email}"/></div>
                                         <span>${qUsers[i].fullNameDisplay}</span>
                                     </a>
@@ -70,14 +70,14 @@ $(`#loadMoreButton`).on(`click`, function() {
     let newDisplay = [];
     
     for (let i = 0; i < 10; i++) {
-                    newDisplay.push( `<a href="/users/${qUsers[i + generalCounter].username}">
+                    newDisplay.push( `<a href="/users/profile/${qUsers[i + generalCounter].username}">
                             <div>
                                 <div><!--Grey bar--></div>
                                 <div><img src="/userWebThumb/${qUsers[i + generalCounter].email}"/></div>
                             </div></a>
                             <div>
                                 <div>
-                                    <a href="/users/${qUsers[i + generalCounter].username}">
+                                    <a href="/users/profile/${qUsers[i + generalCounter].username}">
                                         <div><img src="/publicAvatar/${qUsers[i + generalCounter].email}"/></div>
                                         <span>${qUsers[i + generalCounter].fullNameDisplay}</span>
                                     </a>

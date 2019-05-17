@@ -39,7 +39,7 @@
         <ul>
             <% for (let val of qUsers) { %>
                 <li>
-                    <a href="/users/<%= val.username %>">
+                    <a href="/users/profile/<%= val.username %>">
                         <div><img src="/publicAvatar/<%= val.email %>"></div>
                         <div>
                             <p><%=val.fullNameDisplay%></p>

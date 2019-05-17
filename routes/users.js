@@ -19,6 +19,11 @@ router.get(`/report/:username`, ensureAuth, (req, res, next)=> {
     res.send(`NOT IMPLEMENTED`);
 });
 
+//User profile route
+router.get(`/profile/:username`, ensureAuth, (req, res, next) => {
+    res.send(`NOT IMPLEMENTED`);
+});
+
 
 /* Login Routes */
 
