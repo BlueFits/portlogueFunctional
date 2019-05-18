@@ -36,7 +36,7 @@ exports.redirectEmail = function(req, res, next) {
         }
 
         else {
-            res.redirect(`/users/${results.username}`);
+            res.redirect(`/users/profile/${results.username}`);
         }
 
     });
@@ -143,11 +143,14 @@ exports.GET_discover_mostViewed = function(req, res, next) {
 };
 
 exports.GET_discover_suggestions = function(req, res, next) {
+    //To be implemented
     res.render(`homePage/homeSuggestions`, {layout: `homePage/homeLayout`, User: req.user});
 };
 
 exports.GET_discover_friends = function(req, res, next) {
-    res.render(`homePage/homeFriends`, {layout: `homePage/homeLayout`, User: req.user});
+    //res.render(`homePage/homeFriends`, {layout: `homePage/homeLayout`, User: req.user});
+    //To be implemented
+    res.send(JSON.stringify(req.user.friendList));
 };
 
 //Search home

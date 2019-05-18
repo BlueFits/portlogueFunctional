@@ -20,7 +20,7 @@ const UserSchema = new Schema({
     portfolioImg: {data: Buffer, contentType: String},
     portfolioLikes: {type: Number, requried: true},
     portfolioViews: {type: Number, requried: true},
-    friendList: [{type:String, required: false}],
+    friendList: [{type:Schema.Types.ObjectId, ref: `User`, required: false}],
     dateJoined: {type: Date, default: Date.now}
 });
 

@@ -24,6 +24,9 @@ router.get(`/profile/:username`, ensureAuth, (req, res, next) => {
     res.send(`NOT IMPLEMENTED`);
 });
 
+//Redirect Email 
+router.get(`/profile/:email`, ensureAuth, routeController.redirectEmail);
+
 
 /* Login Routes */
 
