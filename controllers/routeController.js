@@ -43,7 +43,7 @@ exports.redirectEmail = function(req, res, next) {
 }
 
 
-//User profile
+//User profile page
 exports.GET_profile = function(req, res, next) {
 
     User.findOne({"username":req.params.username}).exec((err, result)=> {
@@ -54,7 +54,7 @@ exports.GET_profile = function(req, res, next) {
         }
 
         else {
-            res.render(`profilePage`, {qUser:result, User:req.user});
+            res.render(`profilePage/profilePageIframe`, {layout: `profilePage/profilePageLayout` , qUser: result, User: req.user});
         }
     });
 

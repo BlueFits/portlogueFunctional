@@ -20,6 +20,8 @@ router.get(`/report/:username`, ensureAuth, (req, res, next)=> {
 });
 
 //User profile route
+router.post(`/add_friend`, ensureAuth, userController.add_friend);
+
 router.get(`/profile/:username`, ensureAuth, routeController.GET_profile);
 
 //Redirect Email 

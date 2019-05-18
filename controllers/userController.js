@@ -6,9 +6,14 @@ const { sanitizeBody } = require('express-validator/filter');
 const Pageres = require(`pageres`);
 const fs = require(`fs`);
 const path = require(`path`);
-const Grid = require('gridfs-stream');
 
 const User = require(`../models/User`);
+
+exports.add_friend = function(req, res, next) {
+
+    res.send(`request From ${req.body.requestFrom}, request to ${req.body.requestTo}`);
+
+};
 
 exports.POST_first_Setup_Link = [
     
