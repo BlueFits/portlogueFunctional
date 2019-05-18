@@ -20,9 +20,7 @@ router.get(`/report/:username`, ensureAuth, (req, res, next)=> {
 });
 
 //User profile route
-router.get(`/profile/:username`, ensureAuth, (req, res, next) => {
-    res.send(`NOT IMPLEMENTED`);
-});
+router.get(`/profile/:username`, ensureAuth, routeController.GET_profile);
 
 //Redirect Email 
 router.get(`/profile/:email`, ensureAuth, routeController.redirectEmail);

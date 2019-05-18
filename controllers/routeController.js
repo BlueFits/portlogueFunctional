@@ -42,6 +42,24 @@ exports.redirectEmail = function(req, res, next) {
     });
 }
 
+
+//User profile
+exports.GET_profile = function(req, res, next) {
+
+    User.findOne({"username":req.params.username}).exec((err, result)=> {
+        if (err) throw "routeController > GET_profile";
+
+        if (!result) {
+            res.send(`NO USERNAME`); //to be implemented
+        }
+
+        else {
+            res.render(`profilePage`, {qUser:result, User:req.user});
+        }
+    });
+
+}
+
 //Login Route
 
 exports.renderLogin = function(req, res, next) {
