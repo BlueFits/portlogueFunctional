@@ -26,6 +26,11 @@ exports.GET_webthumb =  function(req, res, next) {
 
 };
 
+//Get for messages
+exports.GET_send_message = function(req, res, next) {
+    res.send(`NOT IMPLEMENTED`);
+}
+
 //Email redirect
 exports.redirectEmail = function(req, res, next) {
     User.findOne({"email": req.params.email}).exec((err, results)=>{
@@ -45,7 +50,7 @@ exports.redirectEmail = function(req, res, next) {
 
 //User profile page
 exports.GET_profile = function(req, res, next) {
-
+    //record user history
     User.findOne({"username":req.params.username}).exec((err, result)=> {
         if (err) throw "routeController > GET_profile";
 
@@ -53,11 +58,43 @@ exports.GET_profile = function(req, res, next) {
             res.send(`NO USERNAME`); //to be implemented
         }
 
-        else {
-            res.render(`profilePage/profilePageIframe`, {layout: `profilePage/profilePageLayout` , qUser: result, User: req.user});
+        else {  
+
+            if (req.user.username === req.params.username) {
+                res.render(`profilePage/profilePageIframe`, {layout: `profilePage/profilePageLayout` , qUser: result, User: req.user});
+                return;
+            }
+
+            for (let val of req.user.viewedPortfolios) {
+
+                let userCheck = false;
+
+                if (val.username === result.username) {
+                    console.log(`Did run`);
+                    userCheck = true;
+                }
+
+                if (userCheck === true) {
+                    res.render(`profilePage/profilePageIframe`, {layout: `profilePage/profilePageLayout` , qUser: result, User: req.user});
+                    return;
+                }   
+
+            }
+
+            let user = new User({
+                    _id: req.user._id,
+                    viewedPortfolios: req.user.viewedPortfolios
+            });
+
+            user.viewedPortfolios.push(result);
+
+            User.findByIdAndUpdate(req.user._id, user, {}, function(err, results) {
+                if (err) {return next(err);}
+                res.render(`profilePage/profilePageIframe`, {layout: `profilePage/profilePageLayout` , qUser: result, User: req.user});
+            });
+                    
         }
     });
-
 }
 
 //Login Route
@@ -165,10 +202,9 @@ exports.GET_discover_suggestions = function(req, res, next) {
     res.render(`homePage/homeSuggestions`, {layout: `homePage/homeLayout`, User: req.user});
 };
 
-exports.GET_discover_friends = function(req, res, next) {
-    //res.render(`homePage/homeFriends`, {layout: `homePage/homeLayout`, User: req.user});
+exports.GET_discover_history = function(req, res, next) {
     //To be implemented
-    res.send(JSON.stringify(req.user.friendList));
+    res.send(JSON.stringify(req.user.userHistory));
 };
 
 //Search home

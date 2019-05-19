@@ -20,7 +20,10 @@ const UserSchema = new Schema({
     portfolioImg: {data: Buffer, contentType: String},
     portfolioLikes: {type: Number, requried: true},
     portfolioViews: {type: Number, requried: true},
-    friendList: [{type:Schema.Types.ObjectId, ref: `User`, required: false}],
+    likedPortfolios: [{type:Schema.Types.ObjectId, ref: `User`, required: false}], //Use .populate on objectId
+    viewedPortfolios: [{type:Schema.Types.Mixed, ref: `User`, required: false}],
+    friendList: [{type: Schema.Types.ObjectId, ref: `User`}], 
+    messagedUsers: [{type: Schema.Types.ObjectId}],
     dateJoined: {type: Date, default: Date.now}
 });
 

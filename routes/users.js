@@ -20,12 +20,15 @@ router.get(`/report/:username`, ensureAuth, (req, res, next)=> {
 });
 
 //User profile route
-router.post(`/add_friend`, ensureAuth, userController.add_friend);
-
 router.get(`/profile/:username`, ensureAuth, routeController.GET_profile);
 
 //Redirect Email 
 router.get(`/profile/:email`, ensureAuth, routeController.redirectEmail);
+
+//Send Message
+router.post(`/send_message/:username`, ensureAuth, userController.POST_send_message);
+
+router.get(`/send_message/:username`, ensureAuth, routeController.GET_send_message);
 
 
 /* Login Routes */

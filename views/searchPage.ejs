@@ -49,7 +49,10 @@
                         </div>
                     </a>
                     <div>
-                        <a href="/willBeImplemented">Add as friend</a>
+                        <form method="POST" action="">
+                            <input type="hidden" value="<%= val._id %>" name="userToAdd"/>
+                            <button type="submit">Add as friend</button>
+                        </form>
                         <a href="<%= val.portfolioUrl%>">Visit official website</a>
                         <a href="/users/report/<%=val.username%>">Report</a>
                     </div>

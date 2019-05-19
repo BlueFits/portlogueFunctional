@@ -45,25 +45,25 @@
                 <div>
                     <div>Quick Search<img src="#" alt="arrow-down"/></div>
                         <ul>
-                            <li><a href="/search?q=generalportfolio">General Portfolio</a></li>>
-                            <li><a href="/search?q=creativeportfolio">Creative Portfolio</a></li>>
-                            <li><a href="/search?q=artportfolio">Art Portfolio</a></li>>
-                            <li><a href="/search?q=photographyportfolio">Photography Portfolio</a></li>>
-                            <li><a href="/search?q=videographyportfolio">Videography Portfolio</a></li>>
-                            <li><a href="/search?q=academicportfolio">Academic Portfolio</a></li>>
-                            <li><a href="/search?q=professionalportfolio">Professional Portfolio</a></li>>
-                            <li><a href="/search?q=businessportfolio">Business Portfolio</a></li>>
+                            <li><a href="/search?q=generalportfolio">General Portfolio</a></li>
+                            <li><a href="/search?q=creativeportfolio">Creative Portfolio</a></li>
+                            <li><a href="/search?q=artportfolio">Art Portfolio</a></li>
+                            <li><a href="/search?q=photographyportfolio">Photography Portfolio</a></li>
+                            <li><a href="/search?q=videographyportfolio">Videography Portfolio</a></li>
+                            <li><a href="/search?q=academicportfolio">Academic Portfolio</a></li>
+                            <li><a href="/search?q=professionalportfolio">Professional Portfolio</a></li>
+                            <li><a href="/search?q=businessportfolio">Business Portfolio</a></li>
                         </ul>
                 </div>
             </div>
     
-            <!-- <span>Friends quick access</span> -->
+            <!-- <span> History quick access</span> -->
             <div>
                 <!-- Will be added -->
                 <ul>
-                    <% for(let val of User.friendList) {%>
+                    <% for(let val of User.viewedPortfolios) {%>
                         <li>
-                            <a href="/users/profile/<%=val%>"><div><img src="/publicAvatar/<%=val%>"/></div></a>
+                            <a href="/users/profile/<%=val.username%>"><div><img src="/publicAvatar/<%=val%>"/></div></a>
                         </li>
                     <%}%>
                 </ul>

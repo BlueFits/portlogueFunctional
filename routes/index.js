@@ -32,8 +32,8 @@ router.get(`/discover/most_viewed`, ensureAuth, routeController.GET_discover_mos
 //GET home page disocver suggestions
 router.get(`/discover/suggestions`, ensureAuth, routeController.GET_discover_suggestions);
 
-//GET home page disocver friends
-router.get(`/discover/friends`, ensureAuth, routeController.GET_discover_friends);
+//GET home page disocver history
+router.get(`/discover/history`, ensureAuth, routeController.GET_discover_history);
 
 
 

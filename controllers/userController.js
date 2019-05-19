@@ -8,13 +8,54 @@ const fs = require(`fs`);
 const path = require(`path`);
 
 const User = require(`../models/User`);
+const FriendStatus = require(`../models/friendStatus`);
 
-exports.add_friend = function(req, res, next) {
+//Add friend process
 
-    res.send(`request From ${req.body.requestFrom}, request to ${req.body.requestTo}`);
+exports.POST_addFriend = function(req, res, next) {
+
+    User.findById(req.body.userToAdd).exec((err, result)=> {
+
+        if (err) {return next(err);}
+
+            let friendStatus = new FriendStatus({
+                requestFrom: req.user,
+                requestTo: result,
+                status: 1
+            });
+
+            FriendStatus.find({"requestFrom": req.user, "requestTo": result}).exec((err, results)=> {
+
+                if (err) {return next(err)};
+
+                if (results.length > 0) {
+
+                    res.send(`Already Made a request to the User`);
+
+                }
+
+                else {
+
+                    friendStatus.save((err)=> {
+                        if (err) {return next(err)};
+                        res.redirect(req.get(`Referrer`));
+                    });
+
+                }
+
+            });
+
+    });
+
+}
+
+exports.POST_send_message = function(req, res, next) {
+
+    res.send(`request From ${req.body.requestFrom}`);
 
 };
 
+// First time Setup
 exports.POST_first_Setup_Link = [
     
     //Validate Fields
