@@ -4,6 +4,7 @@ const { sanitizeBody } = require('express-validator/filter');
 const async = require(`async`);
 
 const User = require(`../models/User`);
+const FriendStatus = require(`../models/friendStatus`);
 
 /* Start of route Functions */
 
@@ -245,36 +246,232 @@ exports.GET_search_home = [
 
             if (results.qryOne.length !== 0) {
                 console.log(`qryOne`);
-                res.render(`searchPage`, {qUsers: results.qryOne, User: req.user, qryFor: req.query.q});
+
+                let friendButton = {};
+
+                let status = 0;
+
+                for (let val of req.user.friendRequests) {
+                    for (let qryTwo of results.qryTwo) {
+                        if (val.requestTo.username === qryTwo.username) {
+                            status = val.status;
+                        }
+                    }
+                }
+
+                switch (status) {
+                    case 0:
+                    friendButton = { state: "", buttonVal: `Add Friend` };
+                    break;
+                    case 1:
+                    friendButton = { state: "disabled", buttonVal: `Request Sent` };
+                    break;
+                    case 2:
+                    friendButton = { state: "disabled", buttonVal: `Friend` };
+                    break;
+                    case 3:
+                    friendButton = { state: "disabled", buttonVal: `Request denied` };
+                    break;
+                }
+
+                res.render(`searchPage`, {qUsers: results.qryOne, User: req.user, qryFor: req.query.q, friendButton});
                 return;
             }
 
             if (results.qryTwo.length !== 0) {
                 console.log(`qry2`);
-                res.render(`searchPage`, {qUsers: results.qryTwo, User: req.user, qryFor: req.query.q});
+
+                let friendButton = {};
+
+                let status = 0;
+
+                for (let val of req.user.friendRequests) {
+                    for (let qryTwo of results.qryTwo) {
+                        if (val.requestTo.username === qryTwo.username) {
+                            status = val.status;
+                        }
+                        if (qryTwo.username === req.user.username) {
+                            status = 4;
+                        }
+                    }
+                }
+
+                switch (status) {
+                    case 0:
+                    friendButton = { state: "", buttonVal: `Add Friend` };
+                    break;
+                    case 1:
+                    friendButton = { state: "disabled", buttonVal: `Request Sent` };
+                    break;
+                    case 2:
+                    friendButton = { state: "disabled", buttonVal: `Friend` };
+                    break;
+                    case 3:
+                    friendButton = { state: "disabled", buttonVal: `Request denied` };
+                    break;
+                    case 4: 
+                    friendButton = { state:"disabled", buttonVal:  `Profile`}
+                }
+
+                res.render(`searchPage`, {qUsers: results.qryTwo, User: req.user, qryFor: req.query.q, friendButton});
                 return;
             }
 
             if (results.qryThree.length !== 0) {
                 console.log(`qry3`);
-                res.render(`searchPage`, {qUsers: results.qryThree, User: req.user, qryFor: req.query.q});
+
+                let friendButton = {};
+
+                let status = 0;
+
+                for (let val of req.user.friendRequests) {
+                    for (let qryTwo of results.qryTwo) {
+                        if (val.requestTo.username === qryTwo.username) {
+                            status = val.status;
+                        }
+                        if (qryTwo.username === req.user.username) {
+                            status = 4;
+                        }
+                    }
+                }
+
+                switch (status) {
+                    case 0:
+                    friendButton = { state: "", buttonVal: `Add Friend` };
+                    break;
+                    case 1:
+                    friendButton = { state: "disabled", buttonVal: `Request Sent` };
+                    break;
+                    case 2:
+                    friendButton = { state: "disabled", buttonVal: `Friend` };
+                    break;
+                    case 3:
+                    friendButton = { state: "disabled", buttonVal: `Request denied` };
+                    break;
+                    case 4: 
+                    friendButton = { state:"disabled", buttonVal:  `Profile`}
+                }
+
+
+                res.render(`searchPage`, {qUsers: results.qryThree, User: req.user, qryFor: req.query.q, friendButton});
                 return;
-            }
+                }
 
             if (results.qryFour.length !== 0) {
                 console.log(`qry4`);
-                res.render(`searchPage`, {qUsers: results.qryFour, User: req.user, qryFor: req.query.q});
+
+                let friendButton = {};
+
+                let status = 0;
+
+                for (let val of req.user.friendRequests) {
+                    for (let qryTwo of results.qryTwo) {
+                        if (val.requestTo.username === qryTwo.username) {
+                            status = val.status;
+                        }
+                        if (qryTwo.username === req.user.username) {
+                            status = 4;
+                        }
+                    }
+                }
+
+                switch (status) {
+                    case 0:
+                    friendButton = { state: "", buttonVal: `Add Friend` };
+                    break;
+                    case 1:
+                    friendButton = { state: "disabled", buttonVal: `Request Sent` };
+                    break;
+                    case 2:
+                    friendButton = { state: "disabled", buttonVal: `Friend` };
+                    break;
+                    case 3:
+                    friendButton = { state: "disabled", buttonVal: `Request denied` };
+                    break;
+                    case 4: 
+                    friendButton = { state:"disabled", buttonVal:  `Profile`}
+                }
+
+
+                res.render(`searchPage`, {qUsers: results.qryFour, User: req.user, qryFor: req.query.q, friendButton});
                 return;
             }
 
             if (results.qryFive.length !== 0) {
                 console.log(`qry5`);
-                res.render(`searchPage`, {qUsers: results.qryFive, User: req.user, qryFor: req.query.q});
+
+                let friendButton = {};
+
+                let status = 0;
+
+                for (let val of req.user.friendRequests) {
+                    for (let qryTwo of results.qryTwo) {
+                        if (val.requestTo.username === qryTwo.username) {
+                            status = val.status;
+                        }
+                        if (qryTwo.username === req.user.username) {
+                            status = 4;
+                        }
+                    }
+                }
+
+                switch (status) {
+                    case 0:
+                    friendButton = { state: "", buttonVal: `Add Friend` };
+                    break;
+                    case 1:
+                    friendButton = { state: "disabled", buttonVal: `Request Sent` };
+                    break;
+                    case 2:
+                    friendButton = { state: "disabled", buttonVal: `Friend` };
+                    break;
+                    case 3:
+                    friendButton = { state: "disabled", buttonVal: `Request denied` };
+                    break;
+                    case 4: 
+                    friendButton = { state:"disabled", buttonVal:  `Profile`}
+                }
+
+                res.render(`searchPage`, {qUsers: results.qryFive, User: req.user, qryFor: req.query.q, friendButton});
                 return;
             }
 
             if (results.qrySix.length !== 0) {
-                res.render(`searchPage`, {qUsers: results.qrySix, User: req.user, qryFor: req.query.q});
+
+                let friendButton = {};
+
+                let status = 0;
+
+                for (let val of req.user.friendRequests) {
+                    for (let qryTwo of results.qryTwo) {
+                        if (val.requestTo.username === qryTwo.username) {
+                            status = val.status;
+                        }
+                        if (qryTwo.username === req.user.username) {
+                            status = 4;
+                        }
+                    }
+                }
+
+                switch (status) {
+                    case 0:
+                    friendButton = { state: "", buttonVal: `Add Friend` };
+                    break;
+                    case 1:
+                    friendButton = { state: "disabled", buttonVal: `Request Sent` };
+                    break;
+                    case 2:
+                    friendButton = { state: "disabled", buttonVal: `Friend` };
+                    break;
+                    case 3:
+                    friendButton = { state: "disabled", buttonVal: `Request denied` };
+                    break;
+                    case 4: 
+                    friendButton = { state:"disabled", buttonVal:  `Profile`}
+                }
+
+
+                res.render(`searchPage`, {qUsers: results.qrySix, User: req.user, qryFor: req.query.q, friendButton});
                 return;
             }
 

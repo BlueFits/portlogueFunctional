@@ -38,7 +38,19 @@ exports.POST_addFriend = function(req, res, next) {
 
                     friendStatus.save((err)=> {
                         if (err) {return next(err)};
-                        res.redirect(req.get(`Referrer`));
+
+                        let user = new User({
+                            _id: req.user._id,
+                            friendRequests: req.user.friendRequests
+                        });
+
+                        user.friendRequests.push(friendStatus);
+
+                        //Update props
+                        User.findByIdAndUpdate(req.user._id, user, {}, function(err, results) {
+                            if (err) {return next(err);}
+                            res.redirect(req.get(`Referrer`));
+                        });
                     });
 
                 }

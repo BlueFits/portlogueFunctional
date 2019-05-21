@@ -1,8 +1,26 @@
-<form method="POST" action="">
-    <input type="email" name="email" placeholder="E-mail"/>
-    <input type="password" name="password" placeholder="Password"/>
-    <button type="submit">Login</button>
-</form>
-<p><%= success_msg ? success_msg : "" %></p>
-<p><%= error ? error : "" %></p>
-<p><%= error_msg ? error_msg : "" %></p>
+<div class="Login-Register">
+    <div class="loginPage-wrap">
+        <img style="width: 135px;" src="/assets/icons/logo_noText.svg"/>
+        <div class="login-header">
+            <h1 style="color: #fff;"><strong>LOGIN TO</strong> YOUR ACCOUNT</h1>
+            <span class="h1-sub" style="color: #8e8e90;">Discover all kinds of personal websites</span>
+        </div>
+        <form class="login-form" method="POST" action="">
+            <input type="email" name="email" placeholder="E-mail"/>
+            <input type="password" name="password" placeholder="Password"/>
+            <button type="submit">Login</button>
+        </form>
+
+        <div class="login-sub-text">
+            <a href="#">Forgot your password?</a>
+            <p>New to portlogue?&nbsp<a href="/users/register">Create an account.</a></p>
+        </div>
+
+        <div class="login-flash-message">
+        <p style="color: #2ecc71;"><%= success_msg ? success_msg : "" %></p>
+        <p style="color: #e74c3c;"><%= error ? error : "" %></p>
+        <p style="color: #e74c3c;"><%= error_msg ? error_msg : "" %></p>
+        </div>
+
+    <div>
+</div>
