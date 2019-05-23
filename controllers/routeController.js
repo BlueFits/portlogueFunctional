@@ -9,11 +9,6 @@ const async = require(`async`);
 const User = require(`../models/User`);
 const FriendStats = require(`../models/friendStatus`);
 
-//Functions
-const functionCntrl = require(`../controllers/functionsContoller`);
-
-
-
 //GET user web thumb 
 exports.GET_webthumb =  function(req, res, next) {
 
@@ -264,60 +259,48 @@ exports.GET_search_home = [
 
         }, function(err, results) {
 
-            if (err) {return next(err);}
-
-            let status = 0;
-
-            let friendButtonVal = {};
+            if (err) {return next(err);}      
 
             //
             if (results.qryOne.length !== 0) {
                 console.log(`qryOne`);
-
-                friendButtonVal = functionCntrl.friendButtonVal(status, results.qryOne, req.user._id);
-
-                res.render(`searchPage`, {qUsers: results.qryOne, User: req.user, qryFor: req.query.q , friendButtonVal});
+                res.render(`searchPage`, {qUsers: results.qryOne, User: req.user, qryFor: req.query.q});
                 return;
             }
 
             if (results.qryTwo.length !== 0) {
                 console.log(`qry2`);
-                friendButtonVal = functionCntrl.friendButtonVal(status, results.qryTwo, req.user._id);
-                res.render(`searchPage`, {qUsers: results.qryTwo, User: req.user, qryFor: req.query.q, friendButtonVal});
+                res.render(`searchPage`, {qUsers: results.qryTwo, User: req.user, qryFor: req.query.q});
                 return;
             }
 
             if (results.qryThree.length !== 0) {
                 console.log(`qry3`);
-                friendButtonVal = functionCntrl.friendButtonVal(status, results.qryThree, req.user._id);
-                res.render(`searchPage`, {qUsers: results.qryThree, User: req.user, qryFor: req.query.q, friendButtonVal});
+                res.render(`searchPage`, {qUsers: results.qryThree, User: req.user, qryFor: req.query.q});
                 return;
                 }
 
             if (results.qryFour.length !== 0) {
                 console.log(`qry4`);
-                friendButtonVal = functionCntrl.friendButtonVal(status, results.qryFour, req.user._id);
-                res.render(`searchPage`, {qUsers: results.qryFour, User: req.user, qryFor: req.query.q, friendButtonVal});
+                res.render(`searchPage`, {qUsers: results.qryFour, User: req.user, qryFor: req.query.q});
                 return;
             }
 
             if (results.qryFive.length !== 0) {
                 console.log(`qry5`);
-                friendButtonVal = functionCntrl.friendButtonVal(status, results.qryFive, req.user._id);
-                res.render(`searchPage`, {qUsers: results.qryFive, User: req.user, qryFor: req.query.q, friendButtonVal});
+                res.render(`searchPage`, {qUsers: results.qryFive, User: req.user, qryFor: req.query.q});
                 return;
             }
 
             if (results.qrySix.length !== 0) {
                 console.log(`qry6`);
-                friendButtonVal = functionCntrl.friendButtonVal(status, results.qrySix, req.user._id);
-                res.render(`searchPage`, {qUsers: results.qrySix, User: req.user, qryFor: req.query.q, friendButtonVal});
+                res.render(`searchPage`, {qUsers: results.qrySix, User: req.user, qryFor: req.query.q});
                 return;
             }
 
             else {
                 console.log(`qryNoResult`);
-                res.render(`searchPage`, {qUsers: [], User: req.user, qryFor: req.query.q, friendButtonVal});
+                res.render(`searchPage`, {qUsers: [], User: req.user, qryFor: req.query.q});
                 return;
             }
         });

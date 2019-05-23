@@ -21,11 +21,17 @@ const UserSchema = new Schema({
     portfolioLikes: {type: Number, requried: true},
     portfolioViews: {type: Number, requried: true},
     likedPortfolios: [{type:Schema.Types.ObjectId, ref: `User`, required: false}], //Use .populate on objectId
-    viewedPortfolios: [{type:Schema.Types.ObjectId, ref: `User`, required: false}],
+    viewedPortfolios: {type:[{type: Schema.Types.ObjectId, ref: `User`}], validate: [arrayLimit, `{PATH} exceeds the limit of 5`]},
     friendList: [{type: Schema.Types.ObjectId, ref: `User`}],
     friendRequests:[{type: Schema.Types.ObjectId, ref: `FriendStatus`}],
     dateJoined: {type: Date, default: Date.now}
 });
+
+
+//Validation
+function arrayLimit(val) {
+    return val.length <= 5;
+}
 
 /* Virtual for user Schema */
 

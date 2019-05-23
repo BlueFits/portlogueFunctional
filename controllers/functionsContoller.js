@@ -19,6 +19,9 @@ exports.friendButtonVal = function(status, qryResult, reqUserId) {
     }
 
     switch (status) {
+        case (`user`):
+            friendButtonVal = {state: ``, val: `Profile`, response: ``, postTo: `404`}
+            break;
         case 0:
             friendButtonVal = {state: ``, val: `Add Frriend`, response: ``, postTo: `add_friend`}
             break;
@@ -32,7 +35,7 @@ exports.friendButtonVal = function(status, qryResult, reqUserId) {
             friendButtonVal = {state: `disabled`, val: `Friend`, response: ``, postTo: `add_friend`}
             break;
         case 3:
-            friendButtonVal = {state: `disabled`, val: `Request rejected`, response: `add_friend`}
+            friendButtonVal = {state: `disabled`, val: `Request rejected`, response: ``, postTo: `add_friend`}
             break;
     }
 

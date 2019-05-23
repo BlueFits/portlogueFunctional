@@ -19,7 +19,7 @@ exports.POST_confirmFriend = function(req, res, next) {
 
             if (err) {return next(err);}
 
-            if (idResult.length === 0) {
+            if (idResult.length === 0) {  
                 res.send(`No such requests`); //toFix
             }
 
@@ -35,7 +35,28 @@ exports.POST_confirmFriend = function(req, res, next) {
                     FriendStatus.findByIdAndUpdate(idResult._id, friendStatus, {}, (err, updateResult)=> {
 
                         if (err) throw `userController > POST_confirmFriend`;
-                        console.log(`Updated Id for friend status`);
+                        
+                        let user = new User({
+                            _id: req.user._id,
+                            friendList: req.user.friendList
+                        });
+
+                        user.friendList.push(userToAdd.username);
+
+                        User.findByIdAndUpdate(req.user._id, user, {}, (err, updateRes)=> {
+                            if (err) throw "userController > PSOT_confirmFriend update";
+                        });
+
+                        let userB = new User({
+                            _id: userToAdd._id,
+                            friendList: userToAdd.friendList
+                        });
+
+                        userB.friendList.push(req.user.username);
+
+                        User.findByIdAndUpdate(userToAdd._id, userB, {}, (err, updateResB)=> {
+                            if (err) throw "userController > POST_confirmFriend update B";
+                        });
 
                     });
 
@@ -58,6 +79,10 @@ exports.POST_confirmFriend = function(req, res, next) {
 }
 
 exports.POST_addFriend = function(req, res, next) {
+
+    if (req.body.friendResponse === `true`) {
+        res.redirect(`/users/confirm_friend`);
+    }
 
     User.findById(req.body.userToAdd).exec((err, userToAdd)=> {
         console.log(`find ran`);
