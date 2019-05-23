@@ -49,9 +49,10 @@
                         </div>
                     </a>
                     <div>
-                        <form method="POST" action="/users/add_friend">
+                        <form method="POST" action="/users/<%= friendButtonVal.postTo %>">
                             <input type="hidden" value="<%= val._id %>" name="userToAdd"/>
-                            <button type="submit" <%=friendButton.state%>><%= friendButton.buttonVal%></button>
+                            <input type="hidden" value="<%= friendButtonVal.response %>" name="friendResponse"/>
+                            <button type="submit" <%= friendButtonVal.state %>><%= friendButtonVal.val %></button>
                         </form>
                         <a href="<%= val.portfolioUrl%>">Visit official website</a>
                         <a href="/users/report/<%=val.username%>">Report</a>

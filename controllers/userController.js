@@ -1,4 +1,3 @@
-const mongoose = require(`mongoose`);
 const bcrypt = require(`bcrypt`);
 const async = require(`async`);
 const { check,body,validationResult } = require('express-validator/check');
@@ -11,30 +10,80 @@ const User = require(`../models/User`);
 const FriendStatus = require(`../models/friendStatus`);
 
 //Add friend process
-
-exports.POST_addFriend = function(req, res, next) {
-
-    User.findById(req.body.userToAdd).exec((err, result)=> {
+exports.POST_confirmFriend = function(req, res, next) {
+    User.findById(req.body.userToAdd).exec((err, userToAdd)=> {
 
         if (err) {return next(err);}
 
-            let friendStatus = new FriendStatus({
-                requestFrom: req.user,
-                requestTo: result,
-                status: 1
-            });
+        FriendStatus.findOne({"requestFrom": userToAdd, "requestTo": req.user}).exec((err, idResult)=> {
 
-            FriendStatus.find({"requestFrom": req.user, "requestTo": result}).exec((err, results)=> {
+            if (err) {return next(err);}
+
+            if (idResult.length === 0) {
+                res.send(`No such requests`); //toFix
+            }
+
+            else {
+
+                if (req.body.friendResponse === `true`) {
+                    
+                    let friendStatus = new FriendStatus({
+                        _id: idResult._id,
+                        status: 2
+                    });
+
+                    FriendStatus.findByIdAndUpdate(idResult._id, friendStatus, {}, (err, updateResult)=> {
+
+                        if (err) throw `userController > POST_confirmFriend`;
+                        console.log(`Updated Id for friend status`);
+
+                    });
+
+                }
+                else {
+                    let friendStatus = new FriendStatus({
+                        _id: idResult._id,
+                        status: 3
+                    });
+
+                    FriendStatus.findByIdAndUpdate(idResult._id, friendStatus, {}, (err, updateResult)=> {
+                        if (err) throw `userController > POST_confirmFriend`;
+                        console.log(`Updated Id for friend status`);
+                        res.redirect(req.get(`Referrer`));
+                    });
+                }
+            }
+        });
+    });
+}
+
+exports.POST_addFriend = function(req, res, next) {
+
+    User.findById(req.body.userToAdd).exec((err, userToAdd)=> {
+        console.log(`find ran`);
+
+        if (err) {return next(err);}
+
+            FriendStatus.find({"requestFrom": req.user, "requestTo": userToAdd}).exec((err, results)=> {
+                console.log(`friend status ran`);
 
                 if (err) {return next(err)};
 
                 if (results.length > 0) {
 
-                    res.send(`Already Made a request to the User`);
-
+                    res.send(`Already Made a request to the User`); //toFix
+                    return;
                 }
 
                 else {
+
+
+
+                    let friendStatus = new FriendStatus({
+                        requestFrom: req.user,
+                        requestTo: userToAdd,
+                        status: 1
+                    });
 
                     friendStatus.save((err)=> {
                         if (err) {return next(err)};
@@ -47,18 +96,25 @@ exports.POST_addFriend = function(req, res, next) {
                         user.friendRequests.push(friendStatus);
 
                         //Update props
-                        User.findByIdAndUpdate(req.user._id, user, {}, function(err, results) {
+                        User.findByIdAndUpdate(req.user._id, user, {}, function(err, result) {
+                            if (err) {return next(err);}
+                        });
+
+                        let otherUser = new User({
+                            _id: userToAdd._id,
+                            friendRequests: userToAdd.friendRequests
+                        });
+
+                        otherUser.friendRequests.push(friendStatus);
+
+                        User.findByIdAndUpdate(userToAdd._id, otherUser, {}, function(err, result) {
                             if (err) {return next(err);}
                             res.redirect(req.get(`Referrer`));
                         });
                     });
-
                 }
-
             });
-
     });
-
 }
 
 exports.POST_send_message = function(req, res, next) {
@@ -93,39 +149,28 @@ exports.POST_first_Setup_Link = [
                 (async function() {
                     console.log(`web thumb running`);
                     await new Pageres({delay: 0})
-                        .src(req.body.link, [`1920x1080`], {crop: true, filename: `${req.user.email}-webthumbnail`})
+                        .src(req.body.link, [`1024x576`], {crop: true, filename: `${req.user.email}-webthumbnail`})
                         .dest(path.join(__dirname, `../portfolioThumb`))
                         .run();
                         console.log(`It ran`);
                         console.log(`Saving User`);
                         let user = new User({
                             _id: req.user._id,
-                            username: req.user.userName,
-                            firstName: req.user.firstName,
-                            lastName: req.user.lastName,
-                            email: req.user.email,
-                            password: req.user.password,
-                            country: req.user.country,
-                            emailDisplay: req.user.emailDisplay,
-                            phone: req.user.phone || `NOT SET`,
-                            postalCode: req.user.postalCode,
-                            occupation: req.user.occupation,
-                            bio: req.user.bio || `NOT SET`,
                             portfolioType: req.body.websiteType.toLowerCase(),
                             portfolioUrl: req.body.link,
                             portfolioImg: {data: fs.readFileSync(path.join(__dirname, `../portfolioThumb/${req.user.email}-webthumbnail.png`)), contentType:`image/png` }
                         });
 
-                        //Delete image after Upload
-                        fs.unlink(path.join(__dirname, `../portfolioThumb/${req.user.email}-webthumbnail.png`), (err) => {
-                            if (err) throw `Error at userController fs.unlink`;
-                            console.log(`File has been deleted`);
-                        });
-
                         //Update props
                         User.findByIdAndUpdate(req.user._id, user, {}, function(err, results) {
+                            console.log(`User saved`);
                             if (err) {return next(err);}
+                            //Delete image after Upload
+                            fs.unlink(path.join(__dirname, `../portfolioThumb/${req.user.email}-webthumbnail.png`), (err) => {
+                            if (err) throw `Error at userController fs.unlink`;
+                            console.log(`File has been deleted`);
                             res.redirect(`/`);
+                            });
                         });
                 })();
         }
@@ -167,20 +212,10 @@ exports.POST_first_Setup_Profile = [
         else {
             let user = new User({
                 _id: req.user._id,
-                username: req.user.userName,
-                firstName: req.user.firstName,
-                lastName: req.user.lastName,
-                email: req.user.email,
-                password: req.user.password,
-                country: req.user.country,
                 emailDisplay: req.body.emailDisplay.toLowerCase(),
-                phone: req.body.phone || `NOT SET`,
-                postalCode: req.user.postalCode,
+                phone: req.body.phone,
                 occupation: req.body.occupation.toLowerCase(),
-                bio: req.body.bio || `NOT SET`,
-                portfolioType: `NOT SET`,
-                portfolioUrl: `NOT SET`,
-                portfolioImg: {data: fs.readFileSync(path.join(__dirname, `../portfolioThumb/no-img.png`)), contentType:`image/png` }
+                bio: req.body.bio
             });
 
             User.findByIdAndUpdate(req.user._id, user, {}, function(err, results) {
@@ -212,20 +247,8 @@ exports.POST_first_Setup_CountryandPostal = [
         else {
             let user = new User({
                 _id: req.user._id,
-                username: req.user.userName,
-                firstName: req.user.firstName,
-                lastName: req.user.lastName,
-                email: req.user.email,
-                password: req.user.password,
                 country: req.body.country.toLowerCase(),
-                emailDisplay: `NOT SET`,
-                phone: `NOT SET`,
                 postalCode: req.body.postalCode.toLowerCase(),
-                occupation: `NOT SET`,
-                bio: `NOT SET`,
-                portfolioType: `NOT SET`,
-                portfolioUrl: `NOT SET`,
-                portfolioImg: {data: fs.readFileSync(path.join(__dirname, `../portfolioThumb/no-img.png`)), contentType:`image/png` }
             });
 
             //Confirm country and POstal Code 

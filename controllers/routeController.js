@@ -1,12 +1,17 @@
 const requiredObjects = require(`../objecList/objects`);
-const { body,validationResult } = require('express-validator/check');
+const { body } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 const async = require(`async`);
 
-const User = require(`../models/User`);
-const FriendStatus = require(`../models/friendStatus`);
 
-/* Start of route Functions */
+
+//Models
+const User = require(`../models/User`);
+const FriendStats = require(`../models/friendStatus`);
+
+//Functions
+const functionCntrl = require(`../controllers/functionsContoller`);
+
 
 
 //GET user web thumb 
@@ -21,24 +26,29 @@ exports.GET_webthumb =  function(req, res, next) {
             return;
         }
         else {
-            res.send(`NO IMAGES FOUND`);
+            res.send(`NO IMAGES FOUND`); //toFIX
         }
+
     });
 
 };
 
+
+
 //Get for messages
 exports.GET_send_message = function(req, res, next) {
-    res.send(`NOT IMPLEMENTED`);
+    res.send(`NOT IMPLEMENTED`); //toFix
 }
+
+
 
 //Email redirect
 exports.redirectEmail = function(req, res, next) {
     User.findOne({"email": req.params.email}).exec((err, results)=>{
-        if (err) throw "routeController-redirectEmail";
+        if (err) throw "routeController > redirectEmail";
 
         if (!results) {
-            res.send(`USER NOT FOUND`);
+            res.send(`USER NOT FOUND`); //toFix
         }
 
         else {
@@ -49,92 +59,99 @@ exports.redirectEmail = function(req, res, next) {
 }
 
 
+
 //User profile page
 exports.GET_profile = function(req, res, next) {
     //record user history
-    User.findOne({"username":req.params.username}).exec((err, result)=> {
+    User.findOne({"username":req.params.username}).populate(`viewedPortfolios`).exec((err, result)=> {
         if (err) throw "routeController > GET_profile";
 
         if (!result) {
-            res.send(`NO USERNAME`); //to be implemented
+            res.send(`NO USERNAME`); //toFix
         }
 
         else {  
 
-            if (req.user.username === req.params.username) {
-                res.render(`profilePage/profilePageIframe`, {layout: `profilePage/profilePageLayout` , qUser: result, User: req.user});
+            if (req.user.username === result.username) {
+                console.log(`Bypass record of history`);
+                res.render(`profilePage/profilePageIframe`, {layout: `profilePage/profilePageLayout` , qUser: result, User: req.user}); //toFix Render Profile instead
                 return;
             }
 
-            for (let val of req.user.viewedPortfolios) {
+            else {
 
                 let userCheck = false;
 
-                if (val.username === result.username) {
-                    console.log(`Did run`);
-                    userCheck = true;
+                for (let val of req.user.viewedPortfolios) {
+                    if (val.toString() === result._id.toString()) {
+                        userCheck = true;
+                    }
                 }
 
                 if (userCheck === true) {
                     res.render(`profilePage/profilePageIframe`, {layout: `profilePage/profilePageLayout` , qUser: result, User: req.user});
                     return;
-                }   
+                }
+                
+                else {
+                    let user = new User({
+                        _id: req.user._id,
+                        viewedPortfolios: req.user.viewedPortfolios
+                    });
+        
+                    user.viewedPortfolios.push(result._id);
+        
+                    User.findByIdAndUpdate(req.user._id, user, {}, function(err, results) {
+                        if (err) {return next(err);}
 
-            }
+                        res.render(`profilePage/profilePageIframe`, {layout: `profilePage/profilePageLayout` , qUser: result, User: req.user});
 
-            let user = new User({
-                    _id: req.user._id,
-                    viewedPortfolios: req.user.viewedPortfolios
-            });
-
-            user.viewedPortfolios.push(result);
-
-            User.findByIdAndUpdate(req.user._id, user, {}, function(err, results) {
-                if (err) {return next(err);}
-                res.render(`profilePage/profilePageIframe`, {layout: `profilePage/profilePageLayout` , qUser: result, User: req.user});
-            });
-                    
+                    });  
+                }
+            }                    
         }
     });
 }
 
-//Login Route
 
+
+//Login Route
 exports.renderLogin = function(req, res, next) {
     res.render(`login`, requiredObjects.registerLocals);
 };
 
 //Register Route
-
 exports.renderRegister = function(req, res, next) {
     res.render(`register`, requiredObjects.registerLocals);
 };
+
+
 
 //Home Page Route
 
 exports.renderHome = function(req, res, next) {
     //Check for first time users
-    User.findOne({"email":req.user.email}).exec(function(err, results) {
+    User.findById(req.user._id).exec(function(err, result) {
 
         if (err) {return next(err);}
 
         //First time setup will run if params are not set
-        if ( (results.country === 'NOT SET') && (results.emailDisplay === `NOT SET`) && (results.postalCode === `NOT SET`) && (results.portfolioUrl === `NOT SET`) ) {
+        if ( (result.country === 'NOT SET') && (result.emailDisplay === `NOT SET`) && (result.postalCode === `NOT SET`) && (result.portfolioUrl === `NOT SET`) ) {
             res.redirect(`/users/first_time_setup`);
         }
 
         //Proceed Normally
         else {
-            User.find({}).exec((err, results)=> {
+            pullCollection.exec((err, results)=> {
                 if (err) throw `routeController > GET_discover_new`;
                 res.render(`homePage/homeNew`, {layout: `homePage/homeLayout`, User: req.user, qUsers: results});
                 return;
             })
         }
-
     });
-
 };
+
+
 
 //GET function for first time setup
 exports.GET_first_Setup_CountryandPostal = function(req, res, next) {
@@ -165,11 +182,12 @@ exports.GET_first_Setup_Link = function(req, res, next) {
     res.redirect(`/`);
 };
 
-/* GET home page */
 
+
+/* GET home page */
 exports.GET_discover_new = function(req, res, next) {
 
-    User.find({}).exec((err, results)=> {
+    pullCollection.exec((err, results)=> {
         if (err) throw `routeController > GET_discover_new`;
         res.render(`homePage/homeNew`, {layout: `homePage/homeLayout`, User: req.user, qUsers: results});
         return;
@@ -178,7 +196,7 @@ exports.GET_discover_new = function(req, res, next) {
 
 exports.GET_discover_highestRated = function(req, res, next) {
 
-    User.find({}).exec((err, results)=> {
+    pullCollection.exec((err, results)=> {
 
         let toDisplay = results.sort((a,b)=> { return b.portfolioLikes - a.portfolioLikes;});
         res.render(`homePage/homeHighestRated`, {layout: `homePage/homeLayout`, qUsers: toDisplay, User:req.user});
@@ -189,7 +207,7 @@ exports.GET_discover_highestRated = function(req, res, next) {
 
 exports.GET_discover_mostViewed = function(req, res, next) {
 
-    User.find({}).exec((err, results)=> {
+    pullCollection.exec((err, results)=> {
 
         let toDisplay = results.sort((a,b)=> { return b.portfolioViews - a.portfolioViews;});
         res.render(`homePage/homeHighestRated`, {layout: `homePage/homeLayout`, qUsers: toDisplay, User:req.user});
@@ -199,13 +217,13 @@ exports.GET_discover_mostViewed = function(req, res, next) {
 };
 
 exports.GET_discover_suggestions = function(req, res, next) {
-    //To be implemented
-    res.render(`homePage/homeSuggestions`, {layout: `homePage/homeLayout`, User: req.user});
+    
+    res.render(`homePage/homeSuggestions`, {layout: `homePage/homeLayout`, User: req.user}); //toFix
 };
 
 exports.GET_discover_history = function(req, res, next) {
-    //To be implemented
-    res.send(JSON.stringify(req.user.userHistory));
+    
+    res.send(JSON.stringify(req.user.userHistory));//toFix
 };
 
 //Search home
@@ -215,272 +233,98 @@ exports.GET_search_home = [
     //Sanitize
     sanitizeBody(`q`).unescape(),
     (req, res, next) => {
+        //Populate User
+        
         //Get rid of spaces
         let searchQry = req.query.q.replace(/\s/g,'').toLowerCase();
+
+        let userId = req.user._id;
 
         //Search Algorithm
         async.parallel({
 
             qryOne: (cb) => {
-                User.find({ "fullName": searchQry }).exec(cb);
+                User.find({ "fullName": searchQry }).populate(`friendRequests`).exec(cb);
             },
             qryTwo: (cb) => {
-                User.find({"firstName":searchQry}).exec(cb);
+                User.find({"firstName":searchQry}).populate(`friendRequests`).exec(cb);
             },
             qryThree: (cb) => {
-                User.find({"lastName":searchQry}).exec(cb);
+                User.find({"lastName":searchQry}).populate(`friendRequests`).exec(cb);
             },
             qryFour: (cb) => {
-                User.find({"email":searchQry}).exec(cb);
+                User.find({"email":searchQry}).populate(`friendRequests`).exec(cb);
             },
             qryFive: (cb) => {
-                User.find({"username":req.query.q}).exec(cb); //Case sensitive Search
+                User.find({"username":req.query.q}).populate(`friendRequests`).exec(cb); //Case sensitive Search
             },
             qrySix: (cb) => {
-                User.find({"portfolioType": req.query.q}).exec(cb);
+                User.find({"portfolioType": req.query.q}).populate(`friendRequests`).exec(cb);
             }
 
         }, function(err, results) {
 
             if (err) {return next(err);}
 
+            let status = 0;
+
+            let friendButtonVal = {};
+
+            //
             if (results.qryOne.length !== 0) {
                 console.log(`qryOne`);
 
-                let friendButton = {};
+                friendButtonVal = functionCntrl.friendButtonVal(status, results.qryOne, req.user._id);
 
-                let status = 0;
-
-                for (let val of req.user.friendRequests) {
-                    for (let qryTwo of results.qryTwo) {
-                        if (val.requestTo.username === qryTwo.username) {
-                            status = val.status;
-                        }
-                    }
-                }
-
-                switch (status) {
-                    case 0:
-                    friendButton = { state: "", buttonVal: `Add Friend` };
-                    break;
-                    case 1:
-                    friendButton = { state: "disabled", buttonVal: `Request Sent` };
-                    break;
-                    case 2:
-                    friendButton = { state: "disabled", buttonVal: `Friend` };
-                    break;
-                    case 3:
-                    friendButton = { state: "disabled", buttonVal: `Request denied` };
-                    break;
-                }
-
-                res.render(`searchPage`, {qUsers: results.qryOne, User: req.user, qryFor: req.query.q, friendButton});
+                res.render(`searchPage`, {qUsers: results.qryOne, User: req.user, qryFor: req.query.q , friendButtonVal});
                 return;
             }
 
             if (results.qryTwo.length !== 0) {
                 console.log(`qry2`);
-
-                let friendButton = {};
-
-                let status = 0;
-
-                for (let val of req.user.friendRequests) {
-                    for (let qryTwo of results.qryTwo) {
-                        if (val.requestTo.username === qryTwo.username) {
-                            status = val.status;
-                        }
-                        if (qryTwo.username === req.user.username) {
-                            status = 4;
-                        }
-                    }
-                }
-
-                switch (status) {
-                    case 0:
-                    friendButton = { state: "", buttonVal: `Add Friend` };
-                    break;
-                    case 1:
-                    friendButton = { state: "disabled", buttonVal: `Request Sent` };
-                    break;
-                    case 2:
-                    friendButton = { state: "disabled", buttonVal: `Friend` };
-                    break;
-                    case 3:
-                    friendButton = { state: "disabled", buttonVal: `Request denied` };
-                    break;
-                    case 4: 
-                    friendButton = { state:"disabled", buttonVal:  `Profile`}
-                }
-
-                res.render(`searchPage`, {qUsers: results.qryTwo, User: req.user, qryFor: req.query.q, friendButton});
+                friendButtonVal = functionCntrl.friendButtonVal(status, results.qryTwo, req.user._id);
+                res.render(`searchPage`, {qUsers: results.qryTwo, User: req.user, qryFor: req.query.q, friendButtonVal});
                 return;
             }
 
             if (results.qryThree.length !== 0) {
                 console.log(`qry3`);
-
-                let friendButton = {};
-
-                let status = 0;
-
-                for (let val of req.user.friendRequests) {
-                    for (let qryTwo of results.qryTwo) {
-                        if (val.requestTo.username === qryTwo.username) {
-                            status = val.status;
-                        }
-                        if (qryTwo.username === req.user.username) {
-                            status = 4;
-                        }
-                    }
-                }
-
-                switch (status) {
-                    case 0:
-                    friendButton = { state: "", buttonVal: `Add Friend` };
-                    break;
-                    case 1:
-                    friendButton = { state: "disabled", buttonVal: `Request Sent` };
-                    break;
-                    case 2:
-                    friendButton = { state: "disabled", buttonVal: `Friend` };
-                    break;
-                    case 3:
-                    friendButton = { state: "disabled", buttonVal: `Request denied` };
-                    break;
-                    case 4: 
-                    friendButton = { state:"disabled", buttonVal:  `Profile`}
-                }
-
-
-                res.render(`searchPage`, {qUsers: results.qryThree, User: req.user, qryFor: req.query.q, friendButton});
+                friendButtonVal = functionCntrl.friendButtonVal(status, results.qryThree, req.user._id);
+                res.render(`searchPage`, {qUsers: results.qryThree, User: req.user, qryFor: req.query.q, friendButtonVal});
                 return;
                 }
 
             if (results.qryFour.length !== 0) {
                 console.log(`qry4`);
-
-                let friendButton = {};
-
-                let status = 0;
-
-                for (let val of req.user.friendRequests) {
-                    for (let qryTwo of results.qryTwo) {
-                        if (val.requestTo.username === qryTwo.username) {
-                            status = val.status;
-                        }
-                        if (qryTwo.username === req.user.username) {
-                            status = 4;
-                        }
-                    }
-                }
-
-                switch (status) {
-                    case 0:
-                    friendButton = { state: "", buttonVal: `Add Friend` };
-                    break;
-                    case 1:
-                    friendButton = { state: "disabled", buttonVal: `Request Sent` };
-                    break;
-                    case 2:
-                    friendButton = { state: "disabled", buttonVal: `Friend` };
-                    break;
-                    case 3:
-                    friendButton = { state: "disabled", buttonVal: `Request denied` };
-                    break;
-                    case 4: 
-                    friendButton = { state:"disabled", buttonVal:  `Profile`}
-                }
-
-
-                res.render(`searchPage`, {qUsers: results.qryFour, User: req.user, qryFor: req.query.q, friendButton});
+                friendButtonVal = functionCntrl.friendButtonVal(status, results.qryFour, req.user._id);
+                res.render(`searchPage`, {qUsers: results.qryFour, User: req.user, qryFor: req.query.q, friendButtonVal});
                 return;
             }
 
             if (results.qryFive.length !== 0) {
                 console.log(`qry5`);
-
-                let friendButton = {};
-
-                let status = 0;
-
-                for (let val of req.user.friendRequests) {
-                    for (let qryTwo of results.qryTwo) {
-                        if (val.requestTo.username === qryTwo.username) {
-                            status = val.status;
-                        }
-                        if (qryTwo.username === req.user.username) {
-                            status = 4;
-                        }
-                    }
-                }
-
-                switch (status) {
-                    case 0:
-                    friendButton = { state: "", buttonVal: `Add Friend` };
-                    break;
-                    case 1:
-                    friendButton = { state: "disabled", buttonVal: `Request Sent` };
-                    break;
-                    case 2:
-                    friendButton = { state: "disabled", buttonVal: `Friend` };
-                    break;
-                    case 3:
-                    friendButton = { state: "disabled", buttonVal: `Request denied` };
-                    break;
-                    case 4: 
-                    friendButton = { state:"disabled", buttonVal:  `Profile`}
-                }
-
-                res.render(`searchPage`, {qUsers: results.qryFive, User: req.user, qryFor: req.query.q, friendButton});
+                friendButtonVal = functionCntrl.friendButtonVal(status, results.qryFive, req.user._id);
+                res.render(`searchPage`, {qUsers: results.qryFive, User: req.user, qryFor: req.query.q, friendButtonVal});
                 return;
             }
 
             if (results.qrySix.length !== 0) {
-
-                let friendButton = {};
-
-                let status = 0;
-
-                for (let val of req.user.friendRequests) {
-                    for (let qryTwo of results.qryTwo) {
-                        if (val.requestTo.username === qryTwo.username) {
-                            status = val.status;
-                        }
-                        if (qryTwo.username === req.user.username) {
-                            status = 4;
-                        }
-                    }
-                }
-
-                switch (status) {
-                    case 0:
-                    friendButton = { state: "", buttonVal: `Add Friend` };
-                    break;
-                    case 1:
-                    friendButton = { state: "disabled", buttonVal: `Request Sent` };
-                    break;
-                    case 2:
-                    friendButton = { state: "disabled", buttonVal: `Friend` };
-                    break;
-                    case 3:
-                    friendButton = { state: "disabled", buttonVal: `Request denied` };
-                    break;
-                    case 4: 
-                    friendButton = { state:"disabled", buttonVal:  `Profile`}
-                }
-
-
-                res.render(`searchPage`, {qUsers: results.qrySix, User: req.user, qryFor: req.query.q, friendButton});
+                console.log(`qry6`);
+                friendButtonVal = functionCntrl.friendButtonVal(status, results.qrySix, req.user._id);
+                res.render(`searchPage`, {qUsers: results.qrySix, User: req.user, qryFor: req.query.q, friendButtonVal});
                 return;
             }
 
             else {
                 console.log(`qryNoResult`);
-                res.render(`searchPage`, {qUsers: [], User: req.user, qryFor: req.query.q});
+                res.render(`searchPage`, {qUsers: [], User: req.user, qryFor: req.query.q, friendButtonVal});
                 return;
             }
-
         });
     }
 ];
+
+
+
+//Initialize Functions
+const pullCollection = User.find({});
