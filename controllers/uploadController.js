@@ -32,7 +32,6 @@ exports.GET_publicAvtr = function(req, res, next) {
 };
 
 
-
 //GET function for rendering first setup avatar
 exports.GET_first_Setup_Avatar = function(req, res, next) {
   

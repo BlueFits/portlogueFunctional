@@ -1,4 +1,22 @@
-<form method="POST" action="">
+<div class="register-page">
+
+<div class="register-artwork">
+
+</div>
+
+<div class="register-wrapper">
+
+
+<form method="POST" action="" class="register-form">
+
+        <div class="register-header-wrapper">
+                <img style="width: 135px;" src="/assets/icons/logo_noText.svg"/>
+                <div class="register-header">
+                    <h1 style="color: #fff;"><strong>CREATE</strong> YOUR ACCOUNT</h1>
+                    <span class="h1-sub" style="color: #8e8e90;">Register and join the portlogue community</span>
+                </div>
+            </div>
+
     <input type="name" name="userName" placeholder="Username" value="<%= ((val) => val || '')(userName);%>"/>
     <div>
         <input type="name" name="firstName" placeholder="First Name" value="<%= ((val) => val || '')(firstName);%>"/>
@@ -8,14 +26,20 @@
     <input type="password" name="password" placeholder="Password"/>
     <input type="password" name="confirmPassword" placeholder="Confirm Password"/>
     <button type="submit">Register</button>
-</form>
-<ul>
-        <% for(let val of errors) {%>
-            <li><%= val.msg %></li>
-        <% } %>
-        <% for(let val of errorsCustom) {%>
-            <li><%= val.msg %></li>
-        <% } %>
-</ul>
 
-<a href="/users/login">Already have an account?</a>
+    <a href="/users/login">Already have an account?</a>
+
+    <ul class="register-flash-message">
+            <% for(let val of errors) {%>
+                <li><%= val.msg %></li>
+            <% } %>
+            <% for(let val of errorsCustom) {%>
+                <li><%= val.msg %></li>
+            <% } %>
+    </ul>
+
+</form>
+
+</div>
+
+</div>

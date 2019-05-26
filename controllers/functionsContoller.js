@@ -41,3 +41,22 @@ exports.friendButtonVal = function(status, qryResult, reqUserId) {
 
     return friendButtonVal;
 }
+
+exports.userHistory = function(reqUser) {
+
+    let displayControl = [];
+    let history = [];
+
+                for (let val of reqUser.viewedPortfolios) {
+                    displayControl.push(val);
+                }
+
+                displayControl = displayControl.reverse();
+
+                for (let i = 0; i < 8; i++) {
+                    history.push(displayControl[i]);
+                }
+
+                return history.filter(Boolean);
+
+}

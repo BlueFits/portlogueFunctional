@@ -235,11 +235,16 @@ exports.POST_first_Setup_Profile = [
         }
 
         else {
+
+            let occupationValue = req.body.occupation.toLowerCase();
+
+            occupationValue = occupationValue.replace(occupationValue[0], occupationValue[0].toUpperCase());
+
             let user = new User({
                 _id: req.user._id,
                 emailDisplay: req.body.emailDisplay.toLowerCase(),
                 phone: req.body.phone,
-                occupation: req.body.occupation.toLowerCase(),
+                occupation: occupationValue,
                 bio: req.body.bio
             });
 
@@ -290,7 +295,7 @@ exports.create_User = [
     //Validate all fields
     body(`userName`).isLength({min: 1}).trim().withMessage(`Username is required`),
     body('firstName').isLength({ min: 1 }).trim().withMessage('First name must be specified.').isAlphanumeric().withMessage('First name has non-alphanumeric characters.'),
-    body('lastName').isLength({ min: 1 }).trim().withMessage('Last name must be specified.').isAlphanumeric().withMessage('First name has non-alphanumeric characters.'),
+    body('lastName').isLength({ min: 1 }).trim().withMessage('Last name must be specified.').isAlphanumeric().withMessage('Last name has non-alphanumeric characters.'),
     check(`email`).isEmail().withMessage(`Email is invalid`),
     body(`password`).isLength({ min: 6 }).trim().withMessage(`Password needs a minimum of 6 Characters`),
     //Santize fields
@@ -314,6 +319,12 @@ exports.create_User = [
         let userLocal = {errors: errors.array(), errorsCustom: customValid, userName, firstName, lastName, email };
         
         //If any errors occur run the if statement
+        if (errors.array().length > 2) {
+            customValid.push({msg: `Errors in multiple fields`});
+            res.render(`register`, {errors: [], errorsCustom: customValid, userName, firstName, lastName, email });
+            return;
+        }
+
         if (!( errors.isEmpty() && (password === confirmPassword) )) {
             customValid.push({ msg: `Passwords do not match` });
             res.render(`register`, userLocal);

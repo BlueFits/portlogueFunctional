@@ -22,6 +22,8 @@ router.get(`/report/:username`, ensureAuth, (req, res, next)=> {
 //User profile route
 router.get(`/profile/:username`, ensureAuth, routeController.GET_profile);
 
+router.get(`/profile/redirect/:id`, ensureAuth, routeController.GET_id_redirect);
+
 //Redirect Email 
 router.get(`/profile/:email`, ensureAuth, routeController.redirectEmail);
 

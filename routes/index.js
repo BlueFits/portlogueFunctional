@@ -16,6 +16,8 @@ router.get(`/userWebThumb/:email`, routeController.GET_webthumb);
 //GET user avatar 
 router.get(`/publicAvatar/:email`, uploadController.GET_publicAvtr);
 
+router.get(`/publicAvatar/redirect/:id`, routeController.idRedirect);
+
 
 /* GET home page. */
 router.get('/', ensureAuthHome, routeController.renderHome);
@@ -33,7 +35,7 @@ router.get(`/discover/most_viewed`, ensureAuth, routeController.GET_discover_mos
 router.get(`/discover/suggestions`, ensureAuth, routeController.GET_discover_suggestions);
 
 //GET home page disocver history
-router.get(`/discover/history`, ensureAuth, routeController.GET_discover_history);
+router.get(`/discover/friends`, ensureAuth, routeController.GET_discover_friends);
 
 
 

@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>PortLogue</title>
+    <link rel="stylesheet" href="/stylesheets/style.css"/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 <body>
-    <header>
-        <nav>
-            <div>
+    <header class="home-header">
+        <nav class="home-nav">
+            <div class="home-left-nav">
                 <ul>
                     <li><a href="#">About</a></li>
                     <li><a href="#">Contact</a></li>
@@ -18,52 +19,63 @@
                     <li><a href="#">Send feedback</a></li>
                 </ul>
             </div>
-            <div>
+            <div class="home-right-nav">
                 <ul>
-                    <li><a href="#"><div><img src="#"/></div></a></li>
-                    <li><a href="#"><div><img src="#"/></div></a></li>
-                    <li><a href="#"><div><img src="#" alt="profile-icon"/></div><ul>
+                    <li><a href="#"><div><img class="nav-icons" src="/assets/icons/icons8-chat-room-96.png"/></div></a></li>
+                    <li><a href="#"><div><img class="nav-icons" src="/assets/icons/icons8-bell-96.png"/></div></a></li>
+                    <li><div class="profile-icon-wrapper" style="cursor: pointer;"><img class="nav-profile-icon" src="/publicAvatar/<%=User.email%>" alt="profile-icon"/></div><ul class="home-nav-dropdown">
                         <li><a href="#">Profile</a></li>
                         <li><a href="#">Account Settings</a></li>
                         <li><a href="/users/logout">Logout</a></li>
-                    </ul></a></li>
+                    </ul></li>
                 </ul>
             </div>
         </nav>
     </header>
     
-    <section>
+    <section class="home-search">
+
         <div>
-            <img src="#" alt="portlogue-logo"/>
-            <span>Search away, your portfolio awaits...</span>
+            <!-- Empty div for allignment  -->
+        </div>
+
+        <div class="home-search-main">
+            <img style="width: 160px;" src="/assets/icons/logo_noText.svg" alt="portlogue-logo"/>
+            <span style="color: #d3d3d3" class="home-search-text"><h2>Search away, your portfolio awaits...</h2></span>
     
-            <div>
+            <div class="home-search-form">
                 <form method="GET" action="/search">
-                    <button type="submit"><img src="#" alt="search-icon"/></button>
+                    <button type="submit"><img class="nav-icons" src="/assets/icons/icons8-search-filled-96.png" alt="search-icon"/></button>
                     <input type="text" name="q"/>
                 </form>
-                <div>
-                    <div>Quick Search<img src="#" alt="arrow-down"/></div>
-                        <ul>
-                            <li><a href="/search?q=generalportfolio">General Portfolio</a></li>
-                            <li><a href="/search?q=creativeportfolio">Creative Portfolio</a></li>
-                            <li><a href="/search?q=artportfolio">Art Portfolio</a></li>
-                            <li><a href="/search?q=photographyportfolio">Photography Portfolio</a></li>
-                            <li><a href="/search?q=videographyportfolio">Videography Portfolio</a></li>
-                            <li><a href="/search?q=academicportfolio">Academic Portfolio</a></li>
-                            <li><a href="/search?q=professionalportfolio">Professional Portfolio</a></li>
-                            <li><a href="/search?q=businessportfolio">Business Portfolio</a></li>
+                <div class="home-quick-search">
+                    <div>
+                        
+                        <div><p>Quick Search</p><img class="nav-icons" src="/assets/icons/icons8-expand-arrow-96.png" alt="arrow-down"/></div>
+                    
+                        <ul class="home-quick-dropdown">
+                            <li><a href="/search?q=General+Portfolio">General Portfolio</a></li>
+                            <li><a href="/search?q=Creative+Portfolio">Creative Portfolio</a></li>
+                            <li><a href="/search?q=Art+Portfolio">Art Portfolio</a></li>
+                            <li><a href="/search?q=Photography+Portfolio">Photography Portfolio</a></li>
+                            <li><a href="/search?q=Videography+Portfolio">Videography Portfolio</a></li>
+                            <li><a href="/search?q=Academic+Portfolio">Academic Portfolio</a></li>
+                            <li><a href="/search?q=Professional+Portfolio">Professional Portfolio</a></li>
+                            <li><a href="/search?q=Business+Portfolio">Business Portfolio</a></li>
                         </ul>
+                    
+                    </div>
                 </div>
             </div>
     
             <!-- <span> History quick access</span> -->
-            <div>
-                <!-- Will be added -->
+            <div class="user-history">                
+                <span><p>Recently visited users</p></span>
+
                 <ul>
-                    <% for(let val of User.viewedPortfolios) {%>
+                    <% for(let val of userHistory) {%>
                         <li>
-                            <a href="/users/profile/<%=val.username%>"><div><img src="/publicAvatar/<%=val%>"/></div></a>
+                            <a href="/users/profile/redirect/<%=val%>"><div class="history-img-wrapper"><img class="user-history-profiles" src="/publicAvatar/redirect/<%=val%>"/></div></a>
                         </li>
                     <%}%>
                 </ul>
@@ -71,8 +83,8 @@
         </div>
     
         <div>
-            <span>Scroll down to see the discover page</span>
-            <img src="" alt="arrow-down"/>
+            <span><p>Scroll down to see the discover page</p></span>
+            <img class="nav-icons" src="/assets/icons/icons8-expand-arrow-96.png" alt="arrow-down"/></div>
         </div>
     </section>
 

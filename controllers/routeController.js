@@ -7,7 +7,9 @@ const async = require(`async`);
 
 //Models
 const User = require(`../models/User`);
-const FriendStats = require(`../models/friendStatus`);
+
+//Functions
+const functionCntrl = require(`../controllers/functionsContoller`);
 
 //GET user web thumb 
 exports.GET_webthumb =  function(req, res, next) {
@@ -50,6 +52,14 @@ exports.redirectEmail = function(req, res, next) {
             res.redirect(`/users/profile/${results.username}`);
         }
 
+    });
+}
+
+
+//Id redirect avatar
+exports.idRedirect = function(req, res, next) {
+    User.findById(req.params.id).exec((err, result)=> {
+        res.redirect(`/publicAvatar/${result.email}`);
     });
 }
 
@@ -108,6 +118,14 @@ exports.GET_profile = function(req, res, next) {
     });
 }
 
+//id redirect
+exports.GET_id_redirect = function(req, res, next) {
+    User.findById(req.params.id).exec((err, result)=> {
+        if (err) {return next(err)};
+        res.redirect(`/users/profile/${result.username}`);
+    });
+}
+
 
 
 //Login Route
@@ -139,7 +157,8 @@ exports.renderHome = function(req, res, next) {
         else {
             pullCollection.exec((err, results)=> {
                 if (err) throw `routeController > GET_discover_new`;
-                res.render(`homePage/homeNew`, {layout: `homePage/homeLayout`, User: req.user, qUsers: results});
+
+                res.render(`homePage/homeNew`, {layout: `homePage/homeLayout`, User: req.user, qUsers: results, userHistory: functionCntrl.userHistory(req.user)});
                 return;
             })
         }
@@ -184,7 +203,7 @@ exports.GET_discover_new = function(req, res, next) {
 
     pullCollection.exec((err, results)=> {
         if (err) throw `routeController > GET_discover_new`;
-        res.render(`homePage/homeNew`, {layout: `homePage/homeLayout`, User: req.user, qUsers: results});
+        res.render(`homePage/homeNew`, {layout: `homePage/homeLayout`, User: req.user, qUsers: results, userHistory: functionCntrl.userHistory(req.user)});
         return;
     })
 };
@@ -194,7 +213,7 @@ exports.GET_discover_highestRated = function(req, res, next) {
     pullCollection.exec((err, results)=> {
 
         let toDisplay = results.sort((a,b)=> { return b.portfolioLikes - a.portfolioLikes;});
-        res.render(`homePage/homeHighestRated`, {layout: `homePage/homeLayout`, qUsers: toDisplay, User:req.user});
+        res.render(`homePage/homeHighestRated`, {layout: `homePage/homeLayout`, qUsers: toDisplay, User:req.user, userHistory: functionCntrl.userHistory(req.user)});
 
     });
 
@@ -205,7 +224,7 @@ exports.GET_discover_mostViewed = function(req, res, next) {
     pullCollection.exec((err, results)=> {
 
         let toDisplay = results.sort((a,b)=> { return b.portfolioViews - a.portfolioViews;});
-        res.render(`homePage/homeHighestRated`, {layout: `homePage/homeLayout`, qUsers: toDisplay, User:req.user});
+        res.render(`homePage/homeHighestRated`, {layout: `homePage/homeLayout`, qUsers: toDisplay, User:req.user, userHistory: functionCntrl.userHistory(req.user)});
 
     });
 
@@ -213,12 +232,14 @@ exports.GET_discover_mostViewed = function(req, res, next) {
 
 exports.GET_discover_suggestions = function(req, res, next) {
     
-    res.render(`homePage/homeSuggestions`, {layout: `homePage/homeLayout`, User: req.user}); //toFix
+    res.render(`homePage/homeSuggestions`, {layout: `homePage/homeLayout`, User: req.user, userHistory: functionCntrl.userHistory(req.user)}); //toFix
 };
 
-exports.GET_discover_history = function(req, res, next) {
+exports.GET_discover_friends = function(req, res, next) {
     
-    res.send(JSON.stringify(req.user.userHistory));//toFix
+    User.findById(req.user._id).populate(`friendList`).exec((err, result)=> {
+        res.render(`homePage/homeFriends`, {layout: `homePage/homeLayout`, User: result, userHistory: functionCntrl.userHistory(req.user)}); //toFix
+    })
 };
 
 //Search home
@@ -254,7 +275,7 @@ exports.GET_search_home = [
                 User.find({"username":req.query.q}).populate(`friendRequests`).exec(cb); //Case sensitive Search
             },
             qrySix: (cb) => {
-                User.find({"portfolioType": req.query.q}).populate(`friendRequests`).exec(cb);
+                User.find({"portfolioType": searchQry}).populate(`friendRequests`).exec(cb);
             }
 
         }, function(err, results) {
