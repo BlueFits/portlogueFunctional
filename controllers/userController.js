@@ -275,9 +275,10 @@ exports.POST_first_Setup_CountryandPostal = [
         }
 
         else {
+
             let user = new User({
                 _id: req.user._id,
-                country: req.body.country.toLowerCase(),
+                country: req.body.country,
                 postalCode: req.body.postalCode.toLowerCase(),
             });
 

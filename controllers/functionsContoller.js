@@ -23,7 +23,7 @@ exports.friendButtonVal = function(status, qryResult, reqUserId) {
             friendButtonVal = {state: ``, val: `Profile`, response: ``, postTo: `404`}
             break;
         case 0:
-            friendButtonVal = {state: ``, val: `Add Frriend`, response: ``, postTo: `add_friend`}
+            friendButtonVal = {state: ``, val: `Add Friend`, response: ``, postTo: `add_friend`}
             break;
         case 1:
             friendButtonVal = {state: `disabled`, val: `Request sent`, response: ``, postTo: `add_friend`}
