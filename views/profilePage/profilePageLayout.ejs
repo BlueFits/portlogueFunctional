@@ -5,8 +5,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>PortLogue</title>
+    <link rel="stylesheet" href="/stylesheets/style.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
-<body>
+<body style="position: relative;">
+
+    <div class="profile-ui-button">
+
+        <img src="/assets/icons/icons8-back-96.png"/>
+
+    </div>
+
+    <section class="screen-overlay">
+    <div class="profile-topbar">
+        <nav>
+            <ul class="profile-left-nav">
+                <li><a href="/">Home</a></li>
+                <li><a href="/discover/new#discoverSection">Discover</a></li>
+                <li><a href="/discover/friends#discoverSection">Friends</a></li>
+            </ul>
+
+            <div class="profile-searchbar">
+                <form method="GET" action="/search">
+                <button type="submit"><img class="nav-icons" src="/assets/icons/icons8-search-filled-96.png" alt="search-icon"/></button>
+                <input type="text" name="q" placeholder="Search"/>
+                </form>
+            </div>
+
+            <ul class="profile-right-nav">
+                    <li><a href="#"><div><img class="nav-icons" src="/assets/icons/icons8-chat-room-96.png"/></div></a></li>
+                    <li><a href="#"><div><img class="nav-icons" src="/assets/icons/icons8-bell-96.png"/></div></a></li>
+                    <li><div class="profile-icon-wrapper" style="cursor: pointer;"><img class="nav-profile-icon" src="/publicAvatar/<%=User.email%>" alt="profile-icon"/></div><ul class="home-nav-dropdown">
+                        <li><a href="#">Profile</a></li>
+                        <li><a href="#">Account Settings</a></li>
+                        <li><a href="/users/logout">Logout</a></li>
+                    </ul></li>
+            </ul>
+
+
+        </nav>
+    </div>
+
+        <div class="black-overlay">
+            <div></div>
+        </div>
+
+
+
+    </section>
+
     <%-body%>
+
+    <script>
+
+        $(`.profile-ui-button`).on(`click`, ()=> {
+
+            (async function(){ $(`.screen-overlay`).toggleClass(`screen-overlay-click`); })().then(()=>{
+                $(`.profile-iframe`).toggleClass(`profile-iframe-click`);
+            });
+
+        });
+
+    
+    </script>
 </body>
 </html>

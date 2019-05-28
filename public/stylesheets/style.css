@@ -345,6 +345,7 @@ h3 {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    align-items: center;
 
     background-color: #21283e;
 }
@@ -361,6 +362,7 @@ h3 {
     justify-content: center;
     position: relative;
     bottom: 50px;
+    width: 300px;
 }
 
 .home-search > div:last-of-type p {
@@ -696,6 +698,133 @@ footer li {
 .footer-desc-social {
     display: flex;
     margin: 10px 0; 
+}
+
+/* PROFILE PAGE*/
+
+.profile-ui-button {
+    position: fixed;
+    z-index: 10;
+    width: 52px;
+    padding: 10px;
+    border: 2px solid #fff;
+    border-radius: 100%;
+    transition: 0.3s ease-in-out;
+    cursor: pointer;
+    transform: scale(0.9);
+    background-color: #000000;
+    opacity: 0.5;
+    left: 20px;
+    bottom: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile-ui-button img {
+    width: 100%;
+}
+
+.profile-iframe {
+    display: flex;
+    z-index: 2;
+    position: fixed;
+    height: 100vh;
+
+    outline: none;
+    border: none;
+}
+
+.profile-iframe-click {
+    z-index: 1;
+}
+
+.screen-overlay {
+    height: 100vh;
+    width: 100%;
+    background-color: transparent;
+    opacity : 0;
+    position: absolute;
+    z-index: 2;
+    transition: 0.2s ease-in-out;
+}
+
+.screen-overlay-click {
+    opacity: 1;
+}
+
+.black-overlay {
+    z-index: 0;
+    height: 100vh;
+    position: relative;
+    border: 3px solid green;
+    opacity: 0.5;
+    background-color: black;
+}
+
+.profile-topbar > nav {
+    width: 100%;
+    height: 60px;
+    border: 3px solid green;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 2;
+    position: absolute;
+}
+
+.profile-topbar > nav > ul > li > a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.profile-topbar > nav > ul {
+    list-style: none;
+}
+
+.profile-left-nav,
+.profile-right-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 15px;
+}
+
+.profile-left-nav > li,
+.profile-right-nav > li {
+    margin: 0 15px;
+}
+
+.profile-searchbar {
+    background-color: #fff;
+    height: 40px;
+    width: 400px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.profile-searchbar > form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.profile-searchbar > form > button {
+    outline: none;
+    border: none;
+    background-color: transparent;
+    margin: 0 5px 0 10px;
+}
+
+.profile-searchbar > form > input {
+    border: none;
+    outline: none;
+    padding: 5px;
+    width: 100%;
 }
 
 
