@@ -23,7 +23,6 @@ const UserSchema = new Schema({
     likedPortfolios: [{type:Schema.Types.ObjectId, ref: `User`, required: false}], //Use .populate on objectId
     viewedPortfolios: {type:[{type: Schema.Types.ObjectId, ref: `User`}], validate: [arrayLimit, `{PATH} exceeds the limit of 5`]},
     friendList: [{type: Schema.Types.ObjectId, ref: `User`}],
-    friendRequests:[{type: Schema.Types.ObjectId, ref: `FriendStatus`}],
     dateJoined: {type: Date, default: Date.now}
 });
 

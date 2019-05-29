@@ -7,6 +7,7 @@ const async = require(`async`);
 
 //Models
 const User = require(`../models/User`);
+const FriendStatus = require(`../models/friendStatus`);
 
 //Functions
 const functionCntrl = require(`../controllers/functionsContoller`);
@@ -68,7 +69,7 @@ exports.idRedirect = function(req, res, next) {
 //User profile page
 exports.GET_profile = function(req, res, next) {
     //record user history
-    User.findOne({"username":req.params.username}).populate(`viewedPortfolios`).exec((err, result)=> {
+    User.findOne({"username":req.params.username}).populate(`viewedPortfolios`).exec((err, profileRes)=> {
         if (err) throw "routeController > GET_profile";
 
         if (!result) {
@@ -76,44 +77,47 @@ exports.GET_profile = function(req, res, next) {
         }
 
         else {  
+            //Save user history && Render Friend Status
+            async.parallel({
 
-            if (req.user.username === result.username) {
-                console.log(`Bypass record of history`);
-                res.render(`profilePage/profilePageIframe`, {layout: `profilePage/profilePageLayout` , qUser: result, User: req.user}); //toFix Render Profile instead
-                return;
-            }
+                one: (cb)=> {
+                    FriendStatus.findOne({"requestFrom": req.user, "requestTo": profileRes._id}).exec(cb);
+                },
+                two: (cb)=> {
+                    FriendStatus.findOne({"requestFrom": profileRes._id, "requestTo": req.user}).exec(cb);
+                }
 
-            else {
+            }, function(err, asyncResult) {
 
+                let friendVal = {};
                 let userCheck = false;
 
                 for (let val of req.user.viewedPortfolios) {
-                    if (val.toString() === result._id.toString()) {
+                    if (val.toString() === profileRes._id.toString()) {
                         userCheck = true;
                     }
                 }
 
-                if (userCheck === true) {
-                    res.render(`profilePage/profilePageIframe`, {layout: `profilePage/profilePageLayout` , qUser: result, User: req.user});
-                    return;
+                //User to qUser
+                if (asyncResult.one) {
+
+                }
+
+                if (!asyncResult.one) {
+
+                }
+
+                //qUser from User
+
+                if (asyncResult.two) {
+
+                }
+
+                if (!asyncResult.two) {
+
                 }
                 
-                else {
-                    let user = new User({
-                        _id: req.user._id,
-                        viewedPortfolios: req.user.viewedPortfolios
-                    });
-        
-                    user.viewedPortfolios.push(result._id);
-        
-                    User.findByIdAndUpdate(req.user._id, user, {}, function(err, results) {
-                        if (err) {return next(err);}
-
-                        res.render(`profilePage/profilePageIframe`, {layout: `profilePage/profilePageLayout` , qUser: result, User: req.user});
-
-                    });  
-                }
-            }                    
+            });           
         }
     });
 }

@@ -34,8 +34,12 @@ router.get(`/send_message/:username`, ensureAuth, routeController.GET_send_messa
 
 //Add friend
 router.post(`/confirm_friend`, ensureAuth, userController.POST_confirmFriend);
+//redirect to confirm page
+router.get(`/confirm_friend/redirect/:id`, ensureAuth, (req, res, next)=> {
+    res.redirect(`/willBeImplemented`); //toFix
+});
 
-router.post(`/add_friend`, ensureAuth, userController.POST_addFriend);
+router.get(`/add_friend/:id`, ensureAuth, userController.GET_addFriend);
 
 
 /* Login Routes */

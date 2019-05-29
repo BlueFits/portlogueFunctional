@@ -56,6 +56,12 @@ h3 {
     font-weight: normal;
 }
 
+.href-disabled {
+    cursor: default;
+    text-decoration: none;
+    pointer-events: none;
+}
+
 .Login-Register {
     height: 100%;
     width: 100%;
@@ -288,6 +294,7 @@ h3 {
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: black;
 }
 
 .nav-profile-icon {
@@ -577,6 +584,7 @@ h3 {
 
 .portfolio-thumbnail {
     width: 430px;
+    height: 257px;
     border-radius: 10px 10px 0 0;
     overflow: hidden;
     box-shadow: 0px 4px 13px -8px black;
@@ -608,8 +616,7 @@ h3 {
     overflow: hidden;
     border-radius: 100%;
     margin-right: 10px;
-    display: flex;
-    align-items: center;
+    background-color: black;
 }
 
 .thumbnail-profile-img {
@@ -825,6 +832,77 @@ footer li {
     outline: none;
     padding: 5px;
     width: 100%;
+}
+
+.qUser-info {
+    color: #7f7f7f;
+    position: absolute;
+    z-index: 2;
+
+    border: 3px solid orange;
+    top: 10%;
+
+    width: 19%;
+    height: 65%;
+    background-color: #fff;
+    border-radius: 5px;
+    margin-left: 30px;
+
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.qUser-desc,
+.qUser-contact {
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.qUser-desc {
+    border-bottom: 1px solid #d3d3d3;
+    width: 80%;
+}
+
+.qUser-desc > div,
+.qUser-contact > div {
+    margin: 10px;
+}
+
+.qUser-options {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.qUser-options > a {
+    color: #7f7f7f;
+    text-decoration: none;
+    display: block;
+    border: 1px solid #7f7f7f;
+    border-radius: 3px;
+    margin: 7px 0;
+    padding: 4px;
+    width: 160px;
+}
+
+.profile-qUser-avatar {
+    width: 95px;
+    height:95px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 100%;
+    overflow: hidden;
+    background-color: black;
+}
+
+.profile-qUser-avatar > img {
+    height: 100%;
 }
 
 

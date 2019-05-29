@@ -11,136 +11,38 @@ const FriendStatus = require(`../models/friendStatus`);
 
 //Add friend process
 exports.POST_confirmFriend = function(req, res, next) {
-    User.findById(req.body.userToAdd).exec((err, userToAdd)=> {
+    
+    
 
+}
+
+exports.GET_addFriend = function(req, res, next) {
+    User.findById(req.params.id).exec((err, qUser)=> {
         if (err) {return next(err);}
 
-        FriendStatus.findOne({"requestFrom": userToAdd, "requestTo": req.user}).exec((err, idResult)=> {
-
+        FriendStatus.findOne({"requestFrom":req.user, "requestTo": qUser}).exec((err, result) => {
             if (err) {return next(err);}
 
-            if (idResult.length === 0) {  
-                res.send(`No such requests`); //toFix
+            if (result) {
+                res.send(`Already made a request to the user`);
             }
 
             else {
+                let friendStat = new FriendStatus({
+                    requestFrom: req.user,
+                    requestTo: qUser,
+                    status: 1
+                });
 
-                if (req.body.friendResponse === `true`) {
-                    
-                    let friendStatus = new FriendStatus({
-                        _id: idResult._id,
-                        status: 2
-                    });
-
-                    FriendStatus.findByIdAndUpdate(idResult._id, friendStatus, {}, (err, updateResult)=> {
-
-                        if (err) throw `userController > POST_confirmFriend`;
-                        
-                        let user = new User({
-                            _id: req.user._id,
-                            friendList: req.user.friendList
-                        });
-
-                        user.friendList.push(userToAdd.username);
-
-                        User.findByIdAndUpdate(req.user._id, user, {}, (err, updateRes)=> {
-                            if (err) throw "userController > PSOT_confirmFriend update";
-                        });
-
-                        let userB = new User({
-                            _id: userToAdd._id,
-                            friendList: userToAdd.friendList
-                        });
-
-                        userB.friendList.push(req.user.username);
-
-                        User.findByIdAndUpdate(userToAdd._id, userB, {}, (err, updateResB)=> {
-                            if (err) throw "userController > POST_confirmFriend update B";
-                        });
-
-                    });
-
-                }
-                else {
-                    let friendStatus = new FriendStatus({
-                        _id: idResult._id,
-                        status: 3
-                    });
-
-                    FriendStatus.findByIdAndUpdate(idResult._id, friendStatus, {}, (err, updateResult)=> {
-                        if (err) throw `userController > POST_confirmFriend`;
-                        console.log(`Updated Id for friend status`);
-                        res.redirect(req.get(`Referrer`));
-                    });
-                }
+                friendStat.save((err)=> {
+                    if (err) {return next(err);}
+                });
             }
-        });
+        }); 
     });
 }
 
-exports.POST_addFriend = function(req, res, next) {
-
-    if (req.body.friendResponse === `true`) {
-        res.redirect(`/users/confirm_friend`);
-    }
-
-    User.findById(req.body.userToAdd).exec((err, userToAdd)=> {
-        console.log(`find ran`);
-
-        if (err) {return next(err);}
-
-            FriendStatus.find({"requestFrom": req.user, "requestTo": userToAdd}).exec((err, results)=> {
-                console.log(`friend status ran`);
-
-                if (err) {return next(err)};
-
-                if (results.length > 0) {
-
-                    res.send(`Already Made a request to the User`); //toFix
-                    return;
-                }
-
-                else {
-
-
-
-                    let friendStatus = new FriendStatus({
-                        requestFrom: req.user,
-                        requestTo: userToAdd,
-                        status: 1
-                    });
-
-                    friendStatus.save((err)=> {
-                        if (err) {return next(err)};
-
-                        let user = new User({
-                            _id: req.user._id,
-                            friendRequests: req.user.friendRequests
-                        });
-
-                        user.friendRequests.push(friendStatus);
-
-                        //Update props
-                        User.findByIdAndUpdate(req.user._id, user, {}, function(err, result) {
-                            if (err) {return next(err);}
-                        });
-
-                        let otherUser = new User({
-                            _id: userToAdd._id,
-                            friendRequests: userToAdd.friendRequests
-                        });
-
-                        otherUser.friendRequests.push(friendStatus);
-
-                        User.findByIdAndUpdate(userToAdd._id, otherUser, {}, function(err, result) {
-                            if (err) {return next(err);}
-                            res.redirect(req.get(`Referrer`));
-                        });
-                    });
-                }
-            });
-    });
-}
+/* Send Message */
 
 exports.POST_send_message = function(req, res, next) {
 

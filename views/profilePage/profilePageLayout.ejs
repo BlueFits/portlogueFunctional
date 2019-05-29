@@ -46,6 +46,38 @@
         </nav>
     </div>
 
+    <div class="qUser-info">
+        <div class="qUser-desc">
+            <div class="profile-qUser-avatar">
+                <img style="height: 100%;" src="/publicAvatar/<%= qUser.email %>"/>
+            </div>
+            <div>
+                <span style="font-size: 18px; color: black;"><strong><%= qUser.fullNameDisplay %></strong></span>
+                <span><p><%= qUser.occupation %></p></span>
+            </div>
+            <div class="qUser-options">
+                <a href="<%=qUser.portfolioUrl%>">Visit Official Website</a>
+                <a href="/willBeImplemented">Message</a>
+                <a href="<%= friendVal.url %>" class="<%= friendVal.class %>"><%= friendVal.val %></a>
+            </div>
+        </div>
+        <div class="qUser-contact">
+            <div style="font-size: 18px; color: black;"><strong>Contact</strong></div>
+            <div>
+                <img src="#"/>
+                <p><%= qUser.email %></p>
+            </div>
+            <div>
+                <img src="#"/>
+                <p><%= qUser.phone %></p>
+            </div>
+            <div>
+                <img src="#"/>
+                <p><%= qUser.country %></p>
+            </div>
+        </div>
+    </div>
+
         <div class="black-overlay">
             <div></div>
         </div>
