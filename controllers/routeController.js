@@ -72,7 +72,7 @@ exports.GET_profile = function(req, res, next) {
     User.findOne({"username":req.params.username}).populate(`viewedPortfolios`).exec((err, profileRes)=> {
         if (err) throw "routeController > GET_profile";
 
-        if (!result) {
+        if (!profileRes) {
             res.send(`NO USERNAME`); //toFix
         }
 
@@ -98,25 +98,59 @@ exports.GET_profile = function(req, res, next) {
                     }
                 }
 
-                //User to qUser
-                if (asyncResult.one) {
-
+                //Check if its user profile
+                if (req.user.username === profileRes.username) {
+                    console.log(`Req user's profile`);
+                    friendVal = {val: `Account Settings`, url: `/`, class: `href-disabled`};
+                    res.render(`profilePage/profilePageIframe`, {layout: `profilePage/profilePageLayout` , qUser: profileRes, User: req.user, friendVal}); //toFix Render Profile instead);
+                    return;
                 }
 
-                if (!asyncResult.one) {
+                //User to qUser
+                if (asyncResult.one) {
+                    console.log(`asyncRes one`);
+                    switch (asyncResult.one.status) {
+                        case 1:
+                            friendVal = {val: `Request Sent`, url: ``, class:`href-disabled`};
+                            break;
+                        case 2:
+                            friendVal = {val: `Friends`, url: `/`, class:`href-disabled`};
+                            break;
+                        case 3:
+                            friendVal = {val: `Request Rejected`, url: `/`, class:`href-disabled`};
+                            break;
+                    }
 
+                    functionCntrl.renderHomeFilter(req, res, profileRes, User, friendVal, userCheck);
+                    return;
                 }
 
                 //qUser from User
-
                 if (asyncResult.two) {
+                    console.log(`async result two`);
+                    switch (asyncResult.two.status) {
+                        case 1:
+                            friendVal = {val: `Respond To Request`, url: `/users/notifications/${profileRes._id}`, class:``};
+                            break;
+                        case 2:
+                            friendVal = {val: `Friends`, url: `/`, class:`href-disabled`};
+                            break;
+                        case 3:
+                            friendVal = {val: `Request Rejected`, url: `/`, class:`href-disabled`};
+                            break;
+                    }
+
+                    functionCntrl.renderHomeFilter(req, res, profileRes, User, friendVal, userCheck);
+                    return;
 
                 }
 
-                if (!asyncResult.two) {
-
+                if ((!asyncResult.one) || (!asyncResult.two)) {
+                    console.log(`async no result one`);
+                    friendVal = {val: `Add Friend`, url: `/users/add_friend/${profileRes._id}`, class: ``};
+                    functionCntrl.renderHomeFilter(req, res, profileRes, User, friendVal, userCheck);
+                    return;
                 }
-                
             });           
         }
     });

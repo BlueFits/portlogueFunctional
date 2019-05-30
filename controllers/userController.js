@@ -36,6 +36,7 @@ exports.GET_addFriend = function(req, res, next) {
 
                 friendStat.save((err)=> {
                     if (err) {return next(err);}
+                    res.render(req.get(`Referrer`));
                 });
             }
         }); 

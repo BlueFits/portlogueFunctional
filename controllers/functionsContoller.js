@@ -1,35 +1,3 @@
-const FriendStatus = require(`../models/friendStatus`);
-
-exports.reqUserFriendStatus = function(profileUser, reqUserId) {
-
-    let status = null;
-
-    let friendButtonVal = {};
-
-        
-        switch (status) {
-            case (`user`):
-                friendButtonVal = {state: ``, val: `Profile`, response: ``, postTo: `404`}
-                break;
-            case 0:
-                friendButtonVal = {state: ``, val: `Add Friend`, response: ``, postTo: `add_friend`}
-                break;
-            case 1:
-                friendButtonVal = {state: `disabled`, val: `Request sent`, response: ``, postTo: `add_friend`}
-                break;
-            case 1.5: 
-                friendButtonVal = {state: ``, val: `Accept request`, response: `true`, postTo: `confirm_friend`}
-                break;
-            case 2:
-                friendButtonVal = {state: `disabled`, val: `Friend`, response: ``, postTo: `add_friend`}
-                break;
-            case 3:
-                friendButtonVal = {state: `disabled`, val: `Request rejected`, response: ``, postTo: `add_friend`}
-                break;
-        }
-
-}
-
 exports.userHistory = function(reqUser) {
 
     let displayControl = [];
@@ -47,4 +15,26 @@ exports.userHistory = function(reqUser) {
 
                 return history.filter(Boolean);
 
+}
+
+exports.renderHomeFilter = function(req, res, profileRes, User, friendVal, userCheck) {
+    if (userCheck === true) {
+        console.log(`Profile already saved`);
+        res.render(`profilePage/profilePageIframe`, {layout: `profilePage/profilePageLayout` , qUser: profileRes, User: req.user, friendVal});
+    }
+
+    else {
+        let user = new User({
+            _id:req.user._id,
+            viewedPortfolios: req.user.viewedPortfolios
+        });
+
+        user.viewedPortfolios.push(profileRes._id);
+
+        User.findByIdAndUpdate(req.user._id, user, {}, (err, result)=> {
+            if (err) {return next(err);}
+
+            res.render(`profilePage/profilePageIframe`, {layout: `profilePage/profilePageLayout` , qUser: profileRes, User: req.user, friendVal});
+        });
+    }
 }
