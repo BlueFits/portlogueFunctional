@@ -21,8 +21,30 @@
             </div>
             <div class="home-right-nav">
                 <ul>
+                    <li><a href="#"><div><img class="nav-icons" src="/assets/icons/icons8-add-user-group-man-man-96.png"/></div></a>
+                        <ul class="add-friend-dropdown">
+                            <% for (let val of friendRequests) { %>>
+                        <li>
+                            <div><img src="/publicAvatar/<%= val.requestFrom.email %>"/> <span><%= val.requestFrom.fullNameDisplay %></span></div>
+                            <div>
+                            <form method="POST" action="/users/confirm_friend">
+                                <input type="hidden" value="accept" name="reqResponse"/>
+                                <input type="hidden" value="<%= val.requestFrom._id %>" name="reqFrom"/>
+                                <input type="hidden" value="<%= val._id %>", name="friendStatId"/>
+                                <button type="submit">Accept</button>
+                            </form>
+                            <form method="POST" action="/users/confirm_friend">
+                                <input type="hidden" value="decline" name="reqResponse"/>
+                                <input type="hidden" value="<%= val.requestFrom._id %>" name="reqFrom"/>
+                                <input type="hidden" value="<%= val._id %>", name="friendStatId"/>
+                                <button type="submit">Decline</button>
+                            </form>
+                            </div>
+                        </li>
+                            <% } %>
+                        </ul>
+                    </li>
                     <li><a href="#"><div><img class="nav-icons" src="/assets/icons/icons8-chat-room-96.png"/></div></a></li>
-                    <li><a href="#"><div><img class="nav-icons" src="/assets/icons/icons8-bell-96.png"/></div></a></li>
                     <li><div class="profile-icon-wrapper" style="cursor: pointer;"><img class="nav-profile-icon" src="/publicAvatar/<%=User.email%>" alt="profile-icon"/></div><ul class="home-nav-dropdown">
                         <li><a href="#">Profile</a></li>
                         <li><a href="#">Account Settings</a></li>
@@ -49,7 +71,7 @@
                     <input type="text" name="q"/>
                 </form>
                 <div class="home-quick-search">
-                    <div>
+                    <div id="qs-dropdown">
                         
                         <div><p>Quick Search</p><img class="nav-icons" src="/assets/icons/icons8-expand-arrow-96.png" alt="arrow-down"/></div>
                     
@@ -63,7 +85,6 @@
                             <li><a href="/search?q=Professional+Portfolio">Professional Portfolio</a></li>
                             <li><a href="/search?q=Business+Portfolio">Business Portfolio</a></li>
                         </ul>
-                    
                     </div>
                 </div>
             </div>
@@ -165,5 +186,19 @@
             </ul>
         </div>
     </footer>
+
+    <script>
+
+        
+    
+        $(`.profile-icon-wrapper`).on(`click`,()=> {
+            $(`.home-nav-dropdown`).toggle();
+        });
+
+        $(`#qs-dropdown`).on(`click`, ()=> {
+            $(`.home-quick-dropdown`).toggle();
+        })
+    
+    </script>
 </body>
 </html>

@@ -12,8 +12,72 @@ const FriendStatus = require(`../models/friendStatus`);
 //Add friend process
 exports.POST_confirmFriend = function(req, res, next) {
     
-    
+    User.findById(req.body.reqFrom).populate(`friendList`).exec((err, reqFrom)=> {
 
+        if (err) {return next(err);}
+
+        if (!reqFrom) {
+            res.send(`NO USER`); //toFix
+        }
+        else {
+
+            if (req.body.reqResponse === `accept`) {
+
+                console.log(`User Accepted`);
+                
+                let friendStat = new FriendStatus({
+                    _id: req.body.friendStatId,
+                    status: 2
+                });
+
+                let user = new User({
+                    _id: req.user._id,
+                    friendList: req.user.friendList
+                });
+    
+                let otherUser = new User({
+                    _id: reqFrom._id,
+                    friendList: reqFrom.friendList
+                });
+
+                user.friendList.push(reqFrom);
+
+                otherUser.friendList.push(req.user);
+
+                FriendStatus.findByIdAndUpdate(req.body.friendStatId, friendStat, {}, (err, fStatAcc)=> {
+                    if (err) {return next(err);}
+
+                    User.findByIdAndUpdate(req.user._id, user, {}, (err, userRes)=> {
+                        if (err) {return next(err);}
+                    });
+
+                    User.findByIdAndUpdate(reqFrom._id, otherUser, {}, (err, otherUserRes)=> {
+                        if (err) {return next(err);}
+                        console.log(`otherUser Save`);
+                        res.redirect(`/`);
+                    });
+
+                });
+
+            }
+        
+            else {
+
+                console.log(`User Denied`);
+                
+                let friendStat = new FriendStatus({
+                    _id: req.body.friendStatId,
+                    status: 3
+                }); 
+
+                FriendStatus.findByIdAndUpdate(req.body.friendStatId, friendStat, {}, (err, fStatDec)=> {
+                    if (err) {return next(err);}
+                    res.redirect(`/`);
+                });
+
+            }
+        }
+    });
 }
 
 exports.GET_addFriend = function(req, res, next) {
@@ -36,7 +100,7 @@ exports.GET_addFriend = function(req, res, next) {
 
                 friendStat.save((err)=> {
                     if (err) {return next(err);}
-                    res.render(req.get(`Referrer`));
+                    res.redirect(req.get(`Referrer`));
                 });
             }
         }); 

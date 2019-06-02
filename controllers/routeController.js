@@ -196,8 +196,33 @@ exports.renderHome = function(req, res, next) {
             pullCollection.exec((err, results)=> {
                 if (err) throw `routeController > GET_discover_new`;
 
-                res.render(`homePage/homeNew`, {layout: `homePage/homeLayout`, User: req.user, qUsers: results, userHistory: functionCntrl.userHistory(req.user)});
-                return;
+                FriendStatus.find({"requestTo": req.user._id}).populate(`requestFrom`).exec((err, fstatRes)=> {
+                    if (err) {console.log(`renderHome> fstatRes`) 
+                            return next(err);}
+
+
+                    let fStatDisplay = [];
+
+                    for (let val of fstatRes) {
+                        if (val.status === 1) {
+                            fStatDisplay.push(val);
+                        }
+                        else {
+                            
+                        }
+                    }
+
+                    if (fstatRes.length === 0) {
+                        console.log(`No requests`);
+                        res.render(`homePage/homeNew`, {layout: `homePage/homeLayout`, User: req.user, qUsers: results, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                        return;
+                    }
+
+                    else {
+                        res.render(`homePage/homeNew`, {layout: `homePage/homeLayout`, User: req.user, qUsers: results, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                        return;
+                    }
+                });
             })
         }
     });

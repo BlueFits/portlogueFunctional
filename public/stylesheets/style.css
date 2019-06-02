@@ -22,6 +22,15 @@ body {
     font-weight: normal;
 }
 
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-color: grey;
+}
+
 input,
 textarea,
 button {
@@ -331,18 +340,30 @@ h3 {
 }
 
 .home-nav-dropdown {
-    border: 3px solid;
+    font-size: 14px;
+    border: 3px solid yellow;
+    background-color: #fff;
+    padding: 5px 0;
 
     position: absolute;
     top: 150%;
     right: 0;
 
-    display: flex;
-    flex-direction: column;
+    display: none;
     width: 180px;
 
     list-style: none;
     text-align: center;
+    border-radius: 5px;
+}
+
+.home-nav-dropdown > li > a {
+    display: block;
+    padding: 10px;
+}
+
+.home-nav-dropdown > li > a:hover {
+    background-color: yellow;
 }
 
 /* Home search */
@@ -433,6 +454,7 @@ h3 {
 .home-quick-search {
     position: relative;
     width: 150px;
+    margin-right: 20px;
 }
 
 .home-quick-search a,
@@ -448,13 +470,14 @@ h3 {
 }
 
 .home-quick-dropdown {
+    display: none;
     position: absolute;
     background-color: #fff;
     border-radius: 0 0 8px 8px;
     box-shadow: 0px 4px 10px -8px;
     margin-top: 15px;
-    width: 130%;
-    right: 0;
+    width: 145.5%;
+    left: -35px;
     top: 18px;
     text-align: center;
     list-style: none;
@@ -842,7 +865,7 @@ footer li {
     border: 3px solid orange;
     top: 10%;
 
-    width: 19%;
+    width: 350px;
     height: 65%;
     background-color: #fff;
     border-radius: 5px;
@@ -851,11 +874,21 @@ footer li {
     display: flex;
     align-items: center;
     flex-direction: column;
+    overflow: scroll;
+    overflow-x: hidden;
+}
+
+.qUser-info::-webkit-scrollbar {
+    width: 8px;
+}
+
+.qUser-info::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-color: grey;
 }
 
 .qUser-desc,
 .qUser-contact {
-    height: 50%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -892,10 +925,7 @@ footer li {
 
 .profile-qUser-avatar {
     width: 95px;
-    height:95px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    height: 95px;
     border-radius: 100%;
     overflow: hidden;
     background-color: black;
@@ -925,6 +955,9 @@ footer li {
 }
 
 @media only screen and (min-width: 961px) and (max-width: 1919px) {/** for 1336x 728 **/
+    .qUser-info {
+        height: 75%;
+    }
   
 }
 
