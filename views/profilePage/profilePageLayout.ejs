@@ -97,7 +97,15 @@
             });
 
         });
+    
+        $(`.profile-icon-wrapper`).on(`click`,()=> {
+            $(`.home-nav-dropdown`).toggle();
+        });
 
+        $(`#qs-dropdown`).on(`click`, ()=> {
+            $(`.home-quick-dropdown`).toggle();
+        })
+    
     
     </script>
 </body>

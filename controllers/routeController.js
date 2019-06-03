@@ -266,7 +266,7 @@ exports.GET_discover_new = function(req, res, next) {
 
     pullCollection.exec((err, results)=> {
         if (err) throw `routeController > GET_discover_new`;
-        res.render(`homePage/homeNew`, {layout: `homePage/homeLayout`, User: req.user, qUsers: results, userHistory: functionCntrl.userHistory(req.user)});
+        res.render(`homePage/homeNew`, {User: req.user, qUsers: results, userHistory: functionCntrl.userHistory(req.user)});
         return;
     })
 };
@@ -276,7 +276,7 @@ exports.GET_discover_highestRated = function(req, res, next) {
     pullCollection.exec((err, results)=> {
 
         let toDisplay = results.sort((a,b)=> { return b.portfolioLikes - a.portfolioLikes;});
-        res.render(`homePage/homeHighestRated`, {layout: `homePage/homeLayout`, qUsers: toDisplay, User:req.user, userHistory: functionCntrl.userHistory(req.user)});
+        res.render(`homePage/homeHighestRated`, {qUsers: toDisplay, User:req.user, userHistory: functionCntrl.userHistory(req.user)});
 
     });
 
@@ -287,7 +287,7 @@ exports.GET_discover_mostViewed = function(req, res, next) {
     pullCollection.exec((err, results)=> {
 
         let toDisplay = results.sort((a,b)=> { return b.portfolioViews - a.portfolioViews;});
-        res.render(`homePage/homeHighestRated`, {layout: `homePage/homeLayout`, qUsers: toDisplay, User:req.user, userHistory: functionCntrl.userHistory(req.user)});
+        res.render(`homePage/homeHighestRated`, {qUsers: toDisplay, User:req.user, userHistory: functionCntrl.userHistory(req.user)});
 
     });
 
@@ -301,7 +301,15 @@ exports.GET_discover_suggestions = function(req, res, next) {
 exports.GET_discover_friends = function(req, res, next) {
     
     User.findById(req.user._id).populate(`friendList`).exec((err, result)=> {
-        res.render(`homePage/homeFriends`, {layout: `homePage/homeLayout`, User: result, userHistory: functionCntrl.userHistory(req.user)}); //toFix
+
+        if (err) {return next(err);}
+
+        if (!result) {
+            res.render(`homePage/homeFriends`, {User: result, userHistory: functionCntrl.userHistory(req.user)}); //toFix
+        }
+        else {
+            res.render(`homePage/homeFriends`, {User: result, userHistory: functionCntrl.userHistory(req.user)}); //toFix
+        }
     })
 };
 

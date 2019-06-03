@@ -16,7 +16,7 @@
 
         if (qUsers.length <= 10) {
             for (let i = 0; i < qUsers.length; i++) {
-                newDisplay.push( `<li class="portfolio-select"><a href="/users/profile/${qUsers[i].username}">
+                newDisplay.push( `<li class="portfolio-select"><a target="_top" href="/users/profile/${qUsers[i].username}">
                     <div class="portfolio-thumbnail">
                         <div class="portfolio-thumbnail-bar"><!--Grey bar--></div>
                         <div><img class="portfolio-thumbnail-img" src="/userWebThumb/${qUsers[i].email}"/></div>
@@ -34,7 +34,7 @@
         }
         else {
             for (let i = 0; i < 10; i++) {
-                nnewDisplay.push( `<li class="portfolio-select"><a href="/users/profile/${qUsers[i].username}">
+                nnewDisplay.push( `<li class="portfolio-select"><a target="_top" href="/users/profile/${qUsers[i].username}">
                     <div class="portfolio-thumbnail">
                         <div class="portfolio-thumbnail-bar"><!--Grey bar--></div>
                         <div><img class="portfolio-thumbnail-img" src="/userWebThumb/${qUsers[i].email}"/></div>
@@ -72,7 +72,7 @@
         let newDisplay = [];
         
         for (let i = 0; i < 10; i++) {
-                        newDisplay.push( `<li class="portfolio-select"><a href="/users/profile/${qUsers[i].username}">
+                        newDisplay.push( `<li class="portfolio-select"><a target="_top" href="/users/profile/${qUsers[i].username}">
                         <div class="portfolio-thumbnail">
                             <div class="portfolio-thumbnail-bar"><!--Grey bar--></div>
                             <div><img class="portfolio-thumbnail-img" src="/userWebThumb/${qUsers[i].email}"/></div>

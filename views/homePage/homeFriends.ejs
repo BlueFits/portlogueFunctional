@@ -1,12 +1,104 @@
 <section id="discoverSection">
+
     <nav class="discover-nav">
-        <ul>
-            <li><a href="/discover/new#discoverSection">New</a></li>
-            <li><a href="/discover/highest_rated#discoverSection">Highest Rated</a></li>
-            <li><a href="/discover/most_viewed#discoverSection">Most Viewed</a></li>
-            <li><a href="/discover/suggestions#discoverSection">Suggestions</a></li>
-            <li><a href="/discover/friends#discoverSection">Friends</a></li>
-        </ul>
+                    <ul>
+                        <li><a href="/discover/new#discoverSection">New</a></li>
+                        <li><a href="/discover/highest_rated#discoverSection">Highest Rated</a></li>
+                        <li><a href="/discover/most_viewed#discoverSection">Most Viewed</a></li>
+                        <li><a href="/discover/suggestions#discoverSection">Suggestions</a></li>
+                        <li><a href="/discover/friends#discoverSection">Friends</a></li>
+                    </ul>
     </nav>
+        <div class="discover-results">
+        <ul class="discover-results-ul" id="userQry"><!-- Custom Limited-->
+    <%- (function(qUsers) {
+        let newDisplay = [];
+
+        if (qUsers.length <= 10) {
+            for (let i = 0; i < qUsers.length; i++) {
+                newDisplay.push( `<li class="portfolio-select"><a target="_top" href="/users/profile/${qUsers[i].username}">
+                    <div class="portfolio-thumbnail">
+                        <div class="portfolio-thumbnail-bar"><!--Grey bar--></div>
+                        <div><img class="portfolio-thumbnail-img" src="/userWebThumb/${qUsers[i].email}"/></div>
+                    </div></a>
+                    <div class="thumbnail-desc">
+                        <div class="profile-name-wrapper">
+                            <div class="thumb-profile-wrapper"><img class="thumbnail-profile-img" src="/publicAvatar/${qUsers[i].email}"/></div>
+                            <a href="/users/profile/${qUsers[i].username}">${qUsers[i].fullNameDisplay}</a>
+                        </div>
+                        <span class="occupation-flex">${qUsers[i].occupation}</span>
+                    </div>
+                </li>`);
+            }
+            return newDisplay.join('');
+        }
+        else {
+            for (let i = 0; i < 10; i++) {
+                nnewDisplay.push( `<li class="portfolio-select"><a target="_top" href="/users/profile/${qUsers[i].username}">
+                    <div class="portfolio-thumbnail">
+                        <div class="portfolio-thumbnail-bar"><!--Grey bar--></div>
+                        <div><img class="portfolio-thumbnail-img" src="/userWebThumb/${qUsers[i].email}"/></div>
+                    </div></a>
+                    <div class="thumbnail-desc">
+                        <div class="profile-name-wrapper">
+                            <div class="thumb-profile-wrapper"><img class="thumbnail-profile-img" src="/publicAvatar/${qUsers[i].email}"/></div>
+                            <a href="/users/profile/${qUsers[i].username}">${qUsers[i].fullNameDisplay}</a>
+                        </div>
+                        <span class="occupation-flex">${qUsers[i].occupation}</span>
+                    </div>
+                </li>`);
+            }
+            return newDisplay.join('');
+        }
+    })(User.friendList);%>
+</ul>
+
+<button id="loadMoreButton">Load More</button>
+
+</div>
+
 </section>
 
+
+<script>
+
+    let generalCounter = 11;
+    
+    let qUsers = <%- JSON.stringify(User.friendList) %>;
+    
+    $(`#loadMoreButton`).on(`click`, function() {
+        generalCounter++
+    
+        let newDisplay = [];
+        
+        for (let i = 0; i < 10; i++) {
+                        newDisplay.push( `<li class="portfolio-select"><a target="_top" href="/users/profile/${qUsers[i].username}">
+                        <div class="portfolio-thumbnail">
+                            <div class="portfolio-thumbnail-bar"><!--Grey bar--></div>
+                            <div><img class="portfolio-thumbnail-img" src="/userWebThumb/${qUsers[i].email}"/></div>
+                        </div></a>
+                        <div class="thumbnail-desc">
+                            <div class="profile-name-wrapper">
+                                <div class="thumb-profile-wrapper"><img class="thumbnail-profile-img" src="/publicAvatar/${qUsers[i].email}"/></div>
+                                <a href="/users/profile/${qUsers[i].username}">${qUsers[i].fullNameDisplay}</a>
+                            </div>
+                            <span class="occupation-flex">${qUsers[i].occupation}</span>
+                        </div>
+                    </li>`);
+                    }
+        let content = newDisplay.join('');
+    
+        let toAppend = document.createElement(`LI`);
+        toAppend.innerHTML = content;
+    
+        let att = document.createAttribute("class");
+        att.value= "portfolio-select";
+    
+        toAppend.setAttribute(att);
+    
+        $(`#userQry`).append(toAppend);
+    })
+    
+    
+    
+    </script>
