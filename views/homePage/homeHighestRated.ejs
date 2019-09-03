@@ -2,58 +2,43 @@
 
     <nav class="discover-nav">
                     <ul>
-                        <li><a href="/discover/new#discoverSection">New</a></li>
-                        <li><a href="/discover/highest_rated#discoverSection">Highest Rated</a></li>
-                        <li><a href="/discover/most_viewed#discoverSection">Most Viewed</a></li>
-                        <li><a href="/discover/suggestions#discoverSection">Suggestions</a></li>
-                        <li><a href="/discover/friends#discoverSection">Friends</a></li>
+                        <li><a href="/discover/new">New</a></li>
+                        <li><a href="/discover/highest_rated">Highest Rated</a></li>
+                        <li><a href="/discover/most_viewed">Most Viewed</a></li>
+                        <li><a href="/discover/friends">Friends</a></li>
                     </ul>
     </nav>
         <div class="discover-results">
         <ul class="discover-results-ul" id="userQry"><!-- Custom Limited-->
-    <%- (function(qUsers) {
-        let newDisplay = [];
-
-        if (qUsers.length <= 10) {
-            for (let i = 0; i < qUsers.length; i++) {
-                newDisplay.push( `<li class="portfolio-select"><a target="_top" href="/users/profile/${qUsers[i].username}">
+            <% for(let user of qUsers) { %>
+                <li class="portfolio-select"><a target="_top" href="/users/profile/<%=user.username%>">
                     <div class="portfolio-thumbnail">
                         <div class="portfolio-thumbnail-bar"><!--Grey bar--></div>
-                        <div><img class="portfolio-thumbnail-img" src="/userWebThumb/${qUsers[i].email}"/></div>
+                        <div><img class="portfolio-thumbnail-img" src="/userWebThumb/<%=user.email%>"/></div>
                     </div></a>
                     <div class="thumbnail-desc">
                         <div class="profile-name-wrapper">
-                            <div class="thumb-profile-wrapper"><img class="thumbnail-profile-img" src="/publicAvatar/${qUsers[i].email}"/></div>
-                            <a href="/users/profile/${qUsers[i].username}">${qUsers[i].fullNameDisplay}</a>
+                            <div class="thumb-profile-wrapper"><img class="thumbnail-profile-img" src="/publicAvatar/<%=user.email%>"/></div>
+                            <a href="/users/profile/<%=user.username%>"><%=user.fullNameDisplay%></a>
                         </div>
-                        <span class="occupation-flex">${qUsers[i].occupation}</span>
+                        <span class="occupation-flex"><%=user.occupation%></span>
                     </div>
-                </li>`);
-            }
-            return newDisplay.join('');
-        }
-        else {
-            for (let i = 0; i < 10; i++) {
-                nnewDisplay.push( `<li class="portfolio-select"><a target="_top" href="/users/profile/${qUsers[i].username}">
-                    <div class="portfolio-thumbnail">
-                        <div class="portfolio-thumbnail-bar"><!--Grey bar--></div>
-                        <div><img class="portfolio-thumbnail-img" src="/userWebThumb/${qUsers[i].email}"/></div>
-                    </div></a>
-                    <div class="thumbnail-desc">
-                        <div class="profile-name-wrapper">
-                            <div class="thumb-profile-wrapper"><img class="thumbnail-profile-img" src="/publicAvatar/${qUsers[i].email}"/></div>
-                            <a href="/users/profile/${qUsers[i].username}">${qUsers[i].fullNameDisplay}</a>
-                        </div>
-                        <span class="occupation-flex">${qUsers[i].occupation}</span>
-                    </div>
-                </li>`);
-            }
-            return newDisplay.join('');
-        }
-    })(qUsers);%>
+                </li>
+            <% } %>
 </ul>
 
-<button id="loadMoreButton">Load More</button>
+    <div class="pageControl">
+        <form method="POST" action="/newQryBack">
+            <input type="hidden" value="<%=page%>" name="pageNumber"/>
+            <button class="prevPag" type="submit">Back</button>
+        </form>
+
+
+        <form method="POST" action="/newQryNext">
+            <input type="hidden" value="<%=page%>" name="pageNumber"/>
+            <button class="nextPag" type="submit" <%=qryNextStat%>>Next</button>
+        </form>
+    </div>
 
 </div>
 

@@ -193,37 +193,7 @@ exports.renderHome = function(req, res, next) {
 
         //Proceed Normally
         else {
-            pullCollection.exec((err, results)=> {
-                if (err) throw `routeController > GET_discover_new`;
-
-                FriendStatus.find({"requestTo": req.user._id}).populate(`requestFrom`).exec((err, fstatRes)=> {
-                    if (err) {console.log(`renderHome> fstatRes`) 
-                            return next(err);}
-
-
-                    let fStatDisplay = [];
-
-                    for (let val of fstatRes) {
-                        if (val.status === 1) {
-                            fStatDisplay.push(val);
-                        }
-                        else {
-                            
-                        }
-                    }
-
-                    if (fstatRes.length === 0) {
-                        console.log(`No requests`);
-                        res.render(`homePage/homeNew`, {layout: `homePage/homeLayout`, User: req.user, qUsers: results, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
-                        return;
-                    }
-
-                    else {
-                        res.render(`homePage/homeNew`, {layout: `homePage/homeLayout`, User: req.user, qUsers: results, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
-                        return;
-                    }
-                });
-            })
+            renderHomeOrNew(req, res, pullCollection, FriendStatus);
         }
     });
 };
@@ -263,35 +233,148 @@ exports.GET_first_Setup_Link = function(req, res, next) {
 
 /* GET home page */
 exports.GET_discover_new = function(req, res, next) {
-
-    pullCollection.exec((err, results)=> {
-        if (err) throw `routeController > GET_discover_new`;
-        res.render(`homePage/homeNew`, {User: req.user, qUsers: results, userHistory: functionCntrl.userHistory(req.user)});
-        return;
-    })
+    renderHomeOrNew(req, res, pullCollection, FriendStatus);
 };
 
+exports.POST_newQryNext = function(req, res, next) {
+    res.redirect(`/discover/new?page=${(parseInt(req.body.pageNumber)  + 1)}`);
+}
+
+exports.POST_newQryPrev = function(req, res, next) {
+    res.redirect(`/discover/new?page=${(parseInt(req.body.pageNumber)  - 1)}`); //toFix: Backing from the first page results to an error
+}
+
+//Discover Highest rated
 exports.GET_discover_highestRated = function(req, res, next) {
+    //requried vars for pagination
+    const pagination = req.query.pagination ? parseInt(req.query.pagination) : 6;
+    const page = req.query.page ? parseInt(req.query.page) : 1;
 
-    pullCollection.exec((err, results)=> {
+    User.find({}).sort({portfolioLikes: -1}).skip((page-1) * pagination).limit(pagination).exec((err, results)=> {
 
-        let toDisplay = results.sort((a,b)=> { return b.portfolioLikes - a.portfolioLikes;});
-        res.render(`homePage/homeHighestRated`, {qUsers: toDisplay, User:req.user, userHistory: functionCntrl.userHistory(req.user)});
+        //
+        FriendStatus.find({"requestTo": req.user._id}).populate(`requestFrom`).exec((err, fstatRes)=> {
+            if (err) {
+                console.log(`renderHome> fstatRes`) 
+                return next(err);
+            }
 
+
+            let fStatDisplay = [];
+
+            for (let val of fstatRes) {
+                if (val.status === 1) {
+                    fStatDisplay.push(val);
+                }
+                else {
+                            
+                }
+            }
+
+            if (fstatRes.length === 0) {
+                console.log(`No requests`);
+
+                //toFix quries pagination
+                if (results.length < 6) {
+                    res.render(`homePage/homeNew`, {qryNextStat: "disabled", page, layout: `homePage/homeLayout`, User: req.user, qUsers: results, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                    return;
+                }
+                //
+                res.render(`homePage/homeNew`, {qryNextStat: "", page, layout: `homePage/homeLayout`, User: req.user, qUsers: results, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                return;
+            }
+
+            else {
+
+                if (results.length < 6) {
+                    res.render(`homePage/homeNew`, {qryNextStat: "disabled", page, layout: `homePage/homeLayout`, User: req.user, qUsers: results, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                    return;
+                }
+
+                res.render(`homePage/homeNew`, {qryNextStat: "", page, layout: `homePage/homeLayout`, User: req.user, qUsers: results, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                return;
+            }
+        });
+        //
     });
-
 };
+
+exports.POST_highestQryNext = function(req, res, next) {
+    res.redirect(`/discover/highest_rated?page=${(parseInt(req.body.pageNumber)  + 1)}`);
+}
+
+exports.POST_highestQryPrev = function(req, res, next) {
+    res.redirect(`/discover/highest_rated?page=${(parseInt(req.body.pageNumber)  - 1)}`);
+}
+
+//Discover Highest Views
 
 exports.GET_discover_mostViewed = function(req, res, next) {
 
-    pullCollection.exec((err, results)=> {
+    //requried vars for pagination
+    const pagination = req.query.pagination ? parseInt(req.query.pagination) : 6;
+    const page = req.query.page ? parseInt(req.query.page) : 1;
 
-        let toDisplay = results.sort((a,b)=> { return b.portfolioViews - a.portfolioViews;});
-        res.render(`homePage/homeHighestRated`, {qUsers: toDisplay, User:req.user, userHistory: functionCntrl.userHistory(req.user)});
+    User.find({}).sort({portfolioViews: -1}).skip((page-1) * pagination).limit(pagination).exec((err, results)=> {
 
+        //
+        FriendStatus.find({"requestTo": req.user._id}).populate(`requestFrom`).exec((err, fstatRes)=> {
+            if (err) {
+                console.log(`renderHome> fstatRes`) 
+                return next(err);
+            }
+
+
+            let fStatDisplay = [];
+
+            for (let val of fstatRes) {
+                if (val.status === 1) {
+                    fStatDisplay.push(val);
+                }
+                else {
+                            
+                }
+            }
+
+            if (fstatRes.length === 0) {
+                console.log(`No requests`);
+
+                //toFix quries pagination
+                if (results.length < 6) {
+                    res.render(`homePage/homeMostViewed`, {qryNextStat: "disabled", page, layout: `homePage/homeLayout`, User: req.user, qUsers: results, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                    return;
+                }
+                //
+                res.render(`homePage/homeMostViewed`, {qryNextStat: "", page, layout: `homePage/homeLayout`, User: req.user, qUsers: results, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                return;
+            }
+
+            else {
+
+                if (results.length < 6) {
+                    res.render(`homePage/homeMostViewed`, {qryNextStat: "disabled", page, layout: `homePage/homeLayout`, User: req.user, qUsers: results, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                    return;
+                }
+
+                res.render(`homePage/homeMostViewed`, {qryNextStat: "", page, layout: `homePage/homeLayout`, User: req.user, qUsers: results, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                return;
+            }
+        });
+        //
     });
 
 };
+
+exports.POST_viewsQryNext = function(req, res, next) {
+    res.redirect(`/discover/most_viewed?page=${(parseInt(req.body.pageNumber)  + 1)}`);
+}
+
+exports.POST_viewsQryPrev = function(req, res, next) {
+    res.redirect(`/discover/most_viewed?page=${(parseInt(req.body.pageNumber)  - 1)}`);
+}
+
+
+//
 
 exports.GET_discover_suggestions = function(req, res, next) {
     
@@ -403,3 +486,56 @@ exports.GET_search_home = [
 
 //Initialize Functions
 const pullCollection = User.find({});
+
+const renderHomeOrNew = function(req, res, pullCollection, FriendStatus) {
+    //requried vars for pagination
+    const pagination = req.query.pagination ? parseInt(req.query.pagination) : 6;
+    const page = req.query.page ? parseInt(req.query.page) : 1;
+    //Pagination equation
+    pullCollection.skip((page-1) * pagination).limit(pagination).sort({dateJoined: -1}).exec((err, results)=> {
+        if (err) throw `routeController > GET_discover_new`;
+
+        FriendStatus.find({"requestTo": req.user._id}).populate(`requestFrom`).exec((err, fstatRes)=> {
+            if (err) {
+                console.log(`renderHome> fstatRes`) 
+                return next(err);
+            }
+
+
+            let fStatDisplay = [];
+
+            for (let val of fstatRes) {
+                if (val.status === 1) {
+                    fStatDisplay.push(val);
+                }
+                else {
+                            
+                }
+            }
+
+            if (fstatRes.length === 0) {
+                console.log(`No requests`);
+
+                //toFix quries pagination
+                if (results.length < 6) {
+                    res.render(`homePage/homeNew`, {qryNextStat: "disabled", page, layout: `homePage/homeLayout`, User: req.user, qUsers: results, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                    return;
+                }
+                //
+                res.render(`homePage/homeNew`, {qryNextStat: "", page, layout: `homePage/homeLayout`, User: req.user, qUsers: results, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                return;
+            }
+
+            else {
+
+                if (results.length < 6) {
+                    res.render(`homePage/homeNew`, {qryNextStat: "disabled", page, layout: `homePage/homeLayout`, User: req.user, qUsers: results, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                    return;
+                }
+
+                res.render(`homePage/homeNew`, {qryNextStat: "", page, layout: `homePage/homeLayout`, User: req.user, qUsers: results, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                return;
+            }
+        });
+    })
+}

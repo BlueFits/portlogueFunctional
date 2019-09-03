@@ -12,8 +12,6 @@ const { upload } = require(`../config/multerConfig`);
 //Protect Routes
 const { ensureAuth } = require(`../config/authenticate`);
 
-
-
 //Report route
 router.get(`/report/:username`, ensureAuth, (req, res, next)=> {
     res.send(`NOT IMPLEMENTED`);
