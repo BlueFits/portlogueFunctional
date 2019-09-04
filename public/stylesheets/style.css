@@ -346,29 +346,32 @@ h3 {
 
 .home-nav-dropdown {
     font-size: 14px;
-    border: 3px solid yellow;
-    background-color: #fff;
     padding: 5px 0;
+    background-color: #ffffff;
+    border: 1px solid #c6c6c6;
+    box-shadow: 0px 0px 5px -2px black;
 
     position: absolute;
-    top: 150%;
+    top: 50px;
     right: 0;
 
     display: none;
     width: 180px;
 
     list-style: none;
-    text-align: center;
+    text-align: left;
     border-radius: 5px;
 }
 
 .home-nav-dropdown > li > a {
     display: block;
-    padding: 10px;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #7f7f7f;
 }
 
 .home-nav-dropdown > li > a:hover {
-    background-color: yellow;
+    background-color: #e5e5e5;
 }
 
 /* Home search */
@@ -509,7 +512,7 @@ h3 {
 .add-friend-dropdown{
     display: none;
     position: absolute;
-    top: 45px;
+    top: 50px;
     right: -20px;
     border-radius: 5px;
     width: 350px;

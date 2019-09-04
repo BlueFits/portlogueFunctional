@@ -558,10 +558,11 @@ const renderHomeOrNew = function(req, res, pullCollection, FriendStatus) {
                 }
             }
 
-            if (fstatRes.length === 0) {
+            if (fStatDisplay.length === 0) {
                 console.log(`No requests`);
+                //Add a function if fStat is empty
 
-                //toFix quries pagination
+                //toFix queries pagination
                 if (results.length < 6) {
                     res.render(`homePage/homeNew`, {qryNextStat: "disabled", page, layout: `homePage/homeLayout`, User: req.user, qUsers: results, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
                     return;
@@ -572,8 +573,6 @@ const renderHomeOrNew = function(req, res, pullCollection, FriendStatus) {
             }
 
             else {
-
-                console.log(fstatRes);
 
                 if (results.length < 6) {
                     res.render(`homePage/homeNew`, {qryNextStat: "disabled", page, layout: `homePage/homeLayout`, User: req.user, qUsers: results, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
