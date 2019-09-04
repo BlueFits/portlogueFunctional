@@ -46,7 +46,7 @@ router.post(`/viewstQryPrev`, ensureAuth, routeController.POST_viewsQryPrev);
 
 
 //GET home page disocver suggestions
-router.get(`/discover/suggestions`, ensureAuth, routeController.GET_discover_suggestions);
+//router.get(`/discover/suggestions`, ensureAuth, routeController.GET_discover_suggestions);
 
 //GET home page disocver history
 router.get(`/discover/friends`, ensureAuth, routeController.GET_discover_friends);

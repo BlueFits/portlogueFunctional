@@ -374,25 +374,70 @@ exports.POST_viewsQryPrev = function(req, res, next) {
 }
 
 
-//
-
+//Suggestions omit for build
+/*
 exports.GET_discover_suggestions = function(req, res, next) {
     
     res.render(`homePage/homeSuggestions`, {layout: `homePage/homeLayout`, User: req.user, userHistory: functionCntrl.userHistory(req.user)}); //toFix
 };
 
+*/
+//Friends Display
 exports.GET_discover_friends = function(req, res, next) {
+
+    //requried vars for pagination
+    const pagination = req.query.pagination ? parseInt(req.query.pagination) : 6;
+    const page = req.query.page ? parseInt(req.query.page) : 1;
+
     
-    User.findById(req.user._id).populate(`friendList`).exec((err, result)=> {
+    User.findById(req.user._id).populate(`friendList`).skip((page-1) * pagination).limit(pagination).exec((err, result)=> {
 
-        if (err) {return next(err);}
+        //
+        
+        FriendStatus.find({"requestTo": req.user._id}).populate(`requestFrom`).exec((err, fstatRes)=> {
+            if (err) {
+                console.log(`renderHome> fstatRes`) 
+                return next(err);
+            }
 
-        if (!result) {
-            res.render(`homePage/homeFriends`, {User: result, userHistory: functionCntrl.userHistory(req.user)}); //toFix
-        }
-        else {
-            res.render(`homePage/homeFriends`, {User: result, userHistory: functionCntrl.userHistory(req.user)}); //toFix
-        }
+
+            let fStatDisplay = [];
+
+            for (let val of fstatRes) {
+                if (val.status === 1) {
+                    fStatDisplay.push(val);
+                }
+                else {
+                            
+                }
+            }
+
+            if (fstatRes.length === 0) {
+                console.log(`No requests`);
+
+                //toFix quries pagination
+                if (result.length < 6) {
+                    res.render(`homePage/homeFriends`, {qryNextStat: "disabled", page, layout: `homePage/homeLayout`, User: req.user, qUser: result.friendList, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                    return;
+                }
+                //
+                res.render(`homePage/homeFriends`, {qryNextStat: "", page, layout: `homePage/homeLayout`, User: req.user, qUser: result.friendList, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                return;
+            }
+
+            else {
+
+                if (result.length < 6) {
+                    res.render(`homePage/homeFriends`, {qryNextStat: "disabled", page, layout: `homePage/homeLayout`, User: req.user, qUser: result.friendList, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                    return;
+                }
+
+                res.render(`homePage/homeFriends`, {qryNextStat: "", page, layout: `homePage/homeLayout`, User: req.user, qUser: result.friendList, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                return;
+            }
+        });
+
+        //
     })
 };
 
@@ -527,6 +572,8 @@ const renderHomeOrNew = function(req, res, pullCollection, FriendStatus) {
             }
 
             else {
+
+                console.log(fstatRes);
 
                 if (results.length < 6) {
                     res.render(`homePage/homeNew`, {qryNextStat: "disabled", page, layout: `homePage/homeLayout`, User: req.user, qUsers: results, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});

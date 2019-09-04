@@ -504,6 +504,72 @@ h3 {
     height: 100%;
 }
 
+/* Friend Request Styles*/
+
+.add-friend-dropdown{
+    display: none;
+    position: absolute;
+    top: 45px;
+    right: -20px;
+    border-radius: 5px;
+    width: 350px;
+    background-color: #ffffff;
+    border: 1px solid #c6c6c6;
+    box-shadow: 0px 0px 5px -2px black;
+    font-size: 14px;
+}
+
+.freq-header {
+    height: 35px;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+}
+
+.frequestTab {
+    width: 100%;
+
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 10px;
+    height: 60px;
+    border-top: 1px solid #c6c6c6;
+    border-bottom : 1px solid #;
+}
+
+.freq-wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.freq-response {
+    width: 40%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.freq-response-accept,
+.freq-response-decline {
+    padding: 4px 10px;
+    cursor: pointer;
+}
+
+.freq-response-accept {
+    border: none;
+    background-color: #3498db;
+    color: #ffffff;
+    border-radius: 2px;
+}
+
+.freq-response-decline {
+    border: 1px solid #d3d3d3;
+    border-radius: 3px;
+    background-color: #dddddd;
+    color: #7f7f7f;
+}
+
 /* DISCOVER SECTION */
 
 #discoverSection {

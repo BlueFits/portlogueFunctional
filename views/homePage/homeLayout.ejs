@@ -52,27 +52,33 @@
 
             <div class="home-right-nav">
                 <ul>
-                    <li><a href="#"><div><img class="nav-icons" src="/assets/icons/icons8-add-user-group-man-man-96.png"/></div></a>
+                    <li id="friend-drop"><a href="#"><div><img class="nav-icons" src="/assets/icons/icons8-add-user-group-man-man-96.png"/></div></a>
                         <ul class="add-friend-dropdown">
+                            
+                            <div class="freq-header">
+                                <span><strong>Friend Requests</strong></span>
+                            </div>
+
                             <% for (let val of friendRequests) { %>
-                        <li>
-                            <div><img style="width:50px;" src="/publicAvatar/<%= val.requestFrom.email %>"/><span><%= val.requestFrom.fullNameDisplay %></span></div>
-                            <div>
+                        <li class="frequestTab">
+                            <div class="freq-wrapper"><div class="thumb-profile-wrapper"><img class="thumbnail-profile-img" src="/publicAvatar/<%= val.requestFrom.email %>"/></div><span><%= val.requestFrom.fullNameDisplay %></span></div>
+                            <div class="freq-response">
                             <form method="POST" action="/users/confirm_friend">
                                 <input type="hidden" value="accept" name="reqResponse"/>
                                 <input type="hidden" value="<%= val.requestFrom._id %>" name="reqFrom"/>
                                 <input type="hidden" value="<%= val._id %>", name="friendStatId"/>
-                                <button type="submit">Accept</button>
+                                <button class="freq-response-accept" type="submit">Accept</button>
                             </form>
                             <form method="POST" action="/users/confirm_friend">
                                 <input type="hidden" value="decline" name="reqResponse"/>
                                 <input type="hidden" value="<%= val.requestFrom._id %>" name="reqFrom"/>
                                 <input type="hidden" value="<%= val._id %>", name="friendStatId"/>
-                                <button type="submit">Decline</button>
+                                <button class="freq-response-decline" type="submit">Decline</button>
                             </form>
                             </div>
                         </li>
                             <% } %>
+
                         </ul>
                     </li>
                     <li><a href="#"><div><img class="nav-icons" src="/assets/icons/icons8-chat-room-96.png"/></div></a></li>
@@ -174,7 +180,11 @@
 
         $(`#qs-dropdown`).on(`click`, ()=> {
             $(`.home-quick-dropdown`).toggle();
-        })
+        });
+
+        $(`#friend-drop`).on(`click`, ()=> {
+            $(`.add-friend-dropdown`).toggle();
+        });
     
     </script>
 </body>
