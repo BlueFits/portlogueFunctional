@@ -848,7 +848,6 @@ footer li {
     z-index: 0;
     height: 100vh;
     position: relative;
-    border: 3px solid green;
     opacity: 0.5;
     background-color: black;
 }
@@ -877,9 +876,14 @@ footer li {
 .profile-left-nav,
 .profile-right-nav {
     display: flex;
-    justify-content: center;
+    justify-content: center; /* Debugg For now that functions are not complete */
     align-items: center;
     margin: 0 15px;
+}
+
+.profile-right-nav {
+    width: 199px;
+    justify-content: flex-end;
 }
 
 .profile-left-nav > li,
@@ -916,14 +920,15 @@ footer li {
     outline: none;
     padding: 5px;
     width: 100%;
+    font-size: 14px;
 }
 
 .qUser-info {
     color: #7f7f7f;
     position: absolute;
     z-index: 2;
+    box-shadow: 0px 0px 5px -2px black;
 
-    border: 3px solid orange;
     top: 10%;
 
     width: 350px;
@@ -946,6 +951,10 @@ footer li {
 .qUser-info::-webkit-scrollbar-thumb {
     border-radius: 5px;
     background-color: grey;
+}
+
+.qUser-interact {
+    
 }
 
 .qUser-desc,
@@ -982,6 +991,14 @@ footer li {
     margin: 7px 0;
     padding: 4px;
     width: 160px;
+    height: 30px;
+}
+
+.qUser-options > a:first-of-type {
+    background-color: #3498db;
+    border: none;
+    color: #fff;
+    border: 1px solid #3498db;
 }
 
 .profile-qUser-avatar {

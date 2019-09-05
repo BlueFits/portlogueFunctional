@@ -33,8 +33,10 @@
             </div>
 
             <ul class="profile-right-nav">
+                <!-- Omit from MVP until function is found
                     <li><a href="#"><div><img class="nav-icons" src="/assets/icons/icons8-chat-room-96.png"/></div></a></li>
-                    <li><a href="#"><div><img class="nav-icons" src="/assets/icons/-bell-96.png"/></div></a></li>
+                    <li><a href="#"><div><img class="nav-icons" src="/assets/icons/icons8-chat-room-96.png"/></div></a></li>
+                -->
                     <li><div class="profile-icon-wrapper" style="cursor: pointer;"><img class="nav-profile-icon" src="/publicAvatar/<%=User.email%>" alt="profile-icon"/></div><ul class="home-nav-dropdown">
                         <li><a href="#">Profile</a></li>
                         <li><a href="#">Account Settings</a></li>
@@ -47,6 +49,7 @@
     </div>
 
     <div class="qUser-info">
+
         <div class="qUser-desc">
             <div class="profile-qUser-avatar">
                 <img style="height: 100%;" src="/publicAvatar/<%= qUser.email %>"/>
@@ -55,6 +58,22 @@
                 <span style="font-size: 18px; color: black;"><strong><%= qUser.fullNameDisplay %></strong></span>
                 <span><p><%= qUser.occupation %></p></span>
             </div>
+
+            <div class="qUser-interact"> <!-- Forms for liking porrtoflio and portfolio views -->
+                <div>
+                    <form method="POST" action="">
+                        <input type="hidden" value="" name=""/>
+                        <button class="" type="submit"><img src="/assets/icons/icons8-facebook-like-96.png"></button>
+                    </form>
+                    <span><%=qUser.portfolioLikes%></span>
+                </div>
+
+                <div>
+                    <img src="/assets/icons/icons8-eye-96.png"/>
+                    <span><%=qUser.portfolioViews%></span>
+                </div>
+            </div>
+            
             <div class="qUser-options">
                 <a href="<%=qUser.portfolioUrl%>">Visit Official Website</a>
                 <a href="/willBeImplemented">Message</a>
@@ -105,7 +124,6 @@
         $(`#qs-dropdown`).on(`click`, ()=> {
             $(`.home-quick-dropdown`).toggle();
         })
-    
     
     </script>
 </body>

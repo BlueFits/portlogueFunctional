@@ -8,6 +8,98 @@ const path = require(`path`);
 
 const User = require(`../models/User`);
 const FriendStatus = require(`../models/friendStatus`);
+const LikeStatus = require(`../models/likeStatus`);
+
+//Liking Process
+exports.POST_likeProfile = function(req, res, next) {
+
+    User.findById(req.body.toLike).exec((err, toLikeResult)=> {
+        if (err) {return next(err);}
+
+        LikeStatus.findOne({"from": req.user, "to": toLikeResult}).exec((err, likeModelRes)=> {
+
+            if (err) {return next(err);}
+
+            if (!likeModelRes) {
+                //Likes the portfolio
+                let likeStat = new LikeStatus({
+                    from: req.user,
+                    to: toLikeResult,
+                    status: 1
+                });
+
+                likeStat.save((err)=> {
+                    console.log(`Saved likeStat`);
+                    if (err) {return next(err);}
+                    //Add one to portfoliolikes 
+                    let user = new User({
+                        portfolioLikes: toLikeResult.portfolioLikes + 1
+                    });
+
+                    User.findByIdAndUpdate(toLikeResult._id, user, {}, (err, updateRes)=> {
+                        if (err) {return next(err);}
+                        console.log(`Added a Like`);
+                        res.redirect(req.get(`Referrer`));
+                    });
+
+                });
+            }
+
+            else {//Process for unliking the profile
+
+                if (likeModelRes.status = 1) {
+
+                    let user = new User({
+                        portfolioLikes: toLikeResult.portfolioLikes - 1
+                    });
+    
+                    User.findByIdAndUpdate(toLikeResult._id, user, {}, (err, updateRes)=> {
+                        if (err) {return next(err);}
+                        console.log(`Removed a like`);
+    
+                        let likeStat = new LikeStatus({
+                            status: 0
+                        });
+    
+                        LikeStatus.findByIdAndUpdate(likeModelRes._id, likeStat, {}, (err, updateRes)=> {
+                            if (err) {return next(err);}
+                            console.log("Changed Status to 0");
+                            res.redirect(req.get(`Referrer`));
+                        });
+                    });
+
+                }
+
+                else {//Reliking a profile
+
+                    let user = new User({
+                        portfolioLikes: toLikeResult.portfolioLikes + 1
+                    });
+
+                    User.findByIdAndUpdate(toLikeResult._id, user, {}, (err, updateRes)=> {
+                        if (err) {return next(err);}
+                        console.log(`Reliked a comment`);
+
+                        let likeStat = new LikeStatus({
+                            status: 1
+                        });
+
+                        LikeStatus.findByIdAndUpdate(likeModelRes._id, likeStat, {}, (err, updateRes)=> {
+                            if (err) {return next(err);}
+                            console.log(`Changed status back to 1`);
+                            res.redirect(req.get(`Referrer`));
+                        });
+                    });
+
+                }
+
+            }
+
+        });
+
+    });
+
+}
 
 //Add friend process
 exports.POST_confirmFriend = function(req, res, next) {
