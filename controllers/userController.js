@@ -33,6 +33,7 @@ exports.POST_likeProfile = function(req, res, next) {
                     if (err) {return next(err);}
                     //Add one to portfoliolikes 
                     let user = new User({
+                        _id: toLikeResult._id,
                         portfolioLikes: toLikeResult.portfolioLikes + 1
                     });
 
@@ -50,6 +51,7 @@ exports.POST_likeProfile = function(req, res, next) {
                 if (likeModelRes.status = 1) {
 
                     let user = new User({
+                        _id: toLikeResult._id,
                         portfolioLikes: toLikeResult.portfolioLikes - 1
                     });
     
@@ -58,6 +60,7 @@ exports.POST_likeProfile = function(req, res, next) {
                         console.log(`Removed a like`);
     
                         let likeStat = new LikeStatus({
+                            _id: likeModelRes._id,
                             status: 0
                         });
     
@@ -81,6 +84,7 @@ exports.POST_likeProfile = function(req, res, next) {
                         console.log(`Reliked a comment`);
 
                         let likeStat = new LikeStatus({
+                            _id: likeModelRes._id,
                             status: 1
                         });
 

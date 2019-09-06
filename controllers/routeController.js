@@ -121,7 +121,7 @@ exports.GET_profile = function(req, res, next) {
                             break;
                     }
 
-                    functionCntrl.renderHomeFilter(req, res, profileRes, User, friendVal, userCheck);
+                    functionCntrl.renderHomeFilter(next, req, res, profileRes, User, friendVal, userCheck);
                     return;
                 }
 
@@ -140,7 +140,7 @@ exports.GET_profile = function(req, res, next) {
                             break;
                     }
 
-                    functionCntrl.renderHomeFilter(req, res, profileRes, User, friendVal, userCheck);
+                    functionCntrl.renderHomeFilter(next, req, res, profileRes, User, friendVal, userCheck);
                     return;
 
                 }
@@ -148,7 +148,7 @@ exports.GET_profile = function(req, res, next) {
                 if ((!asyncResult.one) || (!asyncResult.two)) {
                     console.log(`async no result one`);
                     friendVal = {val: `Add Friend`, url: `/users/add_friend/${profileRes._id}`, class: ``};
-                    functionCntrl.renderHomeFilter(req, res, profileRes, User, friendVal, userCheck);
+                    functionCntrl.renderHomeFilter(next, req, res, profileRes, User, friendVal, userCheck);
                     return;
                 }
             });           
