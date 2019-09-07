@@ -26,6 +26,7 @@ exports.renderHomeFilter = function(next, req, res, profileRes, User, friendVal,
     else {
         let user = new User({
             _id:req.user._id,
+            likedPortfolios: req.user.likedPortfolios,
             viewedPortfolios: req.user.viewedPortfolios,
             friendList: req.user.friendList,
             dateJoined: req.user.dateJoined

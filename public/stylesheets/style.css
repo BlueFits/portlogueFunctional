@@ -1013,6 +1013,52 @@ footer li {
     height: 100%;
 }
 
+.qUser-interact {
+    width: 50%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.qUser-interact-like,
+.qUser-interact-views {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.profile-like-button {
+    border-radius: 2px;
+    padding: 5px;
+    border: none;
+    cursor: pointer;
+    background-color: #fff;
+    margin-right: 5px;
+    transition: 0.1s ease-in-out;
+}
+
+.profile-like-button:hover {
+    background-color: #d1d1d1;
+}
+
+.profile-views-wrapper {
+    padding: 5px;
+    margin-right: 5px;
+}
+
+.profile-like-button > img,
+.profile-views-icon {
+    width: 24px;
+}
+
+.profile-like-button {
+
+}
+
+.profile-views-button {
+
+}
+
 
 /** media queries **/
 

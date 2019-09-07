@@ -8,98 +8,121 @@ const path = require(`path`);
 
 const User = require(`../models/User`);
 const FriendStatus = require(`../models/friendStatus`);
-const LikeStatus = require(`../models/likeStatus`);
 
 //Liking Process
 exports.POST_likeProfile = function(req, res, next) {
+    //Push qUser to User's likedportfolios and increment qUser's portfolioLikes
+    User.findOne({"username": req.body.qUsername}).exec((err, qUserRes)=> {
 
-    User.findById(req.body.toLike).exec((err, toLikeResult)=> {
         if (err) {return next(err);}
 
-        LikeStatus.findOne({"from": req.user, "to": toLikeResult}).exec((err, likeModelRes)=> {
+        if (!qUserRes) {    
+            res.send(`Error in the profile rendering :( it's lacks a parameter.`);
+        }
 
-            if (err) {return next(err);}
+        else {
+            //Case where it is User to qUser
+            //Run a check wether qUser is already in User's likedportfolios
+            let checkLikes = false;
 
-            if (!likeModelRes) {
-                //Likes the portfolio
-                let likeStat = new LikeStatus({
-                    from: req.user,
-                    to: toLikeResult,
-                    status: 1
-                });
+            User.findById(req.user._id).populate("likedPortfolios").exec((err, userRes)=> {
+                if (err) {return next(err);}
+                //For loop that iterates over likedPortfolios
 
-                likeStat.save((err)=> {
-                    console.log(`Saved likeStat`);
-                    if (err) {return next(err);}
-                    //Add one to portfoliolikes 
-                    let user = new User({
-                        _id: toLikeResult._id,
-                        portfolioLikes: toLikeResult.portfolioLikes + 1
+                for (let val of userRes.likedPortfolios) {
+                    console.log(`${val} --- for loop values`);
+                    if (val.username.toString() === qUserRes.username.toString()) {
+                        checkLikes = true;
+                    }
+                }
+
+                if (checkLikes === true) {
+                    //Make the process for unliking
+
+                    let userResNewList = [];
+                    //Make a copy of user liked portfolios
+                    for (let val of userRes.likedPortfolios) {
+                        userResNewList.push(val);
+                    }
+
+                    console.log(userResNewList + "  This is the made up array list");
+                    //Gets rid of the liked portfolio
+                    for (let i = 0; i < userResNewList.length; i++) {
+                        if (userResNewList[i].username.toString() === qUserRes.username.toString()) {
+                            userResNewList.splice(i, 1);
+                        }
+                    }
+
+                    console.log(userResNewList + "  After splicing");
+
+                    let userUpdate = new User({
+                        _id: userRes._id,
+                        likedPortfolios: userResNewList,
+                        viewedPortfolios: userRes.viewedPortfolios,
+                        friendList: userRes.friendList,
+                        dateJoined: userRes.dateJoined
                     });
 
-                    User.findByIdAndUpdate(toLikeResult._id, user, {}, (err, updateRes)=> {
+                    User.findByIdAndUpdate(userRes._id, userUpdate, {}, (err, updateRes)=> {
                         if (err) {return next(err);}
-                        console.log(`Added a Like`);
-                        res.redirect(req.get(`Referrer`));
-                    });
-
-                });
-            }
-
-            else {//Process for unliking the profile
-
-                if (likeModelRes.status = 1) {
-
-                    let user = new User({
-                        _id: toLikeResult._id,
-                        portfolioLikes: toLikeResult.portfolioLikes - 1
-                    });
-    
-                    User.findByIdAndUpdate(toLikeResult._id, user, {}, (err, updateRes)=> {
-                        if (err) {return next(err);}
-                        console.log(`Removed a like`);
-    
-                        let likeStat = new LikeStatus({
-                            _id: likeModelRes._id,
-                            status: 0
+                        console.log(`Removed user from liked portfolios`);
+                        //Update user again to decrease like count
+                        let qUserUpdate = new User({
+                            _id: qUserRes._id,
+                            likedPortfolios: qUserRes.likedPortfolios,
+                            viewedPortfolios: qUserRes.viewedPortfolios,
+                            friendList: qUserRes.friendList,
+                            portfolioLikes: qUserRes.portfolioLikes - 1,
+                            dateJoined: qUserRes.dateJoined
                         });
-    
-                        LikeStatus.findByIdAndUpdate(likeModelRes._id, likeStat, {}, (err, updateRes)=> {
+
+                        User.findByIdAndUpdate(qUserRes._id, qUserUpdate, {},(err, updateRes)=> {
                             if (err) {return next(err);}
-                            console.log("Changed Status to 0");
                             res.redirect(req.get(`Referrer`));
                         });
+
                     });
 
                 }
 
-                else {//Reliking a profile
+                else {
+                    //
 
-                    let user = new User({
-                        portfolioLikes: toLikeResult.portfolioLikes + 1
+                    let userUpdate = new User({
+                        _id: userRes._id,
+                        likedPortfolios: userRes.likedPortfolios,
+                        viewedPortfolios: userRes.viewedPortfolios,
+                        friendList: userRes.friendList,
+                        dateJoined: userRes.dateJoined
                     });
 
-                    User.findByIdAndUpdate(toLikeResult._id, user, {}, (err, updateRes)=> {
-                        if (err) {return next(err);}
-                        console.log(`Reliked a comment`);
+                    userUpdate.likedPortfolios.push(qUserRes);
 
-                        let likeStat = new LikeStatus({
-                            _id: likeModelRes._id,
-                            status: 1
+                    User.findByIdAndUpdate(userRes._id, userUpdate, {}, (err, updateRes)=> {
+                        if (err) {return next(err);}
+                        console.log(`Added to portfolio likes`);
+                        
+                        let qUserUpdate = new User({
+                            _id: qUserRes._id,
+                            likedPortfolios: qUserRes.likedPortfolios,
+                            viewedPortfolios: qUserRes.viewedPortfolios,
+                            friendList: qUserRes.friendList,
+                            portfolioLikes: qUserRes.portfolioLikes + 1,
+                            dateJoined: qUserRes.dateJoined
                         });
 
-                        LikeStatus.findByIdAndUpdate(likeModelRes._id, likeStat, {}, (err, updateRes)=> {
+                        console.log(`${qUserUpdate} --- qUser update log`);
+                        User.findByIdAndUpdate(qUserRes._id, qUserUpdate, {}, (err, updateRes)=> {
                             if (err) {return next(err);}
-                            console.log(`Changed status back to 1`);
                             res.redirect(req.get(`Referrer`));
                         });
+
                     });
 
                 }
 
-            }
-
-        });
+            });
+        }
 
     });
 
@@ -128,12 +151,18 @@ exports.POST_confirmFriend = function(req, res, next) {
 
                 let user = new User({
                     _id: req.user._id,
-                    friendList: req.user.friendList
+                    friendList: req.user.friendList,
+                    dateJoined: req.user.dateJoined,
+                    likedPortfolios: req.user.likedPortfolios,
+                    viewedPortfolios: req.user.viewedPortfolios
                 });
     
                 let otherUser = new User({
                     _id: reqFrom._id,
-                    friendList: reqFrom.friendList
+                    friendList: reqFrom.friendList,
+                    dateJoined: reqFrom.dateJoined,
+                    likedPortfolios: reqFrom.likedPortfolios,
+                    viewedPortfolios:  reqFrom.viewedPortfolios
                 });
 
                 user.friendList.push(reqFrom);

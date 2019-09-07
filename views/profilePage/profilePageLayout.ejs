@@ -38,7 +38,7 @@
                     <li><a href="#"><div><img class="nav-icons" src="/assets/icons/icons8-chat-room-96.png"/></div></a></li>
                 -->
                     <li><div class="profile-icon-wrapper" style="cursor: pointer;"><img class="nav-profile-icon" src="/publicAvatar/<%=User.email%>" alt="profile-icon"/></div><ul class="home-nav-dropdown">
-                        <li><a href="#">Profile</a></li>
+                        <li><a href="/users/profile/<%=User.username%>">Profile</a></li>
                         <li><a href="#">Account Settings</a></li>
                         <li><a href="/users/logout">Logout</a></li>
                     </ul></li>
@@ -60,16 +60,18 @@
             </div>
 
             <div class="qUser-interact"> <!-- Forms for liking porrtoflio and portfolio views -->
-                <div>
-                    <form method="POST" action="">
-                        <input type="hidden" value="" name=""/>
-                        <button class="" type="submit"><img src="/assets/icons/icons8-facebook-like-96.png"></button>
+                <div class="qUser-interact-like">
+                    <form method="POST" action="/users/like_profile">
+                        <input type="hidden" value="<%=qUser.username%>" name="qUsername"/>
+                        <button class="profile-like-button" type="submit"><img src="/assets/icons/icons8-facebook-like-96.png"></button>
                     </form>
                     <span><%=qUser.portfolioLikes%></span>
                 </div>
 
-                <div>
-                    <img src="/assets/icons/icons8-eye-96.png"/>
+                <div class="qUser-interact-views">
+                    <div class="profile-views-wrapper">
+                    <img class="profile-views-icon" src="/assets/icons/icons8-eye-96.png"/>
+                    </div>
                     <span><%=qUser.portfolioViews%></span>
                 </div>
             </div>

@@ -22,6 +22,9 @@ router.get(`/profile/:username`, ensureAuth, routeController.GET_profile);
 
 router.get(`/profile/redirect/:id`, ensureAuth, routeController.GET_id_redirect);
 
+//Liking Profile
+router.post(`/like_profile`, ensureAuth, userController.POST_likeProfile);
+
 //Redirect Email 
 router.get(`/profile/:email`, ensureAuth, routeController.redirectEmail);
 
