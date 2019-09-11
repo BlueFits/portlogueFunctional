@@ -24,7 +24,13 @@ module.exports = function(passport) {
 
                 if (isMatch) {
 
-                    return done(null, results);
+                    if (!results.isVerified) {
+                        return done(null, false, {message: "The email for this account has not been verified."});
+                    }
+
+                    else {
+                        return done(null, results);
+                    }
 
                 }
 

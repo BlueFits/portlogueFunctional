@@ -5,6 +5,9 @@ const { ensureAuthHome, ensureAuth } = require(`../config/authenticate`);
 const routeController = require(`../controllers/routeController`);
 const uploadController = require(`../controllers/uploadController`);
 
+//User token confirmation
+router.get(`/:userToken`, routeController.GET_confirmation);
+
 //Will be implemenged
 router.get(`/willBeImplemented`, (req, res, next)=> {
     res.send(`Hazah`);

@@ -5,9 +5,12 @@ const { sanitizeBody } = require('express-validator/filter');
 const Pageres = require(`pageres`);
 const fs = require(`fs`);
 const path = require(`path`);
+const randomString = require(`randomstring`);
+const mailer = require(`../misc/mailer`);
 
 const User = require(`../models/User`);
 const FriendStatus = require(`../models/friendStatus`);
+const Token = require(`../models/Token`);
 
 //Liking Process
 exports.POST_likeProfile = function(req, res, next) {
@@ -471,7 +474,7 @@ exports.create_User = [
                     return;
                 }
 
-                if (results.check2) {
+                if (results.check2) {   
                     customValid.push({msg: `Username is taken`});
                     res.render(`register`, userLocal);
                     return;
@@ -483,19 +486,50 @@ exports.create_User = [
                         bcrypt.hash(user.password, salt, function(err, hash) {
                             if (err) {return next(err);}
                             user.password = hash;
+
                             //Save User with hashed Password
-                            user.save(function(err) {
+                            user.save(function(err, savedUser) {
                                 if (err) {return next(err);}
-                                //Go back to login after saving
-                                req.flash(`success`, `Successfully registered`);
-                                res.redirect(`/users/login`);
+
+                                //Generate secret token for confirmation   
+                                const secretToken = randomString.generate();
+
+                                let tokenCreate = new Token({
+                                    _userId: savedUser,
+                                    token: secretToken,
+                                });
+
+                                console.log(`${savedUser} --- this is the saved user`);
+
+                                tokenCreate.save((err)=> {
+                                    if (err) {return next(err);}
+
+                                    //Send email confirmation
+
+                                    const confirmationEmail = require(`../emailForwards/confirmation`)(secretToken);
+
+                                    const mailOptions = {
+                                        from: `Excited User <mailgun@samples.mailgun.org>`,
+                                        to: req.body.email,
+                                        subject: "Portlogue Verification Email.",
+                                        html: confirmationEmail
+                                    }
+
+                                    console.log(`${req.body.email} -- got the email`);
+
+                                    mailer.transporter.sendMail(mailOptions, (err, data)=> {
+                                        if (err) {return next(err);}
+                                        console.log(`Email has been sent to user`);
+                                    });
+
+                                    //Go back to login after saving
+                                    req.flash(`success`, `An email has been sent to ${savedUser.email}. Please check it to proceed.`); //Change this for user confirmation only
+                                    res.redirect(`/users/login`);
+                                });
                             });
                         });
                     });
                 }
-
-
-
             });
         }
     },

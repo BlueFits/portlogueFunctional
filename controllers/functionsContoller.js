@@ -17,10 +17,13 @@ exports.userHistory = function(reqUser) {
 
 }
 
-exports.renderHomeFilter = function(next, req, res, profileRes, User, friendVal, userCheck) {
+exports.renderHomeFilter = function(next, req, res, profileRes, User, friendVal, userCheck, likeFunction) {
+
+    likeFunction.status = "";
+
     if (userCheck === true) {
         console.log(`Profile already saved`);
-        res.render(`profilePage/profilePageIframe`, {layout: `profilePage/profilePageLayout` , qUser: profileRes, User: req.user, friendVal});
+        res.render(`profilePage/profilePageIframe`, {layout: `profilePage/profilePageLayout` , qUser: profileRes, User: req.user, friendVal, likeFunction});
     }
 
     else {
@@ -46,7 +49,7 @@ exports.renderHomeFilter = function(next, req, res, profileRes, User, friendVal,
 
             User.findByIdAndUpdate(profileRes._id, pRes, {}, (err, updateRes)=> {
                 if (err) {return next(err);}
-                res.render(`profilePage/profilePageIframe`, {layout: `profilePage/profilePageLayout` , qUser: profileRes, User: req.user, friendVal});
+                res.render(`profilePage/profilePageIframe`, {layout: `profilePage/profilePageLayout` , qUser: profileRes, User: req.user, friendVal, likeFunction});
             });
             //
             //res.render(`profilePage/profilePageIframe`, {layout: `profilePage/profilePageLayout` , qUser: profileRes, User: req.user, friendVal});

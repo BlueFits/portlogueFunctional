@@ -8,6 +8,7 @@ const async = require(`async`);
 //Models
 const User = require(`../models/User`);
 const FriendStatus = require(`../models/friendStatus`);
+const Token = require(`../models/Token`);
 
 //Functions
 const functionCntrl = require(`../controllers/functionsContoller`);
@@ -91,6 +92,7 @@ exports.GET_profile = function(req, res, next) {
 
                 let friendVal = {};
                 let userCheck = false;
+                let likeFunction = {};
 
                 for (let val of req.user.viewedPortfolios) {
                     if (val.toString() === profileRes._id.toString()) {
@@ -102,7 +104,10 @@ exports.GET_profile = function(req, res, next) {
                 if (req.user.username === profileRes.username) {
                     console.log(`Req user's profile`);
                     friendVal = {val: `Account Settings`, url: `/`, class: `href-disabled`};
-                    res.render(`profilePage/profilePageIframe`, {layout: `profilePage/profilePageLayout` , qUser: profileRes, User: req.user, friendVal}); //toFix Render Profile instead);
+
+                    likeFunction.status = `disabled`;
+
+                    res.render(`profilePage/profilePageIframe`, {layout: `profilePage/profilePageLayout` , qUser: profileRes, User: req.user, friendVal, likeFunction}); //toFix Render Profile instead);
                     return;
                 }
 
@@ -121,7 +126,7 @@ exports.GET_profile = function(req, res, next) {
                             break;
                     }
 
-                    functionCntrl.renderHomeFilter(next, req, res, profileRes, User, friendVal, userCheck);
+                    functionCntrl.renderHomeFilter(next, req, res, profileRes, User, friendVal, userCheck, likeFunction);
                     return;
                 }
 
@@ -140,7 +145,7 @@ exports.GET_profile = function(req, res, next) {
                             break;
                     }
 
-                    functionCntrl.renderHomeFilter(next, req, res, profileRes, User, friendVal, userCheck);
+                    functionCntrl.renderHomeFilter(next, req, res, profileRes, User, friendVal, userCheck, likeFunction);
                     return;
 
                 }
@@ -148,7 +153,7 @@ exports.GET_profile = function(req, res, next) {
                 if ((!asyncResult.one) || (!asyncResult.two)) {
                     console.log(`async no result one`);
                     friendVal = {val: `Add Friend`, url: `/users/add_friend/${profileRes._id}`, class: ``};
-                    functionCntrl.renderHomeFilter(next, req, res, profileRes, User, friendVal, userCheck);
+                    functionCntrl.renderHomeFilter(next, req, res, profileRes, User, friendVal, userCheck, likeFunction);
                     return;
                 }
             });           
@@ -584,4 +589,44 @@ const renderHomeOrNew = function(req, res, pullCollection, FriendStatus) {
             }
         });
     })
+}
+
+//User confirmation
+exports.GET_confirmation = function(req, res, next) {
+
+    const userToken = req.params.userToken;
+
+    //Find the account
+    Token.findOne({"token": userToken}).populate(`_userId`).exec((err, result)=> {
+
+        if (err) {return next(err);}
+
+        if (!result) {
+            res.sendStatus(404);
+        }
+
+        else {
+            User.findById(result._userId._id).exec((err, userRes)=> {
+                if (err) {return next(err);}
+    
+                let userUpdate = new User({
+                    _id: userRes._id,
+                    isVerified: true
+                });
+    
+                User.findByIdAndUpdate(userRes._id, userUpdate, {}, (err, udpateRes)=> {
+                    if (err) {return next(err);}
+
+                    Token.findByIdAndDelete(result._id, (err, deleteRes)=> {
+                        if (err) {return next(err);}
+                        req.flash(`success`, `Account has been successfully created`);
+                        res.redirect(`/users/login`);
+                    });
+                    
+                });
+    
+            });
+
+        }
+    });
 }

@@ -1,15 +1,17 @@
-<header>
-    <img alt="PortLogue-icon"/>
+<div class="setup-wrapper">
+
+<header class="portlogue-setup-icon">
+    <img src="/assets/icons/portlogue-setup-icon.svg" alt="PortLogue-icon"/>
 </header>
 
-<section>
-    <div>
-        <div>
-            <h1>Welcome, <%= User.firstName %>!</h1>
-            <p>Let's setup your profile, tell us which country you hail from!</p>
+<section class="setup-section">
+    <div class="country-setup">
+        <div class="setup-greeter">
+            <h1 style="color: #636363;">Welcome, <%= User.firstName.charAt(0).toUpperCase() + User.firstName.slice(1); %>!</h1>
+            <p class="h1-sub" style="color: #7c7c7c;">Let's setup your profile, tell us which country you hail from!</p>
         </div>
-        <form method="POST" action="">
-            <div>
+        <form method="POST" action="" class="country-setup-form">
+            <div class="country-1-div">
                 <label for='country'>Country/Region</label>
                 <select name='country'>
 
@@ -19,17 +21,20 @@
 
                 </select>
             </div>
-            <div>
+            <div class="country-2-div">
                 <label for='postalCode'>Postal Code</label>
                 <input name="postalCode" type="name"/>
             </div>
-            <button type="submit">Next</button>
+            <button class="setup-button" type="submit">Next</button>
         </form>
     </div>
 </section>
+
 
 <ul>
         <% for(let val of errors) {%>
             <li><%= val.msg %></li>
         <% } %>
 </ul>
+
+</div>

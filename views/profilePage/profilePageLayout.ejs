@@ -63,7 +63,7 @@
                 <div class="qUser-interact-like">
                     <form method="POST" action="/users/like_profile">
                         <input type="hidden" value="<%=qUser.username%>" name="qUsername"/>
-                        <button class="profile-like-button" type="submit"><img src="/assets/icons/icons8-facebook-like-96.png"></button>
+                        <button class="profile-like-button" type="submit" <%=likeFunction.status%>><img src="/assets/icons/icons8-facebook-like-96.png"></button>
                     </form>
                     <span><%=qUser.portfolioLikes%></span>
                 </div>
@@ -126,6 +126,7 @@
         $(`#qs-dropdown`).on(`click`, ()=> {
             $(`.home-quick-dropdown`).toggle();
         })
+
     
     </script>
 </body>

@@ -156,6 +156,7 @@ h3 {
 
 .login-flash-message {
     margin-top: 5px;
+    text-align: center;
 }
 
 /** Register Page **/
@@ -262,7 +263,99 @@ h3 {
     background-color: #266e96;
 }
 
+/* Setup Pages */
+
+.setup-wrapper {
+    height: 100vh;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+    background-color: #fbfbfb;
+}
+
+.portlogue-setup-icon {
+    position: absolute;
+    top: 50px;
+    left: 150px;
+}
+
+.portlogue-setup-icon > img {
+    width: 190px;
+}
+
+.setup-section {
+    width: 700px;
+    height: 500px;
+}
+
+.setup-greeter {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.setup-greeter p {
+    margin-top: 5px;
+}
+
+.setup-button {
+    width: 500px;
+    height: 40px;
+    border: none;
+    background-color: #3498db;
+    color: #fff;
+    font-size: 21px;
+    margin-top: 25px;
+    margin-bottom: 130px;
+    cursor: pointer;
+}
+
+/* Country and postal code  */
+
+.country-setup {
+    display: flex;
+    flex-direction: column;
+
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    
+}
+
+.country-setup-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.country-1-div,
+.country-2-div {
+    display: flex;
+    flex-direction: column;
+    color: #aaaaaa;
+    margin: 8px 0;
+}
+
+.country-1-div select,
+.country-2-div input {
+    width: 500px;
+    height: 40px;
+    border-radius: 5px;
+    border: 1px solid #7f7f7f;
+    margin-top: 5px;
+    padding: 5px;
+}
 /* HOME PAGE */
+
+.hidden-overlay {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    display: none;
+}
 
 /* Home nav */
 
@@ -1034,11 +1127,16 @@ footer li {
     cursor: pointer;
     background-color: #fff;
     margin-right: 5px;
-    transition: 0.1s ease-in-out;
+    transition: 0.1 ease-in-out;
 }
 
-.profile-like-button:hover {
+.profile-like-button:hover:enabled {
     background-color: #d1d1d1;
+}
+
+.profile-like-button:disabled {
+    /* toFix */
+    cursor: default;
 }
 
 .profile-views-wrapper {

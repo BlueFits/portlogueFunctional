@@ -57,6 +57,11 @@ router.post(`/register`, userController.create_User);
 
 router.get(`/register`, routeController.renderRegister);
 
+/* Verification Route */
+
+/*router.post(`/resend`, userController.resendTokenPOST); */
+
+
 /* Logout Route */
 
 router.get(`/logout`, passportController.logoutUser);
