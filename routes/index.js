@@ -6,7 +6,7 @@ const routeController = require(`../controllers/routeController`);
 const uploadController = require(`../controllers/uploadController`);
 
 //User token confirmation
-router.get(`/:userToken`, routeController.GET_confirmation);
+router.get(`/confirm/:userToken`, routeController.GET_confirmation);
 
 //Will be implemenged
 router.get(`/willBeImplemented`, (req, res, next)=> {

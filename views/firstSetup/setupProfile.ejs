@@ -1,31 +1,33 @@
-<header>
-    <img alt="PortLogue-icon"/>
+<div class="setup-wrapper">
+
+<header class="portlogue-setup-icon">
+    <img src="/assets/icons/portlogue-setup-icon.svg" alt="PortLogue-icon"/>
 </header>
 
-<section>
-    <div>
-        <h1>Setup your profile</h1>
-        <p>Tell people who you are, what you do, and how they can reach you</p>
+<section class="profile-setup">
+    <div class="setup-greeter">
+        <h1 style="color: #636363;">Setup your profile</h1>
+        <p class="h1-sub" style="color: #7c7c7c;">Tell people who you are, what you do, <br/> and how they can reach you</p>
     </div>
-    <form method="POST" action="">
-        <div>
+    <form method="POST" action="" class="country-setup-form">
+        <div class="country-2-div">
             <label for="emailDisplay">Email</label>
             <input type="email" name="emailDisplay" value="<%= User.email %>"/>
         </div>
-        <div>
+        <div class="country-2-div">
                 <label for="phone">Phone</label>
                 <input type="text" name="phone" placeholder="Optional"/>
         </div>
-        <div>
+        <div class="country-2-div">
                 <label for="occupation">Occupation</label>
                 <input type="text" name="occupation"/>
         </div>
-        <div>
+        <div class="country-2-div">
                 <label for="bio">Bio</label>
                 <textarea name="bio" maxlength="160"></textarea>
                 <p>Max: 160</p>
         </div>
-        <button type="submit">Next</button>
+        <button class="setup-button" type="submit">Next</button>
     </form>
 </section>
 
@@ -34,3 +36,13 @@
             <li><%= val.msg %></li>
         <% } %>
 </ul>
+
+</div>
+
+<script>
+        $(`.setup-button`).on(`click`, ()=> {
+            $(`.setup-button`).attr(`disabled`,`true`);
+            $(`.setup-button`).html(`<div class="loader"></div>`);
+            $(`.country-setup-form`).submit();
+        });
+</script>

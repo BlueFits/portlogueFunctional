@@ -445,7 +445,8 @@ exports.create_User = [
                 portfolioUrl: `NOT SET`,
                 portfolioImg: {data: fs.readFileSync(path.join(__dirname, `../portfolioThumb/no-img.png`)), contentType:`image/png` },
                 portfolioLikes: 0,
-                portfolioViews: 0
+                portfolioViews: 0,
+                isVerified: false
             });
 
             //Check if user already exists

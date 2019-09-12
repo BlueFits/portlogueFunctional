@@ -192,7 +192,7 @@ exports.renderHome = function(req, res, next) {
         if (err) {return next(err);}
 
         //First time setup will run if params are not set
-        if ( (result.country === 'NOT SET') && (result.emailDisplay === `NOT SET`) && (result.postalCode === `NOT SET`) && (result.portfolioUrl === `NOT SET`) ) {
+        if ( (result.country === 'NOT SET') || (result.emailDisplay === `NOT SET`) || (result.portfolioUrl === `NOT SET`) ) {
             res.redirect(`/users/first_time_setup`);
         }
 
@@ -533,6 +533,47 @@ exports.GET_search_home = [
 ];
 
 
+//User confirmation
+exports.GET_confirmation = function(req, res, next) {
+
+    const userToken = req.params.userToken;
+
+    //Find the account
+    Token.findOne({"token": userToken}).populate(`_userId`).exec((err, result)=> {
+
+        if (err) {return next(err);}
+
+        if (!result) {
+
+            res.sendStatus(404 + " Error at GET_confirmation ");
+        }
+
+        else {
+            User.findById(result._userId._id).exec((err, userRes)=> {
+                if (err) {return next(err);}
+    
+                let userUpdate = new User({
+                    _id: userRes._id,
+                    isVerified: true
+                });
+    
+                User.findByIdAndUpdate(userRes._id, userUpdate, {}, (err, udpateRes)=> {
+                    if (err) {return next(err);}
+
+                    Token.findByIdAndDelete(result._id, (err, deleteRes)=> {
+                        if (err) {return next(err);}
+                        req.flash(`success`, `Account has been successfully created`);
+                        res.redirect(`/users/login`);
+                    });
+                    
+                });
+    
+            });
+
+        }
+    });
+}
+
 
 //Initialize Functions
 const pullCollection = User.find({});
@@ -589,44 +630,4 @@ const renderHomeOrNew = function(req, res, pullCollection, FriendStatus) {
             }
         });
     })
-}
-
-//User confirmation
-exports.GET_confirmation = function(req, res, next) {
-
-    const userToken = req.params.userToken;
-
-    //Find the account
-    Token.findOne({"token": userToken}).populate(`_userId`).exec((err, result)=> {
-
-        if (err) {return next(err);}
-
-        if (!result) {
-            res.sendStatus(404);
-        }
-
-        else {
-            User.findById(result._userId._id).exec((err, userRes)=> {
-                if (err) {return next(err);}
-    
-                let userUpdate = new User({
-                    _id: userRes._id,
-                    isVerified: true
-                });
-    
-                User.findByIdAndUpdate(userRes._id, userUpdate, {}, (err, udpateRes)=> {
-                    if (err) {return next(err);}
-
-                    Token.findByIdAndDelete(result._id, (err, deleteRes)=> {
-                        if (err) {return next(err);}
-                        req.flash(`success`, `Account has been successfully created`);
-                        res.redirect(`/users/login`);
-                    });
-                    
-                });
-    
-            });
-
-        }
-    });
 }

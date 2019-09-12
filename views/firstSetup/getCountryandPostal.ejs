@@ -26,6 +26,7 @@
                 <input name="postalCode" type="name"/>
             </div>
             <button class="setup-button" type="submit">Next</button>
+            
         </form>
     </div>
 </section>
@@ -38,3 +39,11 @@
 </ul>
 
 </div>
+
+<script>
+    $(`.setup-button`).on(`click`, ()=> {
+        $(`.setup-button`).attr(`disabled`,`true`);
+        $(`.setup-button`).html(`<div class="loader"></div>`);
+        $(`.country-setup-form`).submit();
+    });
+</script>

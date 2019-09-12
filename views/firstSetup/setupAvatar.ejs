@@ -1,29 +1,40 @@
-<header>
-        <img alt="PortLogue-icon"/>
+<div class="setup-wrapper">
+
+<header class="portlogue-setup-icon">
+        <img src="/assets/icons/portlogue-setup-icon.svg" alt="PortLogue-icon"/>
 </header>
 
-<section>
-    <div>
-        <h1>Add a profile photo</h1>
-        <p>Help people recognize you</p>
+<section class="avatar-section">
+    <div class="setup-greeter">
+        <h1 style="color: #636363;">Add a profile photo</h1>
+        <p class="h1-sub" style="color: #7c7c7c;">Help people recognize you</p>
     </div>
-    <div>
-        <div>
+    <div class="setup-avatar">
+        <div class="avatar-wrapper">
                 <img src="<%= avatar %>"/>
         </div>
-        <div>
+        <div class="setup-avatar-desc">
             <h2><%= User.fullNameDisplay %></h2>
             <p><%= User.occupation %></p>
             <p><%= User.country %></p>
         </div>
     </div>
 
-    <div>
-        <form method="POST" action="" enctype="multipart/form-data">
-            <input type="file" name="avatar"/>
-            <button type="submit">Add photo</button>
+    <div class="avatar-form">
+        <form id="avatar-form-proccess" method="POST" action="" enctype="multipart/form-data">
+            <input class="avatar-input" id="uploadAvatarPhoto" type="file" name="avatar"/>
+            
+            <button class="avatar-button" type="submit" id="submitButton">Upload</button>
         </form>
-        <a href="/users/first_time_setup_link">Next</a>
+        <a class="avatar-next" href="/users/first_time_setup_link">Next</a>
     </div>
-
 </section>
+</div>
+
+<script>
+        $(`.avatar-button`).on(`click`, ()=> {
+            $(`.avatar-button`).attr(`disabled`,`true`);
+            $(`.avatar-button`).html(`<div class="loaderB"></div>`);
+            $(`#avatar-form-proccess`).submit();
+        });
+    </script>

@@ -1,19 +1,22 @@
-<header>
-    <img alt="PortLogue-icon"/>
+<div class="setup-wrapper">
+
+<header class="portlogue-setup-icon">
+    <img src="/assets/icons/portlogue-setup-icon.svg" alt="PortLogue-icon"/>
 </header>
 
 <section>
-    <div>
-        <h1>Link your personal website</h1>
-        <p>Showcase your website to the portlogue community</p>
+    <div class="country-setup">
+    <div class="setup-greeter">
+        <h1 style="color: #636363;">Link your personal website</h1>
+        <p class="h1-sub" style="color: #7c7c7c;">Showcase your website to the <br/> portlogue community!</p>
     </div>
     <div>
-        <form method="POST" action="">
-            <div>
+        <form method="POST" action="" class="country-setup-form">
+            <div class="country-2-div">
             <label for="link">Link</label>
-            <input type="url" name="link" placeholder="https://www.YourWebsite.com"/>
+            <input id="linkInput" type="url" name="link" placeholder="https://www.YourWebsite.com"/>
             </div>
-            <div>
+            <div class="country-1-div">
             <label for="websiteType">Website type</label>
             <select name="websiteType">
                 <option value="generalPortfolio">General Portfolio</option>
@@ -26,11 +29,29 @@
                 <option value="businessPortfolio">Business Portfolio</option>
             </select>
             </div>
-            <button type="submit">Finish</button>
+            <button class="setup-button" type="submit">Finish</button>
         </form>
+    </div>
     </div>
 </section>
 
 <% for(let val of errors) {%>
     <li><%= val.msg %></li>
 <% } %>
+
+</div>
+
+<script>
+
+    $(`#linkInput`).on(`click`, ()=> {
+        let text = $(`#linkInput`);
+        (!text.val()) ?  text.val(`https://${text.val()}`) : "";
+    });
+
+    $(`.setup-button`).on(`click`, ()=> {
+        $(`.setup-button`).attr(`disabled`,`true`);
+        $(`.setup-button`).html(`<div class="loader"></div>`);
+        $(`.country-setup-form`).submit();
+    });
+
+</script>
