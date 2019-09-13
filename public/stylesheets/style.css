@@ -407,7 +407,8 @@ h3 {
 
 .setup-avatar {
     margin-top: 10px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);    display: flex;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);    
+    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -746,6 +747,165 @@ h3 {
     height: 100%;
 }
 
+/* Search Page */
+
+.search-page-wrapper,
+.search-header {
+    width: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.search-nav {
+    height: 70px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.search-nav a {
+    text-decoration: none;
+    color: #969696;
+}
+
+.search-nav-left,
+.search-nav-right {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+}
+
+.search-nav-left li,
+.search-nav-right li{
+    margin: 0 15px;
+}
+
+.search-nav-left li:first-of-type {
+    margin-left: 50px;    
+}
+
+.search-nav-right li:first-of-type {
+    margin-right: 50px;
+}
+
+.search-index-wrapper {
+    margin-top: 55px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.search-index-greeter {
+    text-align: center;
+}
+
+.search-index-form {
+    margin-top: 20px;
+    border: 1px solid #bbbbbb;
+    border-radius: 5px;
+    background-color: #fff;
+    height: 45px;
+    width: 70%;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.search-index-button {
+    background-color: #fff;
+    border: none;
+    outline: none;
+    margin: 0 10px;
+}
+
+.search-index-input {
+    height: 80%;
+    width: 100%;
+    border: none;
+    outline: none;
+}
+
+.search-result-notif {
+    margin: 30px 0;
+}
+
+.search-result-wrapper {
+    width: 70%;
+    min-height: 58vh;
+}
+
+.search-result {
+    background-color: #fff;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 5px;
+    box-shadow: 0px 5px 12px -8px rgba(133,133,133,1);
+    margin-bottom: 10px;
+    transition: 0.1s ease-in-out;
+}
+
+.search-result:hover {
+    border: 1px solid grey;
+    transform: scale(1.02);
+}
+
+.search-result-img-wrap {
+    border-radius: 50%;
+    width: 70px;
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    margin-right: 10px;
+    background-color: grey;
+}
+
+.search-result-img-wrap img {
+    height: 100%;
+}
+
+.search-result-a {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 85%;
+    padding: 10px;
+    text-decoration: none;
+    color: #969696;
+}
+
+.search-functions {
+    border-left: 1px solid #bbbbbb;;
+    height: 75px;
+    width: 200px;
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-right: 10px;
+}
+
+.search-functions a {
+    text-decoration: none;
+    color: #969696;
+}
+
+.search-end {
+    color: #969696;
+    padding-bottom: 40px;
+}
+
 /* Friend Request Styles*/
 
 .add-friend-dropdown{
@@ -916,11 +1076,16 @@ h3 {
     overflow: hidden;
     border-radius: 100%;
     margin-right: 10px;
-    background-color: black;
+    background-color: grey;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .thumbnail-profile-img {
     height: 100%;
+    margin-left: 10px; /* toFix not sure why I have to do this */
 }
 
 .profile-name-wrapper {
@@ -1093,9 +1258,8 @@ footer li {
 
 .profile-topbar > nav {
     width: 100%;
-    height: 60px;
-    border: 3px solid green;
-
+    height: 70px;
+    
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1117,11 +1281,11 @@ footer li {
     display: flex;
     justify-content: center; /* Debugg For now that functions are not complete */
     align-items: center;
-    margin: 0 15px;
+    margin: 0 35px;
 }
 
 .profile-right-nav {
-    width: 199px;
+    width: 270px;
     justify-content: flex-end;
 }
 
@@ -1168,7 +1332,7 @@ footer li {
     z-index: 2;
     box-shadow: 0px 0px 5px -2px black;
 
-    top: 10%;
+    top: 15%;
 
     width: 350px;
     height: 65%;
@@ -1203,6 +1367,17 @@ footer li {
     align-items: center;
     justify-content: center;
     text-align: center;
+}
+
+.qUser-contact-div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.qUser-contact-div img {
+    margin-bottom: 5px;
 }
 
 .qUser-desc {
@@ -1245,7 +1420,10 @@ footer li {
     height: 95px;
     border-radius: 100%;
     overflow: hidden;
-    background-color: black;
+    background-color: grey;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .profile-qUser-avatar > img {

@@ -6,7 +6,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>PortLogue</title>
     <link rel="stylesheet" href="/stylesheets/style.css"/>
-    <script src="/scripts/app.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="//unpkg.com/jscroll/dist/jquery.jscroll.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jscroll/2.4.1/jquery.jscroll.min.js"></script>
@@ -172,66 +171,6 @@
             </ul>
         </div>
     </footer>
-
-    <script>
-
-        
-    
-        $(`.profile-icon-wrapper`).on(`click`,()=> {
-            $(`.home-nav-dropdown`).toggle();
-
-            if ($(`.add-friend-dropdown`).css(`display`) === `block` ||  $(`.home-quick-dropdown`).css(`display`) === `block`) {
-                $(`.hidden-overlay`).css(`display`, `block`);       
-            }
-
-            else {
-                $(`.hidden-overlay`).toggle();
-            }
-
-            $(`.add-friend-dropdown`).css(`display`,`none`);
-            $(`.home-quick-dropdown`).css(`display`, `none`);
-        });
-
-        $(`#qs-dropdown`).on(`click`, ()=> {
-            $(`.home-quick-dropdown`).toggle();
-
-            if ($(`.add-friend-dropdown`).css(`display`) === `block` || $(`.home-nav-dropdown`).css(`display`) === `block`) {
-                $(`.hidden-overlay`).css(`display`, `block`);       
-            }
-
-            else {
-                $(`.hidden-overlay`).toggle();
-            }
-            
-            $(`.add-friend-dropdown`).css(`display`,`none`);
-            $(`.home-nav-dropdown`).css(`display`, `none`);
-        });
-
-        $(`#friend-drop`).on(`click`, ()=> {
-            $(`.add-friend-dropdown`).toggle();
-
-            if ($(`.home-nav-dropdown`).css(`display`) === `block` ||  $(`.home-quick-dropdown`).css(`display`) === `block`) {
-                $(`.hidden-overlay`).css(`display`, `block`);
-            }
-
-            else {
-                $(`.hidden-overlay`).toggle();
-            }
-
-            $(`.home-nav-dropdown`).css(`display`, `none`);
-            $(`.home-quick-dropdown`).css(`display`, `none`);
-        });
-
-
-        //On click of overlay hide all popups
-        $(`.hidden-overlay`).on(`click`, ()=> {
-            $(`.hidden-overlay`).toggle();
-            //
-            $(`.add-friend-dropdown`).css(`display`,`none`);
-            $(`.home-nav-dropdown`).css(`display`,`none`);
-            $(`.home-quick-dropdown`).css(`display`, `none`);
-        });
-    
-    </script>
+    <script src="/scripts/front-end-functions.js"></script>
 </body>
 </html>

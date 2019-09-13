@@ -1,54 +1,59 @@
-<header>
-    <nav>
-        <ul>
+<div class="search-page-wrapper">
+<header class="search-header">
+    <nav class="search-nav">
+        <ul class="search-nav-left">
             <li><a href="/">Home</a></li>
             <li><a href="/#discoverSection">Discover</a></li>
             <li><a href="/willBeImplemented">Friends</a></li>
         </ul>
-        <ul>
-            <li><a href="#"><div><img src="#"/></div></a></li>
-            <li><a href="#"><div><img src="#"/></div></a></li>
-            <li><a href="#"><div><img src="#" alt="profile-icon"/></div></a></li>
+        <ul class="search-nav-right">
+        <!--<li><a href="#"><div><img src="#"/></div></a></li>
+            <li><a href="#"><div><img src="#"/></div></a></li>-->
+            <li><div class="profile-icon-wrapper" style="cursor: pointer;"><img class="nav-profile-icon" src="/publicAvatar/<%=User.email%>" alt="profile-icon"/></div><ul class="home-nav-dropdown">
+                <li><a href="/users/profile/<%=User.username%>">Profile</a></li>
+                <li><a href="#">Account Settings</a></li>
+                <li><a href="/users/logout">Logout</a></li>
+            </ul></li>
         </ul>
     </nav>
 
-    <div>
-        <div>
-            <h1>Search</h1>
-            <span>Search PortLogue users by their name, username, or email.</span>
+    <div class="search-index-wrapper">
+        <div class="search-index-greeter">
+            <h1 style="color: #7f7f7f">Search</h1>
+            <span class="h1-sub" style="color: #bbbbbb;">Search PortLogue users by their name, username, or email.</span>
         </div>
-        <form method="GET" action="/search">
-            <button type="submit"><img src="#" alt="search-icon"/></button>
-            <input type="text" name="q"/>
+        <form class="search-index-form" method="GET" action="/search">
+            <button class="search-index-button" type="submit"><img class="nav-icons" src="/assets/icons/icons8-search-filled-96.png" alt="search-icon"/></button>
+            <input class="search-index-input" type="text" name="q"/>
         </form>
     </div>
 </header>
 
 
-<section>
-    <span><%- ((qUsers, qryFor)=>{ 
-        if (qUsers.length === 0) {
-            return `No results for <strong>${qryFor}</strong>`;
-        }
-        else {
-            return `Results for <strong>${qryFor}</strong>`;
-        }
-    })(qUsers, qryFor);%></span>
+<span style="color: #bbbbbb" class="h1-sub search-result-notif"><%- ((qUsers, qryFor)=>{ 
+    if (qUsers.length === 0) {
+        return `No results for <strong>${qryFor}</strong>`;
+    }
+    else {
+        return `Results for <strong>${qryFor}</strong>`;
+    }
+})(qUsers, qryFor);%></span>
 
-    <div>
-        <ul>
+
+<section class="search-result-wrapper">
+        <ul class="search-result-ul">
             <% for (let val of qUsers) { %>
-                <li>
-                    <a href="/users/profile/<%= val.username %>">
-                        <div><img src="/publicAvatar/<%= val.email %>"></div>
+                <li class="search-result">
+                    <a class="search-result-a" href="/users/profile/<%= val.username %>">
+                        <div class="search-result-img-wrap"><img src="/publicAvatar/<%= val.email %>"></div>
                         <div>
                             <p><%=val.fullNameDisplay%></p>
-                            <p><%=val.username%>||<%=val.email%></p>
+                            <p><%=val.username%>&nbsp;||&nbsp;<%=val.email%></p>
                             <p><%=val.occupation%></p>
-                            <p><%val.country%></p>
+                            <p><%=val.country%></p>
                         </div>
                     </a>
-                    <div>
+                    <div class="search-functions">
                         <a href="/users/send_message/<%= val.username %>">Send message</a>
                         <a href="<%= val.portfolioUrl%>">Visit official website</a>
                         <a href="/users/report/<%=val.username%>">Report</a>
@@ -56,11 +61,12 @@
                 </li>
                 <%}%> 
         </ul>
-    </div>
 </section>
 
-<div>
+<div class="search-end">
     <span>End of results</span>
+</div>
+
 </div>
 
 <footer>
