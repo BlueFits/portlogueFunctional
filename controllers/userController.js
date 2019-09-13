@@ -3,6 +3,7 @@ const async = require(`async`);
 const { check,body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 const Pageres = require(`pageres`);
+const captureWebsite = require(`capture-website`);
 const fs = require(`fs`);
 const path = require(`path`);
 const randomString = require(`randomstring`);
@@ -266,20 +267,30 @@ exports.POST_first_Setup_Link = [
         
         else {
 
+            //
             async function snap() {
+                await captureWebsite.file(req.body.link, `${req.user.email}-webthumbnail.png`, {
+                    width: 1024,
+                    height: 576
+                });
+                console.log(`capture website ran`);
+            };
+            //
+
+            /*async function snap() {
                 console.log(`web thumb running`);
                 await new Pageres({delay: 0})
                     .src(req.body.link, [`1024x576`], {crop: true, filename: `${req.user.email}-webthumbnail`})
                     .dest(path.join(__dirname, `../portfolioThumb`))
                     .run();
                     console.log(`It ran`);
-            };
+            };*/
 
             snap().then((cb)=> {
                 console.log(`Saving User`);
                 let newWebThumb = new User({
                     _id: req.user._id,
-                    portfolioImg: {data: fs.readFileSync(path.join(__dirname, `../portfolioThumb/${req.user.email}-webthumbnail.png`)), contentType:`image/png` }
+                    portfolioImg: {data: fs.readFileSync(path.join(__dirname, `../${req.user.email}-webthumbnail.png`)), contentType:`image/png` }
                 });
 
                 //Update props
@@ -287,7 +298,7 @@ exports.POST_first_Setup_Link = [
                     console.log(`User saved`);
                     if (err) {return next(err);}
                     //Delete image after Upload
-                    fs.unlink(path.join(__dirname, `../portfolioThumb/${req.user.email}-webthumbnail.png`), (err) => {
+                    fs.unlink(path.join(__dirname, `../${req.user.email}-webthumbnail.png`), (err) => {
                     if (err) throw `Error at userController fs.unlink`;
                     console.log(`File has been deleted`);
                     res.redirect(`/`);
