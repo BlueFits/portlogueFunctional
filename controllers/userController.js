@@ -290,6 +290,7 @@ exports.POST_first_Setup_Link = [
                     fs.unlink(path.join(__dirname, `../portfolioThumb/${req.user.email}-webthumbnail.png`), (err) => {
                     if (err) throw `Error at userController fs.unlink`;
                     console.log(`File has been deleted`);
+                    res.redirect(`/`);
                     });
                 });
             });
@@ -303,7 +304,6 @@ exports.POST_first_Setup_Link = [
             User.findByIdAndUpdate(req.user._id, user, {}, (err, updateRes)=> {
                 console.log(`User info A saved`);
                 if (err) {return next(err);}
-                res.redirect(`/`);
             });
         }
     }
