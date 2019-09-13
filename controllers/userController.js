@@ -289,10 +289,10 @@ exports.POST_first_Setup_Link = [
                             fs.unlink(path.join(__dirname, `../portfolioThumb/${req.user.email}-webthumbnail.png`), (err) => {
                             if (err) throw `Error at userController fs.unlink`;
                             console.log(`File has been deleted`);
+                            res.redirect(`/`);
                             });
                         });
                 })();
-                res.redirect(`/`);
         }
     }
     
