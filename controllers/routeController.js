@@ -192,7 +192,7 @@ exports.renderHome = function(req, res, next) {
         if (err) {return next(err);}
 
         //First time setup will run if params are not set
-        if ( (result.country === 'NOT SET') || (result.emailDisplay === `NOT SET`) || (result.portfolioUrl === `NOT SET`) ) {
+        if ( (result.country === 'NOT SET') || (result.emailDisplay === `NOT SET`) ) {
             res.redirect(`/users/first_time_setup`);
         }
 
