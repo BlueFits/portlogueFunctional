@@ -266,30 +266,33 @@ exports.POST_first_Setup_Link = [
         
         else {
 
-            (async function() {
+            async function snap() {
                 console.log(`web thumb running`);
                 await new Pageres({delay: 0})
                     .src(req.body.link, [`1024x576`], {crop: true, filename: `${req.user.email}-webthumbnail`})
                     .dest(path.join(__dirname, `../portfolioThumb`))
                     .run();
                     console.log(`It ran`);
-                    console.log(`Saving User`);
-                    let newWebThumb = new User({
-                        _id: req.user._id,
-                        portfolioImg: {data: fs.readFileSync(path.join(__dirname, `../portfolioThumb/${req.user.email}-webthumbnail.png`)), contentType:`image/png` }
-                    });
+            };
 
-                    //Update props
-                    User.findByIdAndUpdate(req.user._id, newWebThumb, {}, function(err, results) {
-                        console.log(`User saved`);
-                        if (err) {return next(err);}
-                        //Delete image after Upload
-                        fs.unlink(path.join(__dirname, `../portfolioThumb/${req.user.email}-webthumbnail.png`), (err) => {
-                        if (err) throw `Error at userController fs.unlink`;
-                        console.log(`File has been deleted`);
-                        });
+            snap().then((cb)=> {
+                console.log(`Saving User`);
+                let newWebThumb = new User({
+                    _id: req.user._id,
+                    portfolioImg: {data: fs.readFileSync(path.join(__dirname, `../portfolioThumb/${req.user.email}-webthumbnail.png`)), contentType:`image/png` }
+                });
+
+                //Update props
+                User.findByIdAndUpdate(req.user._id, newWebThumb, {}, function(err, results) {
+                    console.log(`User saved`);
+                    if (err) {return next(err);}
+                    //Delete image after Upload
+                    fs.unlink(path.join(__dirname, `../portfolioThumb/${req.user.email}-webthumbnail.png`), (err) => {
+                    if (err) throw `Error at userController fs.unlink`;
+                    console.log(`File has been deleted`);
                     });
-            })();
+                });
+            });
 
             let user = new User({
                 _id: req.user._id,
