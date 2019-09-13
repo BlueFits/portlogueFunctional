@@ -542,7 +542,7 @@ exports.create_User = [
                                     const confirmationEmail = require(`../emailForwards/confirmation`)(secretToken);
 
                                     const mailOptions = {
-                                        from: `Excited User <mailgun@samples.mailgun.org>`,
+                                        from: `info@portlogue.com`,
                                         to: req.body.email,
                                         subject: "Portlogue Verification Email.",
                                         html: confirmationEmail
