@@ -267,14 +267,21 @@ exports.POST_first_Setup_Link = [
         
         else {
 
-            //
+            //This wont run in heroku
             async function snap() {
                 await captureWebsite.file(req.body.link, `${req.user.email}-webthumbnail.png`, {
                     width: 1024,
-                    height: 576
+                    height: 576,
+                    launchOptions: {
+                        args: [
+                            '--no-sandbox',
+                            '--disable-setuid-sandbox',
+                            '--disable-dev-shm-usage',
+                            '--single-process'
+                          ],
+                    }
                 });
                 console.log(`capture website ran`);
-                res.redirect(`/`);
             };
             //
 
@@ -287,7 +294,7 @@ exports.POST_first_Setup_Link = [
                     console.log(`It ran`);
             };*/
 
-            /*snap().then((cb)=> {
+            snap().then((cb)=> {
                 console.log(`Saving User`);
                 let newWebThumb = new User({
                     _id: req.user._id,
@@ -306,7 +313,7 @@ exports.POST_first_Setup_Link = [
                     });
                 });
             });
-            */
+            
 
             let user = new User({
                 _id: req.user._id,
