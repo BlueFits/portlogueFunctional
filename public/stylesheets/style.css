@@ -1204,7 +1204,7 @@ footer li {
     padding: 10px;
     border: 2px solid #fff;
     border-radius: 100%;
-    transition: 0.3s ease-in-out;
+    transition: 0.1s ease-in-out;
     cursor: pointer;
     transform: scale(0.9);
     background-color: #000000;
@@ -1214,6 +1214,10 @@ footer li {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.profile-ui-button:hover {
+    transform: scale(1);
 }
 
 .profile-ui-button img {
