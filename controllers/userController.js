@@ -274,6 +274,7 @@ exports.POST_first_Setup_Link = [
                     height: 576
                 });
                 console.log(`capture website ran`);
+                res.redirect(`/`);
             };
             //
 
@@ -286,7 +287,7 @@ exports.POST_first_Setup_Link = [
                     console.log(`It ran`);
             };*/
 
-            snap().then((cb)=> {
+            /*snap().then((cb)=> {
                 console.log(`Saving User`);
                 let newWebThumb = new User({
                     _id: req.user._id,
@@ -305,6 +306,7 @@ exports.POST_first_Setup_Link = [
                     });
                 });
             });
+            */
 
             let user = new User({
                 _id: req.user._id,
