@@ -231,7 +231,10 @@ exports.GET_first_Setup_Link = function(req, res, next) {
     if ((req.user.portfolioUrl === `NOT SET`) && (req.user.portfolioType === `NOT SET`)) {
         res.render(`firstSetup/setupLink`, {errors: [], User: req.user});
     }
-    res.redirect(`/`);
+
+    else {
+        res.redirect(`/`);
+    }
 };
 
 
