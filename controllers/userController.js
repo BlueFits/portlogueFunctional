@@ -283,7 +283,7 @@ exports.POST_first_Setup_Link = [
                 });
                 console.log(`capture website ran`);
             };
-            //
+            //remove
 
             /*async function snap() {
                 console.log(`web thumb running`);
