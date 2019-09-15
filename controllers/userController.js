@@ -2,7 +2,6 @@ const bcrypt = require(`bcrypt`);
 const async = require(`async`);
 const { check,body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
-const Pageres = require(`pageres`);
 const captureWebsite = require(`capture-website`);
 const fs = require(`fs`);
 const path = require(`path`);
@@ -61,6 +60,7 @@ exports.POST_likeProfile = function(req, res, next) {
 
                     let userUpdate = new User({
                         _id: userRes._id,
+                        status: "active",
                         likedPortfolios: userResNewList,
                         viewedPortfolios: userRes.viewedPortfolios,
                         friendList: userRes.friendList,
@@ -73,6 +73,7 @@ exports.POST_likeProfile = function(req, res, next) {
                         //Update user again to decrease like count
                         let qUserUpdate = new User({
                             _id: qUserRes._id,
+                            status: "active",
                             likedPortfolios: qUserRes.likedPortfolios,
                             viewedPortfolios: qUserRes.viewedPortfolios,
                             friendList: qUserRes.friendList,
@@ -94,6 +95,7 @@ exports.POST_likeProfile = function(req, res, next) {
 
                     let userUpdate = new User({
                         _id: userRes._id,
+                        status: "active",
                         likedPortfolios: userRes.likedPortfolios,
                         viewedPortfolios: userRes.viewedPortfolios,
                         friendList: userRes.friendList,
@@ -108,6 +110,7 @@ exports.POST_likeProfile = function(req, res, next) {
                         
                         let qUserUpdate = new User({
                             _id: qUserRes._id,
+                            status: "active",
                             likedPortfolios: qUserRes.likedPortfolios,
                             viewedPortfolios: qUserRes.viewedPortfolios,
                             friendList: qUserRes.friendList,
@@ -155,6 +158,7 @@ exports.POST_confirmFriend = function(req, res, next) {
 
                 let user = new User({
                     _id: req.user._id,
+                    status: "active",
                     friendList: req.user.friendList,
                     dateJoined: req.user.dateJoined,
                     likedPortfolios: req.user.likedPortfolios,
@@ -163,6 +167,7 @@ exports.POST_confirmFriend = function(req, res, next) {
     
                 let otherUser = new User({
                     _id: reqFrom._id,
+                    status: "active",
                     friendList: reqFrom.friendList,
                     dateJoined: reqFrom.dateJoined,
                     likedPortfolios: reqFrom.likedPortfolios,
@@ -282,23 +287,15 @@ exports.POST_first_Setup_Link = [
                     }
                 });
                 console.log(`capture website ran`);
-            };
-            //remove
-
-            /*async function snap() {
-                console.log(`web thumb running`);
-                await new Pageres({delay: 0})
-                    .src(req.body.link, [`1024x576`], {crop: true, filename: `${req.user.email}-webthumbnail`})
-                    .dest(path.join(__dirname, `../portfolioThumb`))
-                    .run();
-                    console.log(`It ran`);
-            };*/
-
+            }; 
             snap().then((cb)=> {
                 console.log(`Saving User`);
                 let newWebThumb = new User({
                     _id: req.user._id,
-                    portfolioImg: {data: fs.readFileSync(path.join(__dirname, `../${req.user.email}-webthumbnail.png`)), contentType:`image/png` }
+                    status: "active",
+                    portfolioImg: {data: fs.readFileSync(path.join(__dirname, `../${req.user.email}-webthumbnail.png`)), contentType:`image/png` },
+                    portfolioType: req.body.websiteType.toLowerCase(),
+                    portfolioUrl: req.body.link,
                 });
 
                 //Update props
@@ -312,19 +309,7 @@ exports.POST_first_Setup_Link = [
                     res.redirect(`/`);
                     });
                 });
-            });
-            
-
-            let user = new User({
-                _id: req.user._id,
-                portfolioType: req.body.websiteType.toLowerCase(),
-                portfolioUrl: req.body.link,
-            });
-
-            User.findByIdAndUpdate(req.user._id, user, {}, (err, updateRes)=> {
-                console.log(`User info A saved`);
-                if (err) {return next(err);}
-            });
+            });            
         }
     }
     

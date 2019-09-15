@@ -266,7 +266,8 @@ exports.GET_discover_highestRated = function(req, res, next) {
                 console.log(`renderHome> fstatRes`) 
                 return next(err);
             }
-
+            //Filter active Users
+            let qUsers = functionCntrl.filterStatus(results);
 
             let fStatDisplay = [];
 
@@ -284,22 +285,22 @@ exports.GET_discover_highestRated = function(req, res, next) {
 
                 //toFix quries pagination
                 if (results.length < 6) {
-                    res.render(`homePage/homeNew`, {qryNextStat: "disabled", page, layout: `homePage/homeLayout`, User: req.user, qUsers: results, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                    res.render(`homePage/homeNew`, {qryNextStat: "disabled", page, layout: `homePage/homeLayout`, User: req.user, qUsers, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
                     return;
                 }
                 //
-                res.render(`homePage/homeNew`, {qryNextStat: "", page, layout: `homePage/homeLayout`, User: req.user, qUsers: results, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                res.render(`homePage/homeNew`, {qryNextStat: "", page, layout: `homePage/homeLayout`, User: req.user, qUsers, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
                 return;
             }
 
             else {
 
                 if (results.length < 6) {
-                    res.render(`homePage/homeNew`, {qryNextStat: "disabled", page, layout: `homePage/homeLayout`, User: req.user, qUsers: results, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                    res.render(`homePage/homeNew`, {qryNextStat: "disabled", page, layout: `homePage/homeLayout`, User: req.user, qUsers, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
                     return;
                 }
 
-                res.render(`homePage/homeNew`, {qryNextStat: "", page, layout: `homePage/homeLayout`, User: req.user, qUsers: results, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                res.render(`homePage/homeNew`, {qryNextStat: "", page, layout: `homePage/homeLayout`, User: req.user, qUsers, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
                 return;
             }
         });
@@ -332,6 +333,9 @@ exports.GET_discover_mostViewed = function(req, res, next) {
                 return next(err);
             }
 
+            //Filter active Users
+            let qUsers = functionCntrl.filterStatus(results);
+
 
             let fStatDisplay = [];
 
@@ -349,22 +353,22 @@ exports.GET_discover_mostViewed = function(req, res, next) {
 
                 //toFix quries pagination
                 if (results.length < 6) {
-                    res.render(`homePage/homeMostViewed`, {qryNextStat: "disabled", page, layout: `homePage/homeLayout`, User: req.user, qUsers: results, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                    res.render(`homePage/homeMostViewed`, {qryNextStat: "disabled", page, layout: `homePage/homeLayout`, User: req.user, qUsers, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
                     return;
                 }
                 //
-                res.render(`homePage/homeMostViewed`, {qryNextStat: "", page, layout: `homePage/homeLayout`, User: req.user, qUsers: results, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                res.render(`homePage/homeMostViewed`, {qryNextStat: "", page, layout: `homePage/homeLayout`, User: req.user, qUsers, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
                 return;
             }
 
             else {
 
                 if (results.length < 6) {
-                    res.render(`homePage/homeMostViewed`, {qryNextStat: "disabled", page, layout: `homePage/homeLayout`, User: req.user, qUsers: results, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                    res.render(`homePage/homeMostViewed`, {qryNextStat: "disabled", page, layout: `homePage/homeLayout`, User: req.user, qUsers, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
                     return;
                 }
 
-                res.render(`homePage/homeMostViewed`, {qryNextStat: "", page, layout: `homePage/homeLayout`, User: req.user, qUsers: results, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                res.render(`homePage/homeMostViewed`, {qryNextStat: "", page, layout: `homePage/homeLayout`, User: req.user, qUsers, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
                 return;
             }
         });
@@ -596,6 +600,8 @@ const renderHomeOrNew = function(req, res, pullCollection, FriendStatus) {
                 console.log(`renderHome> fstatRes`) 
                 return next(err);
             }
+            //Filter active users from inactive users
+            let qUsers = functionCntrl.filterStatus(results);
 
 
             let fStatDisplay = [];
@@ -615,22 +621,22 @@ const renderHomeOrNew = function(req, res, pullCollection, FriendStatus) {
 
                 //toFix queries pagination
                 if (results.length < 6) {
-                    res.render(`homePage/homeNew`, {qryNextStat: "disabled", page, layout: `homePage/homeLayout`, User: req.user, qUsers: results, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                    res.render(`homePage/homeNew`, {qryNextStat: "disabled", page, layout: `homePage/homeLayout`, User: req.user, qUsers, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
                     return;
                 }
                 //
-                res.render(`homePage/homeNew`, {qryNextStat: "", page, layout: `homePage/homeLayout`, User: req.user, qUsers: results, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                res.render(`homePage/homeNew`, {qryNextStat: "", page, layout: `homePage/homeLayout`, User: req.user, qUsers, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
                 return;
             }
 
             else {
 
                 if (results.length < 6) {
-                    res.render(`homePage/homeNew`, {qryNextStat: "disabled", page, layout: `homePage/homeLayout`, User: req.user, qUsers: results, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                    res.render(`homePage/homeNew`, {qryNextStat: "disabled", page, layout: `homePage/homeLayout`, User: req.user, qUsers, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
                     return;
                 }
 
-                res.render(`homePage/homeNew`, {qryNextStat: "", page, layout: `homePage/homeLayout`, User: req.user, qUsers: results, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                res.render(`homePage/homeNew`, {qryNextStat: "", page, layout: `homePage/homeLayout`, User: req.user, qUsers, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
                 return;
             }
         });

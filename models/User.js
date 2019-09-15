@@ -3,6 +3,7 @@ const mongoose = require(`mongoose`);
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
+    status: {type: String, required: true, default: "inactive"},
     isVerified: {type: Boolean, default: true},
     username: {type: String, required: true},
     firstName: {type: String, required: true},

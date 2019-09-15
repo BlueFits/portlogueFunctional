@@ -56,3 +56,15 @@ exports.renderHomeFilter = function(next, req, res, profileRes, User, friendVal,
         });
     }
 }
+
+exports.filterStatus = function(results) {
+    let qUsers = [];
+
+    for (val of results) {
+        if (val.status === "active") {
+            qUsers.push(val);
+        }
+    }
+
+    return qUsers;
+}
