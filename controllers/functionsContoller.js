@@ -29,6 +29,7 @@ exports.renderHomeFilter = function(next, req, res, profileRes, User, friendVal,
     else {
         let user = new User({
             _id:req.user._id,
+            status: "active",
             likedPortfolios: req.user.likedPortfolios,
             viewedPortfolios: req.user.viewedPortfolios,
             friendList: req.user.friendList,
@@ -43,6 +44,7 @@ exports.renderHomeFilter = function(next, req, res, profileRes, User, friendVal,
 
             let pRes = new User({
                 _id: profileRes._id,
+                status: "active",
                 portfolioViews: profileRes.portfolioViews + 1,
                 dateJoined: profileRes.dateJoined
             });
