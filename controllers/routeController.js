@@ -583,8 +583,44 @@ exports.GET_confirmation = function(req, res, next) {
     });
 }
 
+exports.GET_settings = function(req, res, next) {
+    //Think about making this a function
+    FriendStatus.find({"requestTo": req.user._id}).populate(`requestFrom`).exec((err, fstatRes)=> {
+        if (err) {
+            console.log(`renderHome > fstatRes`) 
+            return next(err);
+        }
+        //Filter active users from inactive users
+
+        let fStatDisplay = [];
+
+        for (let val of fstatRes) {
+            if (val.status === 1) {
+                fStatDisplay.push(val);
+            }
+            else {
+                        
+            }
+        }
+
+        if (fStatDisplay.length === 0) {
+            console.log(`No requests`);
+            //Add a function if fStat is empty
+            res.render(`settings`, {layout: `homePage/homeLayout`, User: req.user, friendRequests: fStatDisplay});
+            return;
+        }
+
+        else {
+            res.render(`settings`, {layout: `homePage/homeLayout`, User: req.user,friendRequests: fStatDisplay});
+            return;
+        }
+    });
+
+}
+
 
 //Initialize Functions
+
 const pullCollection = User.find({});
 
 const renderHomeOrNew = function(req, res, pullCollection, FriendStatus) {
