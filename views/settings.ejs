@@ -19,14 +19,73 @@
             </div>
             <!-- Avatar change -->
             <div>
-                
+                <div>
+                    <img src="/publicAvatar/<%=User.email%>"/>
+                    <span><%=User.fullNameDisplay%></span>
+                </div>
+                <span>Change profile picture</span>
+
+                <div>
+                    <form id="" method="POST" action="" enctype="multipart/form-data">
+                        <input class="" id="" type="file" name=""/>
+                            
+                        <button class="" type="" id="">Update</button>
+                    </form>
+                </div>
             </div>
             <!-- Peronsal information -->
             <div>
                 <span>Personal Information</span>
                 <div>
                     <form method="POST" action="">
+                        <div>
+                                <div>
+                                    <label for="firstName">First Name</label>
+                                    <input id="firstName" type="text" name="firstName"/>
+                                </div>
+            
+                                <div>
+                                    <label for="lastName">Last Name</label>
+                                    <input id="lastName" type="text" name="lastName"/>
+                                </div>
+                        </div>
+                        <div>
+                            <div>
+                                <label for="email">Email</label>
+                                <input id="email" type="email" name="email"/>
+                            </div>
+                            <div>
+                                <label for="phoneNumber">Phone Number</label>
+                                <input id="phoneNumber" type="number" name="phoneNumber"/>
+                            </div>
+                        </div>
+                        <button type="submit">Save</button>
+                    </form>
+                </div>
+            </div>
 
+            <!-- About You -->
+            <div>
+                <span>About You</span>
+                <div>
+                    <form method="POST" action="">
+                            <div>
+                                    <div>
+                                        <label for="country-setting">Country</label>
+                                        <select name='country'>
+
+                                                <% for(let val of selectCountry) {%>
+                                                    <option value="<%= val %>"><%= val%></option>
+                                                <% } %>
+                            
+                                        </select>
+                                    </div>
+                                    <div>
+                                            <label for="postalCode-setting">Postal Code</label>
+                                            <input id="postalCode-setting" type="text" name="postalCode"/>
+                                    </div>
+                            </div>
+                            
                     </form>
                 </div>
             </div>
