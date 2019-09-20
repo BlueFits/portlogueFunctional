@@ -12,6 +12,9 @@ const { upload } = require(`../config/multerConfig`);
 //Protect Routes
 const { ensureAuth } = require(`../config/authenticate`);
 
+//POST request to change personal info
+router.post(`/change_personalInfo`, ensureAuth, userController.POST_personalInfo);
+
 //Account Settings
 router.get(`/settings`, ensureAuth, routeController.GET_settings);
 
@@ -82,6 +85,9 @@ router.post(`/first_time_setup_profile`, ensureAuth, userController.POST_first_S
 
 /* GET request to initial setup PROFILE SETUP*/
 router.get(`/first_time_setup_profile`, ensureAuth, routeController.GET_first_Setup_Profile);
+
+/* POST request to update avatar */
+router.post(`/change_avatar`, ensureAuth, uploadController.POST_changeAvatar, upload.single(`avatar`), userController.POST_changeAvatar);
 
 /* POST request to initial setup AVATAR */
 router.post(`/first_time_setup_avatar`, ensureAuth, upload.single(`avatar`), userController.POST_first_Setup_Avatar);

@@ -20,15 +20,14 @@
             <!-- Avatar change -->
             <div>
                 <div>
-                    <img src="/publicAvatar/<%=User.email%>"/>
+                    <img style="width: 100px;" src="/publicAvatar/<%=User.email%>"/>
                     <span><%=User.fullNameDisplay%></span>
                 </div>
                 <span>Change profile picture</span>
 
                 <div>
-                    <form id="" method="POST" action="" enctype="multipart/form-data">
-                        <input class="" id="" type="file" name=""/>
-                            
+                    <form id="" method="POST" action="/users/change_avatar" enctype="multipart/form-data">
+                        <input class="" id="" type="file" name="avatar"/>
                         <button class="" type="" id="">Update</button>
                     </form>
                 </div>
@@ -37,7 +36,7 @@
             <div>
                 <span>Personal Information</span>
                 <div>
-                    <form method="POST" action="">
+                    <form method="POST" action="/users/change_personalInfo">
                         <div>
                                 <div>
                                     <label for="firstName">First Name</label>
@@ -85,7 +84,23 @@
                                             <input id="postalCode-setting" type="text" name="postalCode"/>
                                     </div>
                             </div>
-                            
+                            <div>
+                                <div>
+                                    <label for="occupation-setting">Occupation</label>
+                                    <select name='occupation-setting'>
+
+                                            <% for(let val of selectCountry) {%>
+                                                <option value="<%= val %>"><%= val%></option>
+                                            <% } %>
+                        
+                                    </select>
+                                </div>
+                                <div>
+                                        <label for="bio-setting">Bio</label>
+                                        <textarea name="bio-setting" maxlength="160"></textarea>
+                                        <p>Max: 160</p>
+                                </div>
+                            </div>
                     </form>
                 </div>
             </div>

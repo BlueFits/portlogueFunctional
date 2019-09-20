@@ -12,6 +12,40 @@ const User = require(`../models/User`);
 const FriendStatus = require(`../models/friendStatus`);
 const Token = require(`../models/Token`);
 
+//Update user's personal info
+exports.POST_personalInfo = function(req, res, next) {
+
+    //NOT DONE REMEMBER TO SANITIZE INFO
+    let userUpdate = new User({
+        //Unchangeable values
+        _id: userRes._id,
+        status: "active",
+        likedPortfolios: userResNewList,
+        viewedPortfolios: userRes.viewedPortfolios,
+        portfolioLikes: userRes.portfolioLikes,
+        friendList: userRes.friendList,
+        dateJoined: userRes.dateJoined,
+        //
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        fullname: firstName.toLowerCase()+lastName.toLowerCase(),
+        email: req.body.email,
+        phone: req.body.phoneNumber
+    });
+
+    User.findByIdAndUpdate(req.user._id, userUpdate, {}, (err, updateRes)=> {
+        if (err) {return next(err);}
+        res.redirect(req.get(`Referrer`));
+        console.log(`success`);
+    });
+
+}
+
+//Redirect after update
+exports.POST_changeAvatar = function(req, res, next) {
+    res.redirect(req.get(`Referrer`));
+}
+
 //Liking Process
 exports.POST_likeProfile = function(req, res, next) {
     //Push qUser to User's likedportfolios and increment qUser's portfolioLikes
@@ -63,6 +97,7 @@ exports.POST_likeProfile = function(req, res, next) {
                         status: "active",
                         likedPortfolios: userResNewList,
                         viewedPortfolios: userRes.viewedPortfolios,
+                        portfolioLikes: userRes.portfolioLikes,
                         friendList: userRes.friendList,
                         dateJoined: userRes.dateJoined
                     });
@@ -99,7 +134,8 @@ exports.POST_likeProfile = function(req, res, next) {
                         likedPortfolios: userRes.likedPortfolios,
                         viewedPortfolios: userRes.viewedPortfolios,
                         friendList: userRes.friendList,
-                        dateJoined: userRes.dateJoined
+                        dateJoined: userRes.dateJoined,
+                        portfolioLikes: userRes.portfolioLikes
                     });
 
                     userUpdate.likedPortfolios.push(qUserRes);
@@ -321,7 +357,7 @@ exports.POST_first_Setup_Avatar = function (req, res, next) {
 
     res.render(`firstSetup/setupAvatar`, { errors:[], User: req.user, avatar: `/publicAvatar/${req.user.email}`});
   
-  }
+}
 
 exports.POST_first_Setup_Profile = [
     //Validate all fields

@@ -47,3 +47,19 @@ exports.GET_first_Setup_Avatar = function(req, res, next) {
     }
   });
 };
+
+//Change avatar first chain
+exports.POST_changeAvatar = function(req, res, next) {
+  //Remove Current user avatar
+  gfs.collection('uploads').remove({ filename: `${req.user.email}-avatar` }, (err, result)=> {
+    if (err) {console.log(`Change avatar error`);}
+
+    if (!result) {
+      res.sendStatus(404 + " Error at POST_changeAvatar ");
+    }
+
+    else {
+      next();
+    }
+  });
+}
