@@ -13,33 +13,58 @@ const FriendStatus = require(`../models/friendStatus`);
 const Token = require(`../models/Token`);
 
 //Update user's personal info
-exports.POST_personalInfo = function(req, res, next) {
+exports.POST_personalInfo =  [
+    //Validate all fields
+    body('firstName').isLength({ min: 1 }).trim().withMessage('First name must be specified.').isAlphanumeric().withMessage('First name has non-alphanumeric characters.'),
+    body('lastName').isLength({ min: 1 }).trim().withMessage('Last name must be specified.').isAlphanumeric().withMessage('Last name has non-alphanumeric characters.'),
+    check(`emailDisplay`).isEmail().withMessage(`Email is invalid`),
+    body(`phoneNumber`).optional({ checkFalsy: true }).trim(),
+    //Santize fields
+    sanitizeBody(`firstName`).escape(),
+    sanitizeBody(`lastName`).escape(),
+    sanitizeBody(`email`).escape(),
+    sanitizeBody(`phoneNumber`).escape(),
 
-    //NOT DONE REMEMBER TO SANITIZE INFO
-    let userUpdate = new User({
-        //Unchangeable values
-        _id: userRes._id,
-        status: "active",
-        likedPortfolios: userResNewList,
-        viewedPortfolios: userRes.viewedPortfolios,
-        portfolioLikes: userRes.portfolioLikes,
-        friendList: userRes.friendList,
-        dateJoined: userRes.dateJoined,
-        //
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        fullname: firstName.toLowerCase()+lastName.toLowerCase(),
-        email: req.body.email,
-        phone: req.body.phoneNumber
-    });
+    //Function 
+    (req, res, next) => {
 
-    User.findByIdAndUpdate(req.user._id, userUpdate, {}, (err, updateRes)=> {
-        if (err) {return next(err);}
-        res.redirect(req.get(`Referrer`));
-        console.log(`success`);
-    });
+        //Initialize validation
+        let errors = validationResult(req);
 
-}
+        //Check for errors
+        if (!errors.isEmpty()) {
+            res.render(`settings`, { errors:errors.array(), User:req.user });
+            return;
+        }
+
+        else {
+            let userUpdate = new User({
+                //Unchangeable values
+                _id: req.user._id,
+                status: "active",
+                likedPortfolios: req.user.likedPortfolios,
+                viewedPortfolios: req.user.viewedPortfolios,
+                portfolioLikes: req.user.portfolioLikes,
+                friendList: req.user.friendList,
+                dateJoined: req.user.dateJoined,
+                //
+                firstName: req.body.firstName || req.user.firstName,
+                lastName: req.body.lastName || req.user.lastName,
+                fullname: req.body.firstName.toLowerCase()+req.body.lastName.toLowerCase() || req.user.fullname,
+                emailDisplay: req.body.emailDisplay || req.user.emailDisplay,
+                phone: req.body.phoneNumber || req.user.phone
+            });
+        
+            User.findByIdAndUpdate(req.user._id, userUpdate, {}, (err, updateRes)=> {
+                if (err) {return next(err);}
+                res.redirect(req.get(`Referrer`));
+                console.log(`success`);
+                //Route to uploadAvatar to update avatar name photo
+            });
+        }
+    }
+]
+
 
 //Redirect after update
 exports.POST_changeAvatar = function(req, res, next) {
