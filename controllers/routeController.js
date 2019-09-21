@@ -584,38 +584,55 @@ exports.GET_confirmation = function(req, res, next) {
 }
 
 exports.GET_settings = function(req, res, next) {
-    //Think about making this a function
-    FriendStatus.find({"requestTo": req.user._id}).populate(`requestFrom`).exec((err, fstatRes)=> {
-        if (err) {
-            console.log(`renderHome > fstatRes`) 
-            return next(err);
-        }
-        //Filter active users from inactive users
-
-        let fStatDisplay = [];
-
-        for (let val of fstatRes) {
-            if (val.status === 1) {
-                fStatDisplay.push(val);
+    //render setting page with friendStat
+    function renderSettings(settingTab) {
+        FriendStatus.find({"requestTo": req.user._id}).populate(`requestFrom`).exec((err, fstatRes)=> {
+            if (err) {
+                console.log(`renderHome > fstatRes`) 
+                return next(err);
             }
+            //Filter active users from inactive users
+    
+            let fStatDisplay = [];
+    
+            for (let val of fstatRes) {
+                if (val.status === 1) {
+                    fStatDisplay.push(val);
+                }
+                else {
+                            
+                }
+            }
+    
+            if (fStatDisplay.length === 0) {
+                console.log(`No requests`);
+                //Add a function if fStat is empty
+                res.render(`settings/${settingTab}`, {layout: `homePage/homeLayout`, User: req.user, errors: [], friendRequests: fStatDisplay, selectCountry: require(`../arrayList/arrays`).countryList});
+                return;
+            }
+    
             else {
-                        
+                res.render(`settings/${settingTab}`, {layout: `homePage/homeLayout`, User: req.user, errors: [], friendRequests: fStatDisplay, selectCountry: require(`../arrayList/arrays`).countryList});
+                return;
             }
-        }
+        });
+    }
 
-        if (fStatDisplay.length === 0) {
-            console.log(`No requests`);
-            //Add a function if fStat is empty
-            res.render(`settings`, {layout: `homePage/homeLayout`, User: req.user, errors: [], friendRequests: fStatDisplay, selectCountry: require(`../arrayList/arrays`).countryList});
-            return;
-        }
+    let tab = req.query.tab;
+    console.log(tab);
+    switch (tab) {
+        case (undefined): 
+            renderSettings("settingsProfile");
+            break;
 
-        else {
-            res.render(`settings`, {layout: `homePage/homeLayout`, User: req.user, errors: [], friendRequests: fStatDisplay, selectCountry: require(`../arrayList/arrays`).countryList});
-            return;
-        }
-    });
-
+        case (`profile`):
+            renderSettings("settingsProfile");
+            break;
+            
+        case (`account`):
+            res.send(`Wapish`);
+            break;
+    }
 }
 
 

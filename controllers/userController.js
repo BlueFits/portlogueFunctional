@@ -16,13 +16,13 @@ const Token = require(`../models/Token`);
 exports.POST_aboutYou = [
     body(`country`).optional({ checkFalsy: true }),
     body(`postalCode`).optional({ checkFalsy: true }).isAlphanumeric().withMessage(`Invalid postal code.`),
-    body(`occupation-setting`).optional({ checkFalsy: true }),
-    body(`bio-setting`).optional({ checkFalsy: true }).isLength({ min: 3, max: 160 }).withMessage(`Max 160 characters.`),
+    body(`occupation`).optional({ checkFalsy: true }),
+    body(`bio`).optional({ checkFalsy: true }).isLength({ min: 3, max: 160 }).withMessage(`Max 160 characters.`),
     //Sanitize fields
     sanitizeBody(`country`).escape(),
     sanitizeBody(`postalCode`).escape(),
-    sanitizeBody(`occupation-setting`).escape(),
-    sanitizeBody(`bio-setting`).escape(),
+    sanitizeBody(`occupation`).escape(),
+    sanitizeBody(`bio`).escape(),
 
     //
     (req, res, next) => {
@@ -33,7 +33,27 @@ exports.POST_aboutYou = [
             res.redirect(req.get(`Referrer`));
         }
         else {
+            let userAboutYou = new User({
+                //Unchangeable values
+                _id: req.user._id,
+                status: "active",
+                likedPortfolios: req.user.likedPortfolios,
+                viewedPortfolios: req.user.viewedPortfolios,
+                portfolioLikes: req.user.portfolioLikes,
+                friendList: req.user.friendList,
+                dateJoined: req.user.dateJoined,
+                //
+                country: req.body.country || req.user.country,
+                postalCode: req.body.postalCode || req.user.postalCode,
+                occupation: req.body.occupation ||req.user.occupation,
+                bio: req.body.bio || req.user.bio
+            });
 
+            User.findByIdAndUpdate(req.user._id, userAboutYou, {} , (err, updateRes)=> {
+                if (err) {return next(err);}
+                req.flash(`success`, `Successfully changed settings.`);
+                res.redirect(req.get(`Referrer`));
+            });
         }
 
     }
@@ -84,8 +104,8 @@ exports.POST_personalInfo =  [
         
             User.findByIdAndUpdate(req.user._id, userUpdate, {}, (err, updateRes)=> {
                 if (err) {return next(err);}
+                req.flash(`success`, `Successfully changed settings.`);
                 res.redirect(req.get(`Referrer`));
-                console.log(`success`);
                 //Route to uploadAvatar to update avatar name photo
             });
         }

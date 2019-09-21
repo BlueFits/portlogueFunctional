@@ -14,7 +14,7 @@
             <div class="country-1-div">
                 <label for='country'>Country/Region</label>
                 <select name='country'>
-
+                    <option value="" disabled selected hidden>Select your option</option>
                     <% for(let val of selectCountry) {%>
                         <option value="<%= val %>"><%= val%></option>
                     <% } %>

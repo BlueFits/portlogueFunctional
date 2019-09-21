@@ -4,6 +4,7 @@
         <% for (let val of error_msg) {%>
             <li><%=val.msg%></li>
         <% } %>
+        <li><%=success_msg%></li>
     </ul>
 
     <div class="settings-wrapper">
@@ -76,9 +77,9 @@
                     <form method="POST" action="/users/change_aboutYou">
                             <div>
                                     <div>
-                                        <label for="country-setting">Country</label>
+                                        <label for="country">Country</label>
                                         <select name='country'>
-
+                                                <option value="" disabled selected hidden>Select your option</option>
                                                 <% for(let val of selectCountry) {%>
                                                     <option value="<%= val %>"><%= val%></option>
                                                 <% } %>
@@ -93,8 +94,8 @@
                             <div>
                                 <div>
                                     <label for="occupation-setting">Occupation</label>
-                                    <select name='occupation-setting'>
-
+                                    <select name='occupation'>
+                                            <option value="" disabled selected hidden>Select your option</option>
                                             <% for(let val of selectCountry) {%>
                                                 <option value="<%= val %>"><%= val%></option>
                                             <% } %>
@@ -103,7 +104,7 @@
                                 </div>
                                 <div>
                                         <label for="bio-setting">Bio</label>
-                                        <textarea name="bio-setting" maxlength="160"></textarea>
+                                        <textarea name="bio" maxlength="160"></textarea>
                                         <p>Max: 160</p>
                                 </div>
                             </div>
