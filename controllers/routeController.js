@@ -606,12 +606,12 @@ exports.GET_settings = function(req, res, next) {
         if (fStatDisplay.length === 0) {
             console.log(`No requests`);
             //Add a function if fStat is empty
-            res.render(`settings`, {layout: `homePage/homeLayout`, User: req.user, friendRequests: fStatDisplay, selectCountry: require(`../arrayList/arrays`).countryList});
+            res.render(`settings`, {layout: `homePage/homeLayout`, User: req.user, errors: [], friendRequests: fStatDisplay, selectCountry: require(`../arrayList/arrays`).countryList});
             return;
         }
 
         else {
-            res.render(`settings`, {layout: `homePage/homeLayout`, User: req.user,friendRequests: fStatDisplay, selectCountry: require(`../arrayList/arrays`).countryList});
+            res.render(`settings`, {layout: `homePage/homeLayout`, User: req.user, errors: [], friendRequests: fStatDisplay, selectCountry: require(`../arrayList/arrays`).countryList});
             return;
         }
     });

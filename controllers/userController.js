@@ -12,12 +12,39 @@ const User = require(`../models/User`);
 const FriendStatus = require(`../models/friendStatus`);
 const Token = require(`../models/Token`);
 
+//Update about you 
+exports.POST_aboutYou = [
+    body(`country`).optional({ checkFalsy: true }),
+    body(`postalCode`).optional({ checkFalsy: true }).isAlphanumeric().withMessage(`Invalid postal code.`),
+    body(`occupation-setting`).optional({ checkFalsy: true }),
+    body(`bio-setting`).optional({ checkFalsy: true }).isLength({ min: 3, max: 160 }).withMessage(`Max 160 characters.`),
+    //Sanitize fields
+    sanitizeBody(`country`).escape(),
+    sanitizeBody(`postalCode`).escape(),
+    sanitizeBody(`occupation-setting`).escape(),
+    sanitizeBody(`bio-setting`).escape(),
+
+    //
+    (req, res, next) => {
+        let errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            req.flash(`error`, errors.array());
+            res.redirect(req.get(`Referrer`));
+        }
+        else {
+
+        }
+
+    }
+]
+
 //Update user's personal info
 exports.POST_personalInfo =  [
     //Validate all fields
-    body('firstName').isLength({ min: 1 }).trim().withMessage('First name must be specified.').isAlphanumeric().withMessage('First name has non-alphanumeric characters.'),
-    body('lastName').isLength({ min: 1 }).trim().withMessage('Last name must be specified.').isAlphanumeric().withMessage('Last name has non-alphanumeric characters.'),
-    check(`emailDisplay`).isEmail().withMessage(`Email is invalid`),
+    body('firstName').optional({ checkFalsy: true }).trim().withMessage('First name must be specified.').isAlphanumeric().withMessage('First name has non-alphanumeric characters.'),
+    body('lastName').optional({ checkFalsy: true }).trim().withMessage('Last name must be specified.').isAlphanumeric().withMessage('Last name has non-alphanumeric characters.'),
+    check(`emailDisplay`).optional({ checkFalsy: true }).isEmail().withMessage(`Email is invalid`),
     body(`phoneNumber`).optional({ checkFalsy: true }).trim(),
     //Santize fields
     sanitizeBody(`firstName`).escape(),
@@ -33,8 +60,8 @@ exports.POST_personalInfo =  [
 
         //Check for errors
         if (!errors.isEmpty()) {
-            res.render(`settings`, { errors:errors.array(), User:req.user });
-            return;
+            req.flash(`error`, errors.array());
+            res.redirect(req.get(`Referrer`));
         }
 
         else {
@@ -64,7 +91,6 @@ exports.POST_personalInfo =  [
         }
     }
 ]
-
 
 //Redirect after update
 exports.POST_changeAvatar = function(req, res, next) {

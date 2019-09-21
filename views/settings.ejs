@@ -1,5 +1,11 @@
 <section>
 
+    <ul>
+        <% for (let val of error_msg) {%>
+            <li><%=val.msg%></li>
+        <% } %>
+    </ul>
+
     <div class="settings-wrapper">
 
         <div class="settings-selection">
@@ -67,7 +73,7 @@
             <div>
                 <span>About You</span>
                 <div>
-                    <form method="POST" action="">
+                    <form method="POST" action="/users/change_aboutYou">
                             <div>
                                     <div>
                                         <label for="country-setting">Country</label>
@@ -101,9 +107,11 @@
                                         <p>Max: 160</p>
                                 </div>
                             </div>
+                            <button type="submit">Save</button>
                     </form>
                 </div>
             </div>
+
         </div>
 
     </div>
