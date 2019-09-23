@@ -33,7 +33,7 @@ exports.POST_changeAccEmail = [
                 if (err) {return next(err);}
 
                 if (result) {
-                    req.flash(`error`, `Email already exists`);
+                    req.flash(`error`, [{ msg: "Email already taken." }]);
                     res.redirect(req.get("Referrer"));
                 }
 
