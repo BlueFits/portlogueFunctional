@@ -12,6 +12,72 @@ const User = require(`../models/User`);
 const FriendStatus = require(`../models/friendStatus`);
 const Token = require(`../models/Token`);
 
+//Update password
+exports.POST_changePassword = [
+
+    body("currentPass").isLength({ min: 1 }).withMessage("Please enter your old password"),
+    body("newPass").isLength({ min: 6 }).withMessage("New password has to have 6 characters"),
+    body("retypeNewPass"),
+    
+    sanitizeBody("currentPass").escape(),
+    sanitizeBody("newPass").escape(),
+    sanitizeBody("retypeNewPass").escape(),
+
+    (req, res, next)=> {
+        let errors = validationResult(req);
+
+        let {currentPass, newPass, retypeNewPass} =  req.body;
+
+        if (!errors.isEmpty()) {
+            req.flash(`error`, errors.array());
+            res.redirect(req.get("Referrer"));
+        }
+
+        if (newPass !== retypeNewPass) {
+            req.flash("error", [{ msg: "Passwords do not match" }]);
+            res.redirect(req.get("Referrer"));
+        }
+
+        else {
+                    bcrypt.compare(currentPass, req.user.password, (err, isMatch)=> {
+                        if (isMatch) {                            
+                            let userUpdatePassword = new User({
+                                //Immutable values
+                                _id: req.user._id,
+                                status: "active",
+                                likedPortfolios: req.user.likedPortfolios,
+                                viewedPortfolios: req.user.viewedPortfolios,
+                                portfolioLikes: req.user.portfolioLikes,
+                                friendList: req.user.friendList,
+                                dateJoined: req.user.dateJoined,
+                                //
+                                password: newPass
+                            });
+
+                            bcrypt.genSalt(10, function(err, salt) {
+                                bcrypt.hash(newPass, salt, function(err, hash) {
+                                    if (err) {return next(err);}
+                                    userUpdatePassword.password = hash;
+                                    //Save User with hashed Password
+                                    User.findByIdAndUpdate(req.user._id, userUpdatePassword, {}, (err, updateRes)=> {
+                                        if (err) {return next(err);}
+                                        req.flash("success", "Successfully changed password.");
+                                        res.redirect(req.get("Referrer"));
+                                    });
+                                });
+                            });
+                        }
+
+                        else {
+                            req.flash("error", [{ msg: "Invalid current password." }]);
+                            res.redirect(req.get("Referrer"));
+                        }
+                    });
+        }
+    }
+
+]
+
 //Update account email
 exports.POST_changeAccEmail = [
 
@@ -567,12 +633,14 @@ exports.create_User = [
     body('lastName').isLength({ min: 1 }).trim().withMessage('Last name must be specified.').isAlphanumeric().withMessage('Last name has non-alphanumeric characters.'),
     check(`email`).isEmail().withMessage(`Email is invalid`),
     body(`password`).isLength({ min: 6 }).trim().withMessage(`Password needs a minimum of 6 Characters`),
+    body(`confirmPassword`),
     //Santize fields
     sanitizeBody(`userName`).escape(),
     sanitizeBody(`firstName`).escape(),
     sanitizeBody(`lastName`).escape(),
     sanitizeBody(`email`).escape(),
     sanitizeBody(`password`).escape(),
+    sanitizeBody(`confirmPassword`).escape(),
 
     (req, res, next) => {
         //Initialize validation
