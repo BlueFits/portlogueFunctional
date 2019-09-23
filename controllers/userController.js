@@ -12,6 +12,64 @@ const User = require(`../models/User`);
 const FriendStatus = require(`../models/friendStatus`);
 const Token = require(`../models/Token`);
 
+//Update account email
+exports.POST_changeAccEmail = [
+
+    body(`email`).isEmail().withMessage(`Invalid Email`),
+    sanitizeBody("email").escape(),
+
+    (req, res, next)=> {
+        let errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            req.flash(`error`, errors.array());
+            res.redirect(req.get("Referrer"));
+        }
+
+        else {
+
+            User.findOne({"email": req.body.email}).exec((err, result)=> {
+
+                if (err) {return next(err);}
+
+                if (result) {
+                    req.flash(`error`, `Email already exists`);
+                    res.redirect(req.get("Referrer"));
+                }
+
+                else {
+
+                    let newEmail = req.body.email.toLowerCase();
+                    let oldEmail = req.user.email;
+
+                    let userUpdate = new User({
+                        //Unchangeable values
+                        _id: req.user._id,
+                        status: "active",
+                        likedPortfolios: req.user.likedPortfolios,
+                        viewedPortfolios: req.user.viewedPortfolios,
+                        portfolioLikes: req.user.portfolioLikes,
+                        friendList: req.user.friendList,
+                        dateJoined: req.user.dateJoined,
+                        //
+                        email: newEmail
+                    });
+
+                    require("./uploadController").email_change_handler(oldEmail, newEmail);
+
+                    User.findByIdAndUpdate(req.user._id, userUpdate, {}, (err, updateRes)=> {
+                        if (err) {return next(err);}
+                        req.flash(`success`, `Successfully changed email`);
+                        res.redirect(req.get("Referrer"));
+                    });
+                }
+            })
+        }
+
+    }
+
+]
+
 //Update about you 
 exports.POST_aboutYou = [
     body(`country`).optional({ checkFalsy: true }),
@@ -138,7 +196,6 @@ exports.POST_likeProfile = function(req, res, next) {
                 //For loop that iterates over likedPortfolios
 
                 for (let val of userRes.likedPortfolios) {
-                    console.log(`${val} --- for loop values`);
                     if (val.username.toString() === qUserRes.username.toString()) {
                         checkLikes = true;
                     }
@@ -153,7 +210,6 @@ exports.POST_likeProfile = function(req, res, next) {
                         userResNewList.push(val);
                     }
 
-                    console.log(userResNewList + "  This is the made up array list");
                     //Gets rid of the liked portfolio
                     for (let i = 0; i < userResNewList.length; i++) {
                         if (userResNewList[i].username.toString() === qUserRes.username.toString()) {
@@ -161,7 +217,6 @@ exports.POST_likeProfile = function(req, res, next) {
                         }
                     }
 
-                    console.log(userResNewList + "  After splicing");
 
                     let userUpdate = new User({
                         _id: userRes._id,
@@ -175,7 +230,6 @@ exports.POST_likeProfile = function(req, res, next) {
 
                     User.findByIdAndUpdate(userRes._id, userUpdate, {}, (err, updateRes)=> {
                         if (err) {return next(err);}
-                        console.log(`Removed user from liked portfolios`);
                         //Update user again to decrease like count
                         let qUserUpdate = new User({
                             _id: qUserRes._id,
@@ -213,7 +267,6 @@ exports.POST_likeProfile = function(req, res, next) {
 
                     User.findByIdAndUpdate(userRes._id, userUpdate, {}, (err, updateRes)=> {
                         if (err) {return next(err);}
-                        console.log(`Added to portfolio likes`);
                         
                         let qUserUpdate = new User({
                             _id: qUserRes._id,
@@ -225,7 +278,6 @@ exports.POST_likeProfile = function(req, res, next) {
                             dateJoined: qUserRes.dateJoined
                         });
 
-                        console.log(`${qUserUpdate} --- qUser update log`);
                         User.findByIdAndUpdate(qUserRes._id, qUserUpdate, {}, (err, updateRes)=> {
                             if (err) {return next(err);}
                             res.redirect(req.get(`Referrer`));
@@ -256,7 +308,6 @@ exports.POST_confirmFriend = function(req, res, next) {
 
             if (req.body.reqResponse === `accept`) {
 
-                console.log(`User Accepted`);
                 
                 let friendStat = new FriendStatus({
                     _id: req.body.friendStatId,
@@ -294,7 +345,6 @@ exports.POST_confirmFriend = function(req, res, next) {
 
                     User.findByIdAndUpdate(reqFrom._id, otherUser, {}, (err, otherUserRes)=> {
                         if (err) {return next(err);}
-                        console.log(`otherUser Save`);
                         res.redirect(`/`);
                     });
 
@@ -304,7 +354,6 @@ exports.POST_confirmFriend = function(req, res, next) {
         
             else {
 
-                console.log(`User Denied`);
                 
                 let friendStat = new FriendStatus({
                     _id: req.body.friendStatId,

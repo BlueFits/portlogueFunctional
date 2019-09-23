@@ -1,0 +1,72 @@
+<section>
+
+    <ul>
+        <% for (let val of error_msg) {%>
+            <li><%=val.msg%></li>
+        <% } %>
+        <li><%=error_msg%></li>
+        <li><%=success_msg%></li>
+    </ul>
+
+    <div class="settings-wrapper">
+
+        <div class="settings-selection">
+            <div>
+                <img src="#" alt="profile"/>
+                <span>Profile</span>
+            </div>
+            <div>
+                <img src="#" alt="Account Settings"/>
+                <span>Account Settings</span>
+            </div>
+        </div>
+
+        <div class="settings-options">
+            <div>
+                <span>Account Settings</span>
+            </div>
+            <!-- Email change -->
+            <div>
+                <form method="POST" action="/users/change_acc_email">
+                    <label for="email-setting">Account email</label>
+                    <input id="email-setting" type="email" name="email" placeholder="<%=User.email%>"/>
+                    <button type="submit">Save</button>
+                </form>
+            </div>
+            <!-- Password change -->
+            <div>
+                <div>
+                    <span>Password</span>
+                    <span>Change password</span>
+                </div>
+                <div>
+                    <form method="POST">
+                        <div>
+                            <label>Current</label>
+                            <input type="password" name="currentPass"/>
+                        </div>
+                        <div>
+                            <label>New</label>
+                            <input type="password" name="newPass"/>
+                        </div>
+                        <div>
+                            <label>Re-type new</label>
+                            <input type="password" name="retypeNewPass"/>
+                        </div>
+                        <button type="submit">Save</button>
+                    </form>
+                </div>
+            </div>
+            <!-- Portfolio Link change -->
+            <div>
+                <form>
+                    <label>Website link</label>
+                    <input type="url" placeholder="<%=User.portfolioUrl%>"/>
+                    <button type="submit">Save</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+</section>

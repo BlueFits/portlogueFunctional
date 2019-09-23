@@ -63,3 +63,15 @@ exports.POST_changeAvatar = function(req, res, next) {
     }
   });
 }
+
+//Email change chain
+exports.email_change_handler = function(oldEmail, newEmail) {
+
+  let gfsUpdate = { $set: { filename: `${newEmail}-avatar` } };
+
+  gfs.collection("uploads").update({filename: `${oldEmail}-avatar`}, gfsUpdate, (err, updateRes)=> {
+    if (err) {return next(err);}
+    console.log(`Changed gfs name`);
+  });
+
+}

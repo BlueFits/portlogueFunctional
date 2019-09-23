@@ -102,7 +102,6 @@ exports.GET_profile = function(req, res, next) {
 
                 //Check if its user profile
                 if (req.user.username === profileRes.username) {
-                    console.log(`Req user's profile`);
                     friendVal = {val: `Account Settings`, url: `/`, class: `href-disabled`};
 
                     likeFunction.status = `disabled`;
@@ -113,7 +112,6 @@ exports.GET_profile = function(req, res, next) {
 
                 //User to qUser
                 if (asyncResult.one) {
-                    console.log(`asyncRes one`);
                     switch (asyncResult.one.status) {
                         case 1:
                             friendVal = {val: `Request Sent`, url: ``, class:`href-disabled`};
@@ -132,7 +130,6 @@ exports.GET_profile = function(req, res, next) {
 
                 //qUser from User
                 if (asyncResult.two) {
-                    console.log(`async result two`);
                     switch (asyncResult.two.status) {
                         case 1:
                             friendVal = {val: `Respond To Request`, url: `/users/notifications/${profileRes._id}`, class:``};
@@ -630,7 +627,7 @@ exports.GET_settings = function(req, res, next) {
             break;
             
         case (`account`):
-            res.send(`Wapish`);
+            renderSettings("settingsAccount");
             break;
     }
 }
