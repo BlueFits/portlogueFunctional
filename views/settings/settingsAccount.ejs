@@ -58,9 +58,29 @@
             </div>
             <!-- Portfolio Link change -->
             <div>
-                <form>
-                    <label>Website link</label>
-                    <input type="url" placeholder="<%=User.portfolioUrl%>"/>
+                <div>
+                    <span>Website Url</span>
+                    <span>Edit</span>
+                </div>
+                <form method="POST" action="/users/change_web_url">
+                    <div>
+                        <label>Website Link</label>
+                        <input type="url" placeholder="<%=User.portfolioUrl%>" name="url"/>
+                    </div>
+                    <div>
+                        <label>Website Type</label>
+                        <select name="websiteType">
+                                <option value="" disabled selected hidden>Select your option</option>
+                                <option value="generalPortfolio">General Portfolio</option>
+                                <option value="creativePortfolio">Creative Portfolio</option>
+                                <option value="artPortfolio">Art Portfolio</option>
+                                <option value="photographyPortfolio">Photography Portfolio</option>
+                                <option value="videographyPortfolio">Videography Portfolio</option>
+                                <option value="avademicPortfolio">Academic Portfolio</option>
+                                <option value="professionalPortfolio">Professional Portfolio</option>
+                                <option value="businessPortfolio">Business Portfolio</option>
+                            </select>
+                    </div>
                     <button type="submit">Save</button>
                 </form>
             </div>

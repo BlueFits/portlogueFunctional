@@ -12,6 +12,77 @@ const User = require(`../models/User`);
 const FriendStatus = require(`../models/friendStatus`);
 const Token = require(`../models/Token`);
 
+//Change web url
+exports.POST_changeWebUrl = [
+    //Validate Fields
+    body(`url`).isURL().withMessage(`The link you have entered is invalid`),
+    body(`websiteType`).isLength({ min: 1}).trim().withMessage(`Please choose a website type`),
+
+    //Sanitize Fields
+    sanitizeBody(`url`),
+    sanitizeBody(`websiteType`).escape(),
+
+    (req, res, next) => {
+        //Initialize Validation
+        let errors = validationResult(req);
+
+        //Check for errors
+        if (!errors.isEmpty()) {
+            req.flash(`error`, errors.array());
+            res.redirect(req.get("Referrer"));
+        }
+        
+        else {
+
+            //This will run in heroku
+            async function snap() {
+                await captureWebsite.file(req.body.url, `${req.user.email}-webthumbnail.png`, {
+                    width: 1024,
+                    height: 576,
+                    launchOptions: {
+                        args: [
+                            '--no-sandbox',
+                            '--disable-setuid-sandbox',
+                            '--disable-dev-shm-usage',
+                            '--single-process'
+                          ],
+                    }
+                });
+                console.log(`capture website ran`);
+            }; 
+            snap().then((cb)=> {
+                console.log(`Saving User`);
+                let newWebThumb = new User({
+                    //Immutable values
+                    _id: req.user._id,
+                    status: "active",
+                    likedPortfolios: req.user.likedPortfolios,
+                    viewedPortfolios: req.user.viewedPortfolios,
+                    portfolioLikes: req.user.portfolioLikes,
+                    friendList: req.user.friendList,
+                    dateJoined: req.user.dateJoined,
+                    //
+                    portfolioImg: {data: fs.readFileSync(path.join(__dirname, `../${req.user.email}-webthumbnail.png`)), contentType:`image/png` },
+                    portfolioType: req.body.websiteType.toLowerCase(),
+                    portfolioUrl: req.body.url,
+                });
+
+                //Update props
+                User.findByIdAndUpdate(req.user._id, newWebThumb, {}, function(err, results) {
+                    if (err) {return next(err);}
+                    //Delete image after Upload
+                    fs.unlink(path.join(__dirname, `../${req.user.email}-webthumbnail.png`), (err) => {
+                    if (err) throw `Error at userController fs.unlink`;
+                    console.log(`File has been deleted`);
+                    req.flash("success", "Successfully changed website url.");
+                    res.redirect(req.get("Referrer"));
+                    });
+                });
+            });            
+        }
+    }
+]
+
 //Update password
 exports.POST_changePassword = [
 

@@ -12,6 +12,9 @@ const { upload } = require(`../config/multerConfig`);
 //Protect Routes
 const { ensureAuth } = require(`../config/authenticate`);
 
+//POST request to change url
+router.post("/change_web_url", ensureAuth, userController.POST_changeWebUrl);
+
 //POST reqest to change password
 router.post("/change_password", ensureAuth, userController.POST_changePassword);
 
