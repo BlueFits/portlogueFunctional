@@ -1,11 +1,25 @@
 <section>
 
-    <ul>
-        <% for (let val of error_msg) {%>
-            <li><%=val.msg%></li>
-        <% } %>
-        <li><%=success_msg%></li>
-    </ul>
+        <ul class="flash-settings">
+                <% for (let val of error_msg) {%>
+                    <li class="flash-style f-error">
+                            <div class="flash-info">
+                                <span><strong>Error</strong></span>
+                                <span><%=val.msg%></span>
+                            </div>
+                            <div class="flash-close"><img src="/assets/icons/icons8-delete-96.png"/></div>
+                    </li>
+                <% } %>
+                <% for (let val of success_msg) {%>
+                    <li class="flash-style f-success">
+                            <div class="flash-info">
+                                <span><strong>Success</strong></span>
+                                <span><%=val.msg%></span>
+                            </div>
+                            <div class="flash-close"><img src="/assets/icons/icons8-delete-96.png"/></div>
+                    </li>
+                <% } %>        
+        </ul>
 
     <div class="settings-wrapper">
 

@@ -74,7 +74,7 @@ exports.POST_changeWebUrl = [
                     fs.unlink(path.join(__dirname, `../${req.user.email}-webthumbnail.png`), (err) => {
                     if (err) throw `Error at userController fs.unlink`;
                     console.log(`File has been deleted`);
-                    req.flash("success", "Successfully changed website url.");
+                    req.flash("success", [ {msg: "Successfully changed url."} ]);
                     res.redirect(req.get("Referrer"));
                     });
                 });
@@ -102,11 +102,13 @@ exports.POST_changePassword = [
         if (!errors.isEmpty()) {
             req.flash(`error`, errors.array());
             res.redirect(req.get("Referrer"));
+            return
         }
 
         if (newPass !== retypeNewPass) {
             req.flash("error", [{ msg: "Passwords do not match" }]);
             res.redirect(req.get("Referrer"));
+            return
         }
 
         else {
@@ -132,7 +134,7 @@ exports.POST_changePassword = [
                                     //Save User with hashed Password
                                     User.findByIdAndUpdate(req.user._id, userUpdatePassword, {}, (err, updateRes)=> {
                                         if (err) {return next(err);}
-                                        req.flash("success", "Successfully changed password.");
+                                        req.flash("success", [{ msg: "Successfully changed password." }]);
                                         res.redirect(req.get("Referrer"));
                                     });
                                 });
@@ -196,7 +198,7 @@ exports.POST_changeAccEmail = [
 
                     User.findByIdAndUpdate(req.user._id, userUpdate, {}, (err, updateRes)=> {
                         if (err) {return next(err);}
-                        req.flash(`success`, `Successfully changed email`);
+                        req.flash(`success`, [{ msg: "Succesfully changed email." }]);
                         res.redirect(req.get("Referrer"));
                     });
                 }
@@ -246,7 +248,7 @@ exports.POST_aboutYou = [
 
             User.findByIdAndUpdate(req.user._id, userAboutYou, {} , (err, updateRes)=> {
                 if (err) {return next(err);}
-                req.flash(`success`, `Successfully changed settings.`);
+                req.flash(`success`, [{ msg: "Successfully changed settings." }]);
                 res.redirect(req.get(`Referrer`));
             });
         }
@@ -299,7 +301,7 @@ exports.POST_personalInfo =  [
         
             User.findByIdAndUpdate(req.user._id, userUpdate, {}, (err, updateRes)=> {
                 if (err) {return next(err);}
-                req.flash(`success`, `Successfully changed settings.`);
+                req.flash(`success`, [{ msg: "Successfully changed settings." }]);
                 res.redirect(req.get(`Referrer`));
                 //Route to uploadAvatar to update avatar name photo
             });

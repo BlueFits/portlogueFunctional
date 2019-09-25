@@ -52,3 +52,17 @@ $(`.hidden-overlay`).on(`click`, ()=> {
     $(`.home-nav-dropdown`).css(`display`,`none`);
     $(`.home-quick-dropdown`).css(`display`, `none`);
 });
+
+//Flash handlers
+setTimeout(() => {
+    $(".flash-style").css("transform", "translateX(-500px)");
+}, 5000);
+
+setTimeout(()=> {
+    $(".flash-style").css("display", "none");
+}, 10000);
+
+$(".flash-close").on("click", ()=> {
+    $(".flash-close").parent().css("transform", "translateX(-500px)");
+});
+//
