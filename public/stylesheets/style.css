@@ -507,6 +507,7 @@ h3 {
 /* Home nav */
 
 .home-header {
+
     width: 100%;
     height: 60px;
     box-shadow: 0px 2px 3px rgba(0,0,0,.13) ,1px 2px 2px rgba(0,0,0,.1) , -1px -2px 2px rgba(0,0,0,.05) ;
@@ -751,6 +752,7 @@ h3 {
 
 .flash-settings {
     position: absolute;
+    top: 65px;
     left: 30px;
     list-style: none;
 }
@@ -766,7 +768,7 @@ h3 {
 .flash-style {
     background-color: #ffffff;
     box-shadow: 0px 1px 10px -2px rgba(133,133,133,1);
-
+    
     width: 360px;
     height: 65px;
     border-radius: 3px;
@@ -797,19 +799,107 @@ h3 {
     height: 100%;
 }
 
+.settings-sub-heading{
+    color: #7f7f7f;
+    font-size: 18px;
+}
+
+.settings-section {
+    background-color: #f4f4f4;
+    padding: 60px 0 60px 0;
+}
+
 .settings-wrapper {
     border: 1px solid;
-
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    width: 80%;
+    width: 70%;
     margin: 0 auto;
 }
 
+.sttng-select{
+    background-color: #21283e;
+    color: #fff;
+}
+
 .settings-selection {
+    background-color: #fff;
+    box-shadow: 0px 1px 10px -2px rgba(133,133,133,1);
+    border-radius: 5px;
+    
+    color: #969696;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 20%;
+}
+
+.settings-selection a {
+    text-decoration: none;
+    padding: 15px 20px;
+    font-size: 16px;
+}
+
+.settings-selection > a:first-of-type {
+    border-radius: 5px 5px 0 0;
+}
+
+.settings-options {
+    box-shadow: 0px 1px 10px -2px rgba(133,133,133,1);
+    background-color: #fff;
+    border-radius: 5px;
+    width: 79.3%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.settings-options > div {
+    border-top: 1px solid #bbbbbb;
+    width: 100%;
+    padding: 20px 30px;
+    color: #969696;
+}
+
+.settings-options > div:first-of-type {
+    border-top: none;
+}
+
+.avatar-change {
+    display: flex;
+    flex-direction: column;
+}
+
+.set-avatar-formOne {
     border: 1px solid;
-    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.set-avatar-display {
+    display: flex;
+    align-items: center;
+}
+
+.set-avatar-img-wrap {
+    height: 80px;
+    width: 80px;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 1px solid green;
+    margin-right: 5px;
+}
+
+.set-avatar-img-wrap img{
+    height: 100%;
+}
+
+.set-avatarChange-form {
+    bordeR: 1px solid orange;
 }
 
 /* Search Page */
@@ -1215,6 +1305,7 @@ h3 {
 
 /* FOOTER */
 footer {
+    background-color :#fff;
     width: 100%;
     display: flex;
     justify-content: space-evenly;

@@ -1,4 +1,5 @@
-<section>
+<body><!-- Remove only for debuggings -->
+<section class="settings-section">
 
     <ul class="flash-settings">
         <% for (let val of error_msg) {%>
@@ -22,30 +23,28 @@
     </ul>
     <div class="settings-wrapper">
 
-        <div class="settings-selection">
-            <div>
-                <img src="#" alt="profile"/>
-                <a href="/users/settings?tab=profile">Profile</a>
-            </div>
-            <div>
-                <img src="#" alt="Account Settings"/>
-                <a href="/users/settings?tab=account">Account Settings</a>
-            </div>
+        <div class="settings-selection">                
+                <a class="sttng-select" href="/users/settings?tab=profile"><img src="#" alt="profile"/><span>Profile</span></a>
+                <a href="/users/settings?tab=account"><img src="#" alt="Account Settings"/><span>Account Settings</span></a>
         </div>
 
         <div class="settings-options">
             <div>
-                <span>Profile</span>
+                <span class="settings-sub-heading">Profile</span>
             </div>
             <!-- Avatar change -->
-            <div>
-                <div>
-                    <img style="width: 100px;" src="/publicAvatar/<%=User.email%>"/>
-                    <span><%=User.fullNameDisplay%></span>
+            <div class="avatar-change">
+                <div class="set-avatar-formOne">
+                        <div class="set-avatar-display">
+                                <div class="set-avatar-img-wrap">
+                                    <img src="/publicAvatar/<%=User.email%>"/>
+                                </div>
+                                <span><%=User.fullNameDisplay%></span>
+                            </div>
+                            <span>Change profile picture</span>
                 </div>
-                <span>Change profile picture</span>
 
-                <div>
+                <div class="set-avatarChange-form">
                     <form id="" method="POST" action="/users/change_avatar" enctype="multipart/form-data">
                         <input class="" id="" type="file" name="avatar"/>
                         <button class="" type="" id="">Update</button>
@@ -131,3 +130,4 @@
     </div>
 
 </section>
+</body>

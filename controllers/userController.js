@@ -311,6 +311,7 @@ exports.POST_personalInfo =  [
 
 //Redirect after update
 exports.POST_changeAvatar = function(req, res, next) {
+    req.flash("success", [{ msg: "Successfully changed profile picture." }]);
     res.redirect(req.get(`Referrer`));
 }
 
