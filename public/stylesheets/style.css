@@ -751,7 +751,7 @@ h3 {
 /* Settings Page */
 
 .flash-settings {
-    position: absolute;
+    position: fixed;
     top: 65px;
     left: 30px;
     list-style: none;
@@ -810,7 +810,6 @@ h3 {
 }
 
 .settings-wrapper {
-    border: 1px solid;
     display: flex;
     justify-content: space-between;
     width: 70%;
@@ -852,6 +851,7 @@ h3 {
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: 720px;
 }
 
 .settings-options > div {
@@ -871,7 +871,6 @@ h3 {
 }
 
 .set-avatar-formOne {
-    border: 1px solid;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -883,6 +882,7 @@ h3 {
 }
 
 .set-avatar-img-wrap {
+    background-color: grey;
     height: 80px;
     width: 80px;
     border-radius: 100%;
@@ -890,16 +890,207 @@ h3 {
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    border: 1px solid green;
-    margin-right: 5px;
+    margin-right: 10px;
 }
 
 .set-avatar-img-wrap img{
     height: 100%;
 }
 
+.set-edit {
+    cursor: pointer;
+    color: #3498db;
+}
+
 .set-avatarChange-form {
-    bordeR: 1px solid orange;
+    display: none;
+    margin-top: 20px;
+}
+
+.personal-info > span {
+}
+
+.personal-info-form {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.personal-info-input {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.personal-info-input > input,
+.personal-info-input > textarea,
+.personal-info-input > select {
+    resize: none;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #7f7f7f;
+}
+
+.personal-info-div {
+    width: 49%;
+}
+
+.personal-info-save {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.personal-info-save button {
+    border: none;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #3498db;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.personal-info-save button:disabled {
+    color: #bbbbbb;
+    cursor: default;
+}
+
+/* lazy sus code */
+
+.aboutYou-info > span {
+}
+
+.aboutYou-info-form {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.aboutYou-info-input {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.aboutYou-info-input > input,
+.aboutYou-info-input > textarea,
+.aboutYou-info-input > select {
+    resize: none;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #7f7f7f;
+}
+
+.aboutYou-info-div {
+    width: 49%;
+}
+
+.aboutYou-info-save {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.aboutYou-info-save button {
+    border: none;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #3498db;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.aboutYou-info-save button:disabled {
+    color: #bbbbbb;
+    cursor: default;
+}
+/**/
+
+.acc-email-change > form{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.email-change-input {
+    display: flex;
+    justify-content: center;
+    width: 510px;
+}
+
+#email-change-submit {
+    color: #3498db;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+
+#email-change-submit:disabled {
+    color: #bbbbbb;
+    cursor: default;
+}
+
+.email-change-input > input {
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #7f7f7f;
+    width: 59%;
+}
+
+.email-change-input > div:first-of-type {
+    width: 13%;
+}
+
+.email-change-input > div:last-of-type {
+    width: 27%;
+}
+
+#change-pass-display {
+    color: #3498db;
+    cursor: pointer;
+}
+
+.acc-pass-divOne {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.acc-pass-divTwo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.acc-pass-divTwo > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 510px;
+    margin-bottom: 10px;
+}
+
+.acc-pass-divTwo > div > label {
+    width: 20%;
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 5px;
+}
+
+.acc-pass-divTwo > div > input,
+.acc-pass-divTwo > div > select {
+    width: 60%;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #7f7f7f;
+}
+
+.acc-pass-divTwo > div:last-of-type {
+    justify-content: flex-end;
 }
 
 /* Search Page */
@@ -1445,7 +1636,7 @@ footer li {
 }
 
 .profile-right-nav {
-    width: 270px;
+    width: 248px; /* I cant beleibe this is the fucking adjustment for the search bar */
     justify-content: flex-end;
 }
 

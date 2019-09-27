@@ -55,7 +55,7 @@ exports.POST_changeWebUrl = [
                 let newWebThumb = new User({
                     //Immutable values
                     _id: req.user._id,
-                    status: "active",
+                    status: req.user.status,
                     likedPortfolios: req.user.likedPortfolios,
                     viewedPortfolios: req.user.viewedPortfolios,
                     portfolioLikes: req.user.portfolioLikes,
@@ -117,7 +117,7 @@ exports.POST_changePassword = [
                             let userUpdatePassword = new User({
                                 //Immutable values
                                 _id: req.user._id,
-                                status: "active",
+                                status: req.user.status,
                                 likedPortfolios: req.user.likedPortfolios,
                                 viewedPortfolios: req.user.viewedPortfolios,
                                 portfolioLikes: req.user.portfolioLikes,
@@ -184,7 +184,7 @@ exports.POST_changeAccEmail = [
                     let userUpdate = new User({
                         //Unchangeable values
                         _id: req.user._id,
-                        status: "active",
+                        status: req.user.status,
                         likedPortfolios: req.user.likedPortfolios,
                         viewedPortfolios: req.user.viewedPortfolios,
                         portfolioLikes: req.user.portfolioLikes,
@@ -233,7 +233,7 @@ exports.POST_aboutYou = [
             let userAboutYou = new User({
                 //Unchangeable values
                 _id: req.user._id,
-                status: "active",
+                status: req.user.status,
                 likedPortfolios: req.user.likedPortfolios,
                 viewedPortfolios: req.user.viewedPortfolios,
                 portfolioLikes: req.user.portfolioLikes,
@@ -241,7 +241,7 @@ exports.POST_aboutYou = [
                 dateJoined: req.user.dateJoined,
                 //
                 country: req.body.country || req.user.country,
-                postalCode: req.body.postalCode || req.user.postalCode,
+                postalCode: req.body.postalCode.toLowerCase() || req.user.postalCode,
                 occupation: req.body.occupation ||req.user.occupation,
                 bio: req.body.bio || req.user.bio
             });
@@ -285,7 +285,7 @@ exports.POST_personalInfo =  [
             let userUpdate = new User({
                 //Unchangeable values
                 _id: req.user._id,
-                status: "active",
+                status: req.user.status,
                 likedPortfolios: req.user.likedPortfolios,
                 viewedPortfolios: req.user.viewedPortfolios,
                 portfolioLikes: req.user.portfolioLikes,
@@ -360,7 +360,7 @@ exports.POST_likeProfile = function(req, res, next) {
 
                     let userUpdate = new User({
                         _id: userRes._id,
-                        status: "active",
+                        status: userRes.status,
                         likedPortfolios: userResNewList,
                         viewedPortfolios: userRes.viewedPortfolios,
                         portfolioLikes: userRes.portfolioLikes,
@@ -373,7 +373,7 @@ exports.POST_likeProfile = function(req, res, next) {
                         //Update user again to decrease like count
                         let qUserUpdate = new User({
                             _id: qUserRes._id,
-                            status: "active",
+                            status: qUserRes.status,
                             likedPortfolios: qUserRes.likedPortfolios,
                             viewedPortfolios: qUserRes.viewedPortfolios,
                             friendList: qUserRes.friendList,
@@ -395,7 +395,7 @@ exports.POST_likeProfile = function(req, res, next) {
 
                     let userUpdate = new User({
                         _id: userRes._id,
-                        status: "active",
+                        status: userRes.status,
                         likedPortfolios: userRes.likedPortfolios,
                         viewedPortfolios: userRes.viewedPortfolios,
                         friendList: userRes.friendList,
@@ -410,7 +410,7 @@ exports.POST_likeProfile = function(req, res, next) {
                         
                         let qUserUpdate = new User({
                             _id: qUserRes._id,
-                            status: "active",
+                            status: qUserRes.status,
                             likedPortfolios: qUserRes.likedPortfolios,
                             viewedPortfolios: qUserRes.viewedPortfolios,
                             friendList: qUserRes.friendList,
@@ -456,7 +456,7 @@ exports.POST_confirmFriend = function(req, res, next) {
 
                 let user = new User({
                     _id: req.user._id,
-                    status: "active",
+                    status: req.user.status,
                     friendList: req.user.friendList,
                     dateJoined: req.user.dateJoined,
                     likedPortfolios: req.user.likedPortfolios,
@@ -465,7 +465,7 @@ exports.POST_confirmFriend = function(req, res, next) {
     
                 let otherUser = new User({
                     _id: reqFrom._id,
-                    status: "active",
+                    status: reqFrom.status,
                     friendList: reqFrom.friendList,
                     dateJoined: reqFrom.dateJoined,
                     likedPortfolios: reqFrom.likedPortfolios,

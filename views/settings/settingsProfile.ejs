@@ -1,4 +1,3 @@
-<body><!-- Remove only for debuggings -->
 <section class="settings-section">
 
     <ul class="flash-settings">
@@ -41,7 +40,7 @@
                                 </div>
                                 <span><%=User.fullNameDisplay%></span>
                             </div>
-                            <span>Change profile picture</span>
+                            <span id="set-changeAvatar" class="set-edit">Change profile picture</span>
                 </div>
 
                 <div class="set-avatarChange-form">
@@ -52,43 +51,43 @@
                 </div>
             </div>
             <!-- Personal information -->
-            <div>
-                <span>Personal Information</span>
-                <div>
-                    <form method="POST" action="/users/change_personalInfo">
-                        <div>
-                                <div>
+            <div class="personal-info">
+                <span class="settings-sub-heading">Personal Information</span>
+                    <form class="personal-info-form" method="POST" action="/users/change_personalInfo">
+                        <div class="personal-info-div">
+                                <div class="personal-info-input">
                                     <label for="firstName">First Name</label>
-                                    <input id="firstName" type="text" name="firstName"/>
+                                    <input id="firstName" type="text" name="firstName" placeholder="<%=User.firstName%>"/>
                                 </div>
             
-                                <div>
+                                <div class="personal-info-input">
                                     <label for="lastName">Last Name</label>
-                                    <input id="lastName" type="text" name="lastName"/>
+                                    <input id="lastName" type="text" name="lastName" placeholder="<%=User.lastName%>"/>
                                 </div>
                         </div>
-                        <div>
-                            <div>
+                        <div class="personal-info-div">
+                            <div class="personal-info-input">
                                 <label for="emailDisplay">Display email</label>
-                                <input id="emailDisplay" type="email" name="emailDisplay"/>
+                                <input id="emailDisplay" type="email" name="emailDisplay" placeholder="<%=User.emailDisplay%>"/>
                             </div>
-                            <div>
+                            <div class="personal-info-input">
                                 <label for="phoneNumber">Phone Number</label>
-                                <input id="phoneNumber" type="number" name="phoneNumber"/>
+                                <input id="phoneNumber" type="number" name="phoneNumber" placeholder="<%=User.phone%>"/>
+                            </div>
+                            <div class="personal-info-save">
+                                <button id="pInfo-save" type="submit" disabled>Save</button>
                             </div>
                         </div>
-                        <button type="submit">Save</button>
                     </form>
-                </div>
             </div>
 
             <!-- About You -->
             <div>
-                <span>About You</span>
+                <span class="settings-sub-heading">About You</span>
                 <div>
-                    <form method="POST" action="/users/change_aboutYou">
-                            <div>
-                                    <div>
+                    <form class="aboutYou-info-form" method="POST" action="/users/change_aboutYou">
+                            <div class="aboutYou-info-div">
+                                    <div class="aboutYou-info-input">
                                         <label for="country">Country</label>
                                         <select name='country'>
                                                 <option value="" disabled selected hidden>Select your option</option>
@@ -98,29 +97,30 @@
                             
                                         </select>
                                     </div>
-                                    <div>
+                                    <div class="aboutYou-info-input">
                                             <label for="postalCode-setting">Postal Code</label>
-                                            <input id="postalCode-setting" type="text" name="postalCode"/>
+                                            <input id="postalCode-setting" type="text" name="postalCode" placeholder="<%=User.postalCode%>"/>
                                     </div>
                             </div>
-                            <div>
-                                <div>
+                            <div class="aboutYou-info-div">
+                                <div class="aboutYou-info-input">
                                     <label for="occupation-setting">Occupation</label>
                                     <select name='occupation'>
                                             <option value="" disabled selected hidden>Select your option</option>
                                             <% for(let val of selectCountry) {%>
                                                 <option value="<%= val %>"><%= val%></option>
                                             <% } %>
-                        
                                     </select>
                                 </div>
-                                <div>
+                                <div class="aboutYou-info-input">
                                         <label for="bio-setting">Bio</label>
-                                        <textarea name="bio" maxlength="160"></textarea>
+                                        <textarea name="bio" maxlength="160" placeholder="<%=User.bio%>"></textarea>
                                         <p>Max: 160</p>
                                 </div>
+                                <div class="aboutYou-info-save">
+                                    <button  id="aboutYou-save" disabled type="submit">Save</button>
+                                </div>
                             </div>
-                            <button type="submit">Save</button>
                     </form>
                 </div>
             </div>
@@ -130,4 +130,19 @@
     </div>
 
 </section>
-</body>
+
+<script>
+
+    $(`#set-changeAvatar`).on("click", ()=> {
+        $(`.set-avatarChange-form`).toggle();
+    });
+
+    $(".personal-info-input > input").on("focus", ()=> {
+        $("#pInfo-save").prop("disabled", false);
+    });
+
+    $(".aboutYou-info-input > input, .aboutYou-info-input > textarea, .aboutYou-info-input > select ").on("focus", ()=> {
+        $("#aboutYou-save").prop("disabled", false);
+    })
+
+</script>

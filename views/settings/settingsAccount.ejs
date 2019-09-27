@@ -1,3 +1,4 @@
+<body>
 <section class="settings-section">
 
         <ul class="flash-settings">
@@ -30,50 +31,57 @@
 
         <div class="settings-options">
             <div>
-                <span>Account Settings</span>
+                <span class="settings-sub-heading">Account Settings</span>
             </div>
             <!-- Email change -->
-            <div>
+            <div class="acc-email-change">
                 <form method="POST" action="/users/change_acc_email">
-                    <label for="email-setting">Account email</label>
-                    <input id="email-setting" type="email" name="email" placeholder="<%=User.email%>"/>
-                    <button type="submit">Save</button>
+                        <label for="email-setting">Account email</label>
+                        <div class="email-change-input">
+                            <div></div>
+                            <input id="email-input" type="email" name="email" placeholder="<%=User.email%>"/>
+                            <div></div>
+                        </div>
+                        <button disabled id="email-change-submit" type="submit">Save</button>
                 </form>
             </div>
             <!-- Password change -->
-            <div>
-                <div>
-                    <span>Password</span>
-                    <span>Change password</span>
+            <div class="acc-pass-change">
+                <div class="acc-pass-divOne">
+                    <span class="settings-sub-heading">Password</span>
                 </div>
-                <div>
-                    <form method="POST" action="/users/change_password">
+                    <form class="acc-pass-divTwo" method="POST" action="/users/change_password">
                         <div>
                             <label>Current</label>
                             <input type="password" name="currentPass"/>
+                            <label></label>
                         </div>
                         <div>
                             <label>New</label>
                             <input type="password" name="newPass"/>
+                            <label></label>
                         </div>
                         <div>
                             <label>Re-type new</label>
                             <input type="password" name="retypeNewPass"/>
+                            <label></label>
                         </div>
-                        <button type="submit">Save</button>
+                        <div class="aboutYou-info-save acc-pass-submit">
+                            <button type="submit">Save</button>
+                            <label></label>
+                        </div>
                     </form>
-                </div>
             </div>
             <!-- Portfolio Link change -->
             <div>
-                <div>
-                    <span>Website Url</span>
-                    <span>Edit</span>
+                <div class="acc-pass-divOne">
+                    <span class="settings-sub-heading">Website Url</span>
                 </div>
-                <form method="POST" action="/users/change_web_url">
+                <form class="acc-pass-divTwo" method="POST" action="/users/change_web_url">
                     <div>
                         <label>Website Link</label>
                         <input type="url" placeholder="<%=User.portfolioUrl%>" name="url"/>
+                        <label></label>
                     </div>
                     <div>
                         <label>Website Type</label>
@@ -88,8 +96,12 @@
                                 <option value="professionalPortfolio">Professional Portfolio</option>
                                 <option value="businessPortfolio">Business Portfolio</option>
                             </select>
+                            <label></label>
                     </div>
-                    <button type="submit">Save</button>
+                    <div class="aboutYou-info-save acc-pass-submit">
+                        <button type="submit">Save</button>
+                        <label></label>
+                    </div>
                 </form>
             </div>
         </div>
@@ -97,3 +109,12 @@
     </div>
 
 </section>
+</body>
+
+<script>
+
+    $("#email-input").on("focus", ()=> {
+        $("#email-change-submit").prop("disabled", false);
+    });
+
+</script>
