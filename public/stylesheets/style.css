@@ -1056,14 +1056,13 @@ h3 {
 .acc-pass-divOne {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20px;
 }
 
 .acc-pass-divTwo {
-    display: flex;
+    display: none;
     flex-direction: column;
     align-items: center;
-
+    margin-top: 20px;
 }
 
 .acc-pass-divTwo > div {
@@ -1090,6 +1089,40 @@ h3 {
 }
 
 .acc-pass-divTwo > div:last-of-type {
+    justify-content: flex-end;
+}
+
+.acc-port-divTwo {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.acc-port-divTwo > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 510px;
+    margin-bottom: 10px;
+}
+
+.acc-port-divTwo > div > label {
+    width: 20%;
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 5px;
+}
+
+.acc-port-divTwo > div > input,
+.acc-port-divTwo > div > select {
+    width: 60%;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #7f7f7f;
+}
+
+.acc-port-divTwo > div:last-of-type {
     justify-content: flex-end;
 }
 

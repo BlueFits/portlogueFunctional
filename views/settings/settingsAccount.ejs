@@ -49,6 +49,7 @@
             <div class="acc-pass-change">
                 <div class="acc-pass-divOne">
                     <span class="settings-sub-heading">Password</span>
+                    <span id="changePassShow" class="set-edit">Change password</span>
                 </div>
                     <form class="acc-pass-divTwo" method="POST" action="/users/change_password">
                         <div>
@@ -76,8 +77,9 @@
             <div>
                 <div class="acc-pass-divOne">
                     <span class="settings-sub-heading">Website Url</span>
+                    <span id="urlChangeShow" class="set-edit">Edit</span>
                 </div>
-                <form class="acc-pass-divTwo" method="POST" action="/users/change_web_url">
+                <form class="acc-port-divTwo" method="POST" action="/users/change_web_url">
                     <div>
                         <label>Website Link</label>
                         <input type="url" placeholder="<%=User.portfolioUrl%>" name="url"/>
@@ -115,6 +117,16 @@
 
     $("#email-input").on("focus", ()=> {
         $("#email-change-submit").prop("disabled", false);
+    });
+
+    $("#changePassShow").on("click", ()=> {
+        ($(".acc-pass-divTwo").css("display") == "flex") ? $(".acc-pass-divTwo").css("display", "none") : $(".acc-pass-divTwo").css("display", "flex");
+        $(".acc-port-divTwo").css("display", "none");
+    });
+
+    $("#urlChangeShow").on("click", ()=> {
+        ($(".acc-port-divTwo").css("display") == "flex") ? $(".acc-port-divTwo").css("display", "none") : $(".acc-port-divTwo").css("display", "flex");
+        $(".acc-pass-divTwo").css("display", "none");
     });
 
 </script>
