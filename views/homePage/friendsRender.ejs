@@ -28,11 +28,29 @@
             <% } %>
 
         </ul>
+        <div class="pageControl">
+            <form method="POST" action="/newQryPrev">
+                <input type="hidden" value="<%=page%>" name="pageNumber"/>
+                <input type="hidden" value="<%=filter%>" name="filter">
+                <button class="prevPag" type="submit">Back</button>
+            </form>
+    
+    
+            <form method="POST" action="/newQryNext">
+                <input type="hidden" value="<%=page%>" name="pageNumber"/>
+                <input type="hidden" value="<%=filter%>" name="filter">
+                <button class="nextPag" type="submit" <%=qryNextStat%>>Next</button>
+            </form>
+        </div>
     </div>
 
 </section>
 
 
 <script>
+
+if (`<%=page%>` === `1`) {
+    $(`.prevPag`).attr("disabled","true");
+}
 
 </script>
