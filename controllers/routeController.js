@@ -12,7 +12,6 @@ const Token = require(`../models/Token`);
 
 //Functions
 const functionCntrl = require(`../controllers/functionsContoller`);
-const localIsEmpty = functionCntrl.isEmpty;
 
 //GET user web thumb 
 exports.GET_webthumb =  function(req, res, next) {
@@ -255,7 +254,9 @@ exports.GET_discover_highestRated = function(req, res, next) {
     //requried vars for pagination
     const pagination = req.query.pagination ? parseInt(req.query.pagination) : 6;
     const page = req.query.page ? parseInt(req.query.page) : 1;
-    const filterQry = req.query.filter ? {"portfolioType:": req.query.fitler} : {};
+    const filterQry = req.query.filter ? {portfolioType: req.query.filter.toString()} : {};
+
+    console.log(filterQry.portfolioType + " THis is the find param");
 
     User.find(filterQry).sort({portfolioLikes: -1}).skip((page-1) * pagination).limit(pagination).exec((err, results)=> {
 
@@ -322,7 +323,7 @@ exports.GET_discover_mostViewed = function(req, res, next) {
     //requried vars for pagination
     const pagination = req.query.pagination ? parseInt(req.query.pagination) : 6;
     const page = req.query.page ? parseInt(req.query.page) : 1;
-    const filterQry = req.query.filter ? {"portfolioType:": req.query.fitler} : {};
+    const filterQry = req.query.filter ? {portfolioType: req.query.filter} : {};
 
     User.find(filterQry).sort({portfolioViews: -1}).skip((page-1) * pagination).limit(pagination).exec((err, results)=> {
 
@@ -643,8 +644,10 @@ const renderHomeOrNew = function(req, res, pullCollection, FriendStatus) {
     //requried vars for pagination
     const pagination = req.query.pagination ? parseInt(req.query.pagination) : 6;
     const page = req.query.page ? parseInt(req.query.page) : 1;
-    const filterQry = req.query.filter ? {"portfolioType:": req.query.fitler} : {};
+    const filterQry = req.query.filter ? {portfolioType: req.query.filter} : {};
 
+    console.log(filterQry.portfolioType+ " This is the param");
+ 
     //Pagination equation
     User.find(filterQry).skip((page-1) * pagination).limit(pagination).sort({dateJoined: -1}).exec((err, results)=> {
         if (err) throw `routeController > GET_discover_new`;
