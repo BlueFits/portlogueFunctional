@@ -32,6 +32,7 @@
         <form method="POST" action="/newQryPrev">
             <input type="hidden" value="<%=page%>" name="pageNumber"/>
             <input type="hidden" value="<%=filter%>" name="filter">
+            <input type="hidden" value="<%=pageSection%>" name="pageSection"/>
             <button class="prevPag" type="submit">Back</button>
         </form>
 
@@ -39,6 +40,7 @@
         <form method="POST" action="/newQryNext">
             <input type="hidden" value="<%=page%>" name="pageNumber"/>
             <input type="hidden" value="<%=filter%>" name="filter">
+            <input type="hidden" value="<%=pageSection%>" name="pageSection"/>
             <button class="nextPag" type="submit" <%=qryNextStat%>>Next</button>
         </form>
     </div>

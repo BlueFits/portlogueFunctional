@@ -224,7 +224,7 @@ exports.renderHome = function(req, res, next) {
 
         //Proceed Normally
         else {
-            renderDiscover(req, res, {dateJoined: -1});
+            renderDiscover(req, res, "new", {dateJoined: -1});
         }
     });
 };
@@ -235,39 +235,23 @@ exports.GET_discover_new = function(req, res, next) {
 };
 
 exports.POST_newQryNext = function(req, res, next) {
-    res.redirect(`/discover/new?filter=${req.body.filter}&page=${(parseInt(req.body.pageNumber)  + 1)}`);
+    res.redirect(`/discover/${req.body.pageSection}?filter=${req.body.filter}&page=${(parseInt(req.body.pageNumber)  + 1)}`);
 }
 
 exports.POST_newQryPrev = function(req, res, next) {
-    res.redirect(`/discover/new?filter=${req.body.filter}&page=${(parseInt(req.body.pageNumber)  - 1)}`); //toFix: Backing from the first page results to an error
+    res.redirect(`/discover/${req.body.pageSection}?filter=${req.body.filter}&page=${(parseInt(req.body.pageNumber)  - 1)}`); //toFix: Backing from the first page results to an error
 }
 
 //Discover Highest rated
 exports.GET_discover_highestRated = function(req, res, next) {
-    renderDiscover(req, res, {portfolioLikes: -1});
+    renderDiscover(req, res, "highest_rated", {portfolioLikes: -1});
 };
-
-exports.POST_highestQryNext = function(req, res, next) {
-    res.redirect(`/discover/highest_rated?page=${(parseInt(req.body.pageNumber)  + 1)}`);
-}
-
-exports.POST_highestQryPrev = function(req, res, next) {
-    res.redirect(`/discover/highest_rated?page=${(parseInt(req.body.pageNumber)  - 1)}`);
-}
 
 //Discover Highest Views
-
 exports.GET_discover_mostViewed = function(req, res, next) {
-    renderDiscover(req, res, {portfolioViews: -1});
+    renderDiscover(req, res, "most_viewed", {portfolioViews: -1});
 };
 
-exports.POST_viewsQryNext = function(req, res, next) {
-    res.redirect(`/discover/most_viewed?page=${(parseInt(req.body.pageNumber)  + 1)}`);
-}
-
-exports.POST_viewsQryPrev = function(req, res, next) {
-    res.redirect(`/discover/most_viewed?page=${(parseInt(req.body.pageNumber)  - 1)}`);
-}
 
 
 //Suggestions omit for build
@@ -525,7 +509,7 @@ exports.GET_settings = function(req, res, next) {
 
 
 //Initialize Functions
-let renderDiscover = function (req, res, sortSetting) {
+let renderDiscover = function (req, res, pageSection, sortSetting) {
 
     //requried vars for pagination
     const pagination = req.query.pagination ? parseInt(req.query.pagination) : 6;
@@ -564,22 +548,22 @@ let renderDiscover = function (req, res, sortSetting) {
 
                 //toFix queries pagination
                 if (results.length < 6) {
-                    res.render(`homePage/discoverRender`, {qryNextStat: "disabled", page, filter: filterQry.portfolioType, layout: `homePage/homeLayout`, User: req.user, qUsers, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                    res.render(`homePage/discoverRender`, {pageSection ,qryNextStat: "disabled", page, filter: filterQry.portfolioType, layout: `homePage/homeLayout`, User: req.user, qUsers, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
                     return;
                 }
                 //
-                res.render(`homePage/discoverRender`, {qryNextStat: "", page, filter: filterQry.portfolioType, layout: `homePage/homeLayout`, User: req.user, qUsers, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                res.render(`homePage/discoverRender`, { pageSection ,qryNextStat: "", page, filter: filterQry.portfolioType, layout: `homePage/homeLayout`, User: req.user, qUsers, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
                 return;
             }
 
             else {
 
                 if (results.length < 6) {
-                    res.render(`homePage/discoverRender`, {qryNextStat: "disabled", page, layout: `homePage/homeLayout`, User: req.user, qUsers, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                    res.render(`homePage/discoverRender`, {pageSection, qryNextStat: "disabled", page, filter: filterQry.portfolioType, layout: `homePage/homeLayout`, User: req.user, qUsers, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
                     return;
                 }
 
-                res.render(`homePage/discoverRender`, {qryNextStat: "", page, layout: `homePage/homeLayout`, User: req.user, qUsers, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                res.render(`homePage/discoverRender`, {pageSection, qryNextStat: "", page, layout: `homePage/homeLayout`, filter: filterQry.portfolioType, User: req.user, qUsers, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
                 return;
             }
         });
