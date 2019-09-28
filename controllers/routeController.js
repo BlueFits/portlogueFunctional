@@ -12,6 +12,7 @@ const Token = require(`../models/Token`);
 
 //Functions
 const functionCntrl = require(`../controllers/functionsContoller`);
+const localIsEmpty = functionCntrl.isEmpty;
 
 //GET user web thumb 
 exports.GET_webthumb =  function(req, res, next) {
@@ -102,7 +103,7 @@ exports.GET_profile = function(req, res, next) {
 
                 //Check if its user profile
                 if (req.user.username === profileRes.username) {
-                    friendVal = {val: `Account Settings`, url: `/`, class: `href-disabled`};
+                    friendVal = {val: `Account Settings`, url: `/users/settings`, class: ``};
 
                     likeFunction.status = `disabled`;
 
@@ -254,8 +255,9 @@ exports.GET_discover_highestRated = function(req, res, next) {
     //requried vars for pagination
     const pagination = req.query.pagination ? parseInt(req.query.pagination) : 6;
     const page = req.query.page ? parseInt(req.query.page) : 1;
+    const filterQry = req.query.filter ? {"portfolioType:": req.query.fitler} : {};
 
-    User.find({}).sort({portfolioLikes: -1}).skip((page-1) * pagination).limit(pagination).exec((err, results)=> {
+    User.find(filterQry).sort({portfolioLikes: -1}).skip((page-1) * pagination).limit(pagination).exec((err, results)=> {
 
         //
         FriendStatus.find({"requestTo": req.user._id}).populate(`requestFrom`).exec((err, fstatRes)=> {
@@ -320,8 +322,9 @@ exports.GET_discover_mostViewed = function(req, res, next) {
     //requried vars for pagination
     const pagination = req.query.pagination ? parseInt(req.query.pagination) : 6;
     const page = req.query.page ? parseInt(req.query.page) : 1;
+    const filterQry = req.query.filter ? {"portfolioType:": req.query.fitler} : {};
 
-    User.find({}).sort({portfolioViews: -1}).skip((page-1) * pagination).limit(pagination).exec((err, results)=> {
+    User.find(filterQry).sort({portfolioViews: -1}).skip((page-1) * pagination).limit(pagination).exec((err, results)=> {
 
         //
         FriendStatus.find({"requestTo": req.user._id}).populate(`requestFrom`).exec((err, fstatRes)=> {
@@ -634,15 +637,16 @@ exports.GET_settings = function(req, res, next) {
 
 
 //Initialize Functions
-
 const pullCollection = User.find({});
 
 const renderHomeOrNew = function(req, res, pullCollection, FriendStatus) {
     //requried vars for pagination
     const pagination = req.query.pagination ? parseInt(req.query.pagination) : 6;
     const page = req.query.page ? parseInt(req.query.page) : 1;
+    const filterQry = req.query.filter ? {"portfolioType:": req.query.fitler} : {};
+
     //Pagination equation
-    pullCollection.skip((page-1) * pagination).limit(pagination).sort({dateJoined: -1}).exec((err, results)=> {
+    User.find(filterQry).skip((page-1) * pagination).limit(pagination).sort({dateJoined: -1}).exec((err, results)=> {
         if (err) throw `routeController > GET_discover_new`;
 
         FriendStatus.find({"requestTo": req.user._id}).populate(`requestFrom`).exec((err, fstatRes)=> {

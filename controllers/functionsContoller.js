@@ -1,3 +1,12 @@
+exports.isEmpty = function(object) {
+    for (let val in object) {
+        if (object.hasOwnProperty(val)) {
+            return false;
+        }
+    }
+    return true;
+}
+
 exports.userHistory = function(reqUser) {
 
     let displayControl = [];
@@ -54,7 +63,6 @@ exports.renderHomeFilter = function(next, req, res, profileRes, User, friendVal,
                 res.render(`profilePage/profilePageIframe`, {layout: `profilePage/profilePageLayout` , qUser: profileRes, User: req.user, friendVal, likeFunction});
             });
             //
-            //res.render(`profilePage/profilePageIframe`, {layout: `profilePage/profilePageLayout` , qUser: profileRes, User: req.user, friendVal});
         });
     }
 }
