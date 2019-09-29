@@ -14,7 +14,7 @@ const UserSchema = new Schema({
     country: {type: String, required: true},
     emailDisplay: {type: String, required: true},
     phone: {type: String, required: false, max: 10},
-    postalCode: {type: String, requried: true, max: 32},
+    postalCode: {type: String, requried: false, max: 32},
     occupation: {type: String, required: false},
     bio: {type: String, min: 3, max: 160, required: false},
     portfolioUrl: {type:String, required: true},
