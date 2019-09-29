@@ -264,24 +264,25 @@ exports.GET_discover_suggestions = function(req, res, next) {
 */
 
 //Friends Display
-exports.GET_discover_friends = function(req, res, next) {
+exports.GET_discover_friends = function(req, res, next) { //error in pageination  page=2 toFix
 
     //requried vars for pagination
     const pagination = req.query.pagination ? parseInt(req.query.pagination) : 6;
     const page = req.query.page ? parseInt(req.query.page) : 1;
     const filterQry = req.query.filter ? {portfolioType: req.query.filter} : {};
 
-    
+        console.log("didnt run User findbyId YET for "+req.user.username+ " id:"+req.user._id);
     User.findById(req.user._id).populate(`friendList`).skip((page-1) * pagination).limit(pagination).exec((err, result)=> {
-
+        if (err) {return next(err);}
         //
-        
+        console.log("ran User.findById " + result.username);
         FriendStatus.find({"requestTo": req.user._id}).populate(`requestFrom`).exec((err, fstatRes)=> {
             if (err) {
                 console.log(`renderHome> fstatRes`) 
                 return next(err);
             }
 
+            console.log("Ran FriendStatus");
 
             let fStatDisplay = [];
 
@@ -298,7 +299,7 @@ exports.GET_discover_friends = function(req, res, next) {
                 console.log(`No requests`);
 
                 //toFix quries pagination
-                if (result.friendList < 6) {
+                if (result.friendList.length < 6) {
                     console.log("nokinokie");
                     res.render(`homePage/friendsRender`, {qryNextStat: "disabled", page, layout: `homePage/homeLayout`, User: req.user, filter: filterQry.portfolioType, qUser: result.friendList, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
                     return;
@@ -311,11 +312,12 @@ exports.GET_discover_friends = function(req, res, next) {
 
             else {
 
-                if (result.friendList < 6) {
+                if (result.friendList.length < 6) {
+                    console.log("nokinokie2");
                     res.render(`homePage/friendsRender`, {qryNextStat: "disabled", page, layout: `homePage/homeLayout`, User: req.user, qUser: result.friendList, filter: filterQry.portfolioType, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
                     return;
                 }
-
+                console.log("okiokie2");
                 res.render(`homePage/friendsRender`, {qryNextStat: "", page, layout: `homePage/homeLayout`, User: req.user, qUser: result.friendList, filter: filterQry.portfolioType, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
                 return;
             }
@@ -324,6 +326,14 @@ exports.GET_discover_friends = function(req, res, next) {
         //
     })
 };
+
+exports.POST_friendsQryNext = function(req, res, next) {
+    res.redirect(`/discover/friends?filter=${req.body.filter}&page=${(parseInt(req.body.pageNumber)  + 1)}`);
+}
+
+exports.POST_friendsQryPrev = function(req, res, next) {
+    res.redirect(`/discover/friends?filter=${req.body.filter}&page=${(parseInt(req.body.pageNumber)  - 1)}`); //toFix: Backing from the first page results to an error
+}
 
 //Search home
 exports.GET_search_home = [
@@ -515,9 +525,6 @@ let renderDiscover = function (req, res, pageSection, sortSetting) {
     const pagination = req.query.pagination ? parseInt(req.query.pagination) : 6;
     const page = req.query.page ? parseInt(req.query.page) : 1;
     const filterQry = req.query.filter ? {portfolioType: req.query.filter} : {};
-
-    console.log(filterQry.portfolioType+ " This is the param");
-    console.log(page + " This is the page param");
 
     User.find(filterQry).skip((page-1) * pagination).limit(pagination).sort(sortSetting).exec((err, results)=> {
         if (err) throw `routeController > GET_discover_new`;

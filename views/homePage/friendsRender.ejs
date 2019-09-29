@@ -29,14 +29,14 @@
 
         </ul>
         <div class="pageControl">
-            <form method="POST" action="/newQryPrev">
+            <form method="POST" action="/friendsQryPrev">
                 <input type="hidden" value="<%=page%>" name="pageNumber"/>
                 <input type="hidden" value="<%=filter%>" name="filter">
                 <button class="prevPag" type="submit">Back</button>
             </form>
     
     
-            <form method="POST" action="/newQryNext">
+            <form method="POST" action="/friendsQryNext">
                 <input type="hidden" value="<%=page%>" name="pageNumber"/>
                 <input type="hidden" value="<%=filter%>" name="filter">
                 <button class="nextPag" type="submit" <%=qryNextStat%>>Next</button>

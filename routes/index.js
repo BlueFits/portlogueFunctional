@@ -43,6 +43,11 @@ router.get(`/discover/most_viewed`, ensureAuth, routeController.GET_discover_mos
 //router.get(`/discover/suggestions`, ensureAuth, routeController.GET_discover_suggestions);
 
 //GET home page disocver history
+
+router.post("/friendsQryNext", ensureAuth, routeController.POST_friendsQryNext);
+
+router.post("/friendsQryPrev", ensureAuth, routeController.POST_friendsQryPrev);
+
 router.get(`/discover/friends`, ensureAuth, routeController.GET_discover_friends);
 
 
