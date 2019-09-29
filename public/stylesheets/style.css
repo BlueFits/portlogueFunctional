@@ -816,10 +816,6 @@ h3 {
     margin: 0 auto;
 }
 
-.sttng-select{
-    background-color: #21283e;
-    color: #fff;
-}
 
 .settings-selection {
     background-color: #fff;
@@ -834,9 +830,16 @@ h3 {
 }
 
 .settings-selection a {
+    color: #969696;
     text-decoration: none;
-    padding: 15px 20px;
+    padding: 10px 20px;
     font-size: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.setting-select-name {
+    margin-left: 5px;
 }
 
 .settings-selection > a:first-of-type {
