@@ -275,6 +275,12 @@ exports.GET_discover_friends = function(req, res, next) { //error in pageination
     User.findById(req.user._id).populate(`friendList`).skip((page-1) * pagination).limit(pagination).exec((err, result)=> {
         if (err) {return next(err);}
         //
+        //toFix
+        if (result === null) {
+            res.send("505 Error. We will fix this in a bit.");
+            return;
+        }
+
         console.log("ran User.findById " + result.username);
         FriendStatus.find({"requestTo": req.user._id}).populate(`requestFrom`).exec((err, fstatRes)=> {
             if (err) {
