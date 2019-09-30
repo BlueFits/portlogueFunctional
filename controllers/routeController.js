@@ -231,7 +231,7 @@ exports.renderHome = function(req, res, next) {
 
 /* discover new */
 exports.GET_discover_new = function(req, res, next) {
-    renderDiscover(req, res, {dateJoined: -1});
+    renderDiscover(req, res, "new",{dateJoined: -1});
 };
 
 exports.POST_newQryNext = function(req, res, next) {

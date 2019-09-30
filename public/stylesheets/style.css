@@ -556,6 +556,7 @@ h3 {
     display: flex;
     align-items: center;
     width: 600px;
+    z-index:1;
 }
 
 .home-right-nav {
@@ -1356,6 +1357,60 @@ h3 {
 
 /* DISCOVER SECTION */
 
+.for-allign {
+    width: 24px;
+    display: flex;
+    justify-content: center;
+    margin-right: 30px;
+}
+
+.filterLabel {
+    cursor: pointer;
+    position: relative;
+    right: 30px;
+    border: 1px solid;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    z-index: 0;
+}
+
+.filter-dropdown {
+    border-radius : 5px;
+}
+
+.filter-dropdown > li:first-of-type > a {
+    border-radius: 5px 5px 0 0;
+}
+
+.filter-dropdown > li:last-of-type > a {
+    border-radius: 0 0 5px 5px
+}
+
+.filter-dropdown {
+    position: absolute;
+    list-style: none;
+    background-color: #fff;
+    right: 30px;
+    top: 125px;
+}
+
+.filter-dropdown > li {
+    height: auto;
+    display: flex;
+}
+
+.filter-dropdown > li > a {
+    color: black;
+    text-align: right;
+    text-decoration: none;
+    padding: 10px 20px;
+    bordeR: 1px solid gold;
+    width: 100%;
+}
+
 #discoverSection {
     width: 100%;
 
@@ -1368,7 +1423,7 @@ h3 {
     background-color: #fbfbfb;
 
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
 
     font-size: 16px;
