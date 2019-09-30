@@ -523,6 +523,10 @@ exports.GET_settings = function(req, res, next) {
     }
 }
 
+//About page
+exports.GET_aboutPage = function(req, res, next) {
+    res.render("homePage/portlogue-about", {layout: "visitorLayout"});
+}
 
 //Initialize Functions
 let renderDiscover = function (req, res, pageSection, sortSetting) {
