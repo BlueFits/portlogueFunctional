@@ -1390,6 +1390,8 @@ h3 {
 }
 
 .filter-dropdown {
+    border-radius: 5px;
+    border: 1px solid #cecbcb;
     display: none;
     position: absolute;
     list-style: none;
