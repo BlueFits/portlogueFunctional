@@ -78,10 +78,12 @@ if (`<%=page%>` === `1`) {
 $("#filterIcon").hover(() => {
     $("#filterIcon > img").attr("src", "/assets/icons/icons8-filter-96-hover.png");
     $(".filterLabel").css("background-color", "grey");
+    $(".filterLabel > span").css("color", "#fff");
 },()=> {
     if (filterCounter === 0) {
         $("#filterIcon > img").attr("src", "/assets/icons/icons8-filter-96.png");
         $(".filterLabel").css("background-color", "transparent");
+        $(".filterLabel > span").css("color", "#bbbbbb");
     }
     else {
         return;
@@ -89,21 +91,18 @@ $("#filterIcon").hover(() => {
 });
 
 $("#filterIcon").on("click", ()=> {
+    $(".filter-dropdown").toggle();
     if ( ($("#filterIcon > img").attr("src") === "/assets/icons/icons8-filter-96-hover.png") && (filterCounter === 0) ) {
         filterCounter = 1;
         $("#filterIcon > img").attr("src", "/assets/icons/icons8-filter-96-hover.png");
         $(".filterLabel").css("background-color", "grey");
+        $(".filterLabel > span").css("color", "#fff");
     }
 
     else if ( ($("#filterIcon > img").attr("src") === "/assets/icons/icons8-filter-96-hover.png") && (filterCounter === 1) ) {
         filterCounter = 0;
         $("#filterIcon > img").attr("src", "/assets/icons/icons8-filter-96.png");
         $(".filterLabel").css("background-color", "transparent");
-
+        $(".filterLabel > span").css("color", "#bbbbbb");
     }
 });
-
-/* Disable back on pagination */
-if (`<%=page%>` === `1`) {
-    $(`.prevPag`).attr("disabled","true");
-}
