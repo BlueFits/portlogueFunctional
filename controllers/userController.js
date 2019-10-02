@@ -568,7 +568,6 @@ exports.POST_first_Setup_Link = [
         
         else {
 
-            //This wont run in heroku
             async function snap() {
                 await captureWebsite.file(req.body.link, `${req.user.email}-webthumbnail.png`, {
                     width: 1024,
