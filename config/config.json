@@ -1,5 +1,4 @@
 {
-    "devLogin" : "mongodb+srv://AzDreaming:passwordAtlas@portloguecluster-fxdw2.gcp.mongodb.net/test?retryWrites=true&w=majority
-    "
+    "devLogin" : "mongodb+srv://AzDreaming:passwordAtlas@portloguecluster-fxdw2.gcp.mongodb.net/test?retryWrites=true&w=majority"
 }
 
