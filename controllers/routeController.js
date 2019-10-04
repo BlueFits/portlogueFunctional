@@ -130,16 +130,62 @@ exports.idRedirect = function(req, res, next) {
 
 //User profile page
 exports.GET_profile = function(req, res, next) {
+
+    //Query for user's profile
+    User.findOne({ username: req.params.username }).populate("websites").exec((err, userProfile)=> {
+        if (err) {return next(err);}
+
+        if (!userProfile) {
+            res.send("Profile does not exist");
+        }
+
+        else {
+            //Render friend status for qUser or user
+            async.parallel({
+                //From user's perspective
+                user: function(cb) {
+                    FriendStatus.find({ "requestFrom": req.user._id, "requestTo": userProfile._id }).exec(cb);
+                },
+                //From qUser's perspective
+                qUser: function(cb) {
+                    FriendStatus.find({ "requestFrom": userProfile._id, "requestTo": req.user }).exec(cb);
+                }
+
+            }, (err, asyncResult)=> {
+
+                let friendVal = {};
+                let userCheck = false;
+
+                //Check if its user's profile
+                if (req.user.username === userProfile.username) {
+                    friendVal = { val: `Account Settings`, url: `/users/settings`, class: `` };
+
+                    res.render(/* toFix */"", { layout: `profilePage/profilePageLayout` , qUser: userProfile , User: req.user, friendVal, likeFunction }); //toFix Render Profile instead);
+                    return;
+                }
+                
+
+
+            });
+        }
+    })
+
+
+
+    /*
     //record user history
-    User.findOne({"username":req.params.username}).populate(`viewedPortfolios`).exec((err, profileRes)=> {
+    User.findOne({"username":req.params.username}).exec((err, profileRes)=> {
         if (err) throw "routeController > GET_profile";
 
+
         if (!profileRes) {
-            res.send(`NO USERNAME`); //toFix
+            res.send(`Profile does not exist`); //toFix
         }
 
         else {  
             //Save user history && Render Friend Status
+
+            
             async.parallel({
 
                 one: (cb)=> {
@@ -155,8 +201,9 @@ exports.GET_profile = function(req, res, next) {
                 let userCheck = false;
                 let likeFunction = {};
 
-                for (let val of req.user.viewedPortfolios) {
-                    if (val.toString() === profileRes._id.toString()) {
+                //Push viewed website in the viewedSites
+                for (let val of req.user.viewedSites) {
+                    if (val._id === profileRes._id.toString()) {
                         userCheck = true;
                     }
                 }
@@ -217,6 +264,7 @@ exports.GET_profile = function(req, res, next) {
             });           
         }
     });
+    */
 }
 
 //id redirect
