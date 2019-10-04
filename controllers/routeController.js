@@ -144,14 +144,16 @@ exports.GET_profile = function(req, res, next) {
             async.parallel({
                 //From user's perspective
                 user: function(cb) {
-                    FriendStatus.find({ "requestFrom": req.user._id, "requestTo": userProfile._id }).exec(cb);
+                    FriendStatus.findOne({ "requestFrom": req.user._id, "requestTo": userProfile._id }).exec(cb);
                 },
                 //From qUser's perspective
                 qUser: function(cb) {
-                    FriendStatus.find({ "requestFrom": userProfile._id, "requestTo": req.user }).exec(cb);
+                    FriendStatus.findOne({ "requestFrom": userProfile._id, "requestTo": req.user }).exec(cb);
                 }
 
             }, (err, asyncResult)=> {
+
+                if (err) {return next(err);}
 
                 let friendVal = {};
                 let userCheck = false;
@@ -160,11 +162,50 @@ exports.GET_profile = function(req, res, next) {
                 if (req.user.username === userProfile.username) {
                     friendVal = { val: `Account Settings`, url: `/users/settings`, class: `` };
 
-                    res.render(/* toFix */"", { layout: `profilePage/profilePageLayout` , qUser: userProfile , User: req.user, friendVal, likeFunction }); //toFix Render Profile instead);
+                    //Will change
+                    res.render("", { layout: `profilePage/profilePageLayout` , qUser: userProfile , User: req.user, friendVal, likeFunction }); //toFix Render Profile instead);
                     return;
                 }
                 
+                //User to qUser
+                if (asyncResult.user) {
+                    switch (asyncResult.user.status) {
+                        case 1:
+                            friendVal = {val: `Request Sent`, url: ``, class:`href-disabled`};
+                            break;
+                        case 2:
+                            friendVal = {val: `Friends`, url: `/`, class:`href-disabled`};
+                            break;
+                        case 3:
+                            friendVal = {val: `Request Rejected`, url: `/`, class:`href-disabled`};
+                            break;
+                    }
 
+                    //Will change
+                    functionCntrl.renderHomeFilter(next, req, res, profileRes, User, friendVal, userCheck, likeFunction);
+                    return;
+                    
+                }
+
+                //qUser from User
+                if (asyncResult.qUser) {
+                    switch (asyncResult.qUser.status) {
+                        case 1:
+                            friendVal = {val: `Respond To Request`, url: `/users/notifications/${profileRes._id}`, class:``};
+                            break;
+                        case 2:
+                            friendVal = {val: `Friends`, url: `/`, class:`href-disabled`};
+                            break;
+                        case 3:
+                            friendVal = {val: `Request Rejected`, url: `/`, class:`href-disabled`};
+                            break;
+                    }
+
+                    //Will change
+                    functionCntrl.renderHomeFilter(next, req, res, profileRes, User, friendVal, userCheck, likeFunction);
+                    return;
+
+                }
 
             });
         }
