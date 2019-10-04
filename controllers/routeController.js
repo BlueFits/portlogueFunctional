@@ -9,19 +9,80 @@ const async = require(`async`);
 const User = require(`../models/User`);
 const FriendStatus = require(`../models/friendStatus`);
 const Token = require(`../models/Token`);
+const Website = require("../models/Website");
 
 //Functions
 const functionCntrl = require(`../controllers/functionsContoller`);
 
+/* Initialize Functions*/
+
+let renderDiscover = function (req, res, pageSection, sortSetting) {
+
+    //requried vars for pagination
+    const pagination = req.query.pagination ? parseInt(req.query.pagination) : 6;
+    const page = req.query.page ? parseInt(req.query.page) : 1;
+    const filterQry = req.query.filter ? {type: req.query.filter} : {};
+
+    Website.find(filterQry).populate("owner").skip((page-1) * pagination).limit(pagination).sort(sortSetting).exec((err, webResults)=> {
+        if (err) throw `routeController > GET_discover_new`;
+
+        FriendStatus.find({"requestTo": req.user._id}).populate(`requestFrom`).exec((err, fstatRes)=> {
+            if (err) {
+                console.log(`renderHome> fstatRes`) 
+                return next(err);
+            }
+
+            let fStatDisplay = [];
+
+            for (let val of fstatRes) {
+                if (val.status === 1) {
+                    fStatDisplay.push(val);
+                }
+                else {
+                            
+                }
+            }
+
+            if (fStatDisplay.length === 0) {
+                console.log(`No requests`);
+                //Add a function if fStat is empty
+
+                //toFix queries pagination
+                if (webResults.length < 6) {
+                    res.render(`homePage/discoverRender`, {pageSection ,qryNextStat: "disabled", page, filter: filterQry.portfolioType, layout: `homePage/homeLayout`, User: req.user, webResults, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                    return;
+                }
+                //
+                res.render(`homePage/discoverRender`, { pageSection ,qryNextStat: "", page, filter: filterQry.portfolioType, layout: `homePage/homeLayout`, User: req.user, webResults, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                return;
+            }
+
+            else {
+
+                if (webResults.length < 6) {
+                    res.render(`homePage/discoverRender`, {pageSection, qryNextStat: "disabled", page, filter: filterQry.portfolioType, layout: `homePage/homeLayout`, User: req.user, webResults, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                    return;
+                }
+
+                res.render(`homePage/discoverRender`, {pageSection, qryNextStat: "", page, layout: `homePage/homeLayout`, filter: filterQry.portfolioType, User: req.user, webResults, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                return;
+            }
+        });
+    })
+
+}
+
+/* */
+
 //GET user web thumb 
 exports.GET_webthumb =  function(req, res, next) {
 
-    User.findOne({"email":req.params.email}).exec((err, result) => {
-        if (err) {return next(err);}
+    Website.findOne({owner: req.params.id}).exec((err, result) => {
+        if (err) {res.sendStatus(404); return;}
         
         if (result) {
-            res.contentType(result.portfolioImg.contentType);
-            res.send(result.portfolioImg.data);
+            res.contentType(result.webThumb.contentType);
+            res.send(result.webThumb.data);
             return;
         }
         else {
@@ -180,8 +241,8 @@ exports.renderRegister = function(req, res, next) {
 
 //GET function for first time setup
 exports.GET_first_Setup_CountryandPostal = function(req, res, next) {
-    //Only run when both oare not set (The user's first time)
-    if ((req.user.country ===`NOT SET`) && (req.user.postalCode === `NOT SET`)) {
+    //Only run when both oare n/a (The user's first time)
+    if ((req.user.country === `n/a`) && (req.user.postalCode === `n/a`)) {
         res.render(`firstSetup/getCountryandPostal`, { errors: [],User: req.user, selectCountry: require(`../arrayList/arrays`).countryList });
     }
     else{
@@ -191,7 +252,7 @@ exports.GET_first_Setup_CountryandPostal = function(req, res, next) {
 
 exports.GET_first_Setup_Profile = function(req, res, next) {
     //Only run on user's very first login
-    if ((req.user.emailDisplay === `NOT SET`) && (req.user.occupation === `NOT SET`)) {
+    if ((req.user.emailDisplay === `n/a`) && (req.user.occupation === `n/a`)) {
         res.render(`firstSetup/setupProfile`, { errors: [], User: req.user });
     }
     else {
@@ -201,7 +262,7 @@ exports.GET_first_Setup_Profile = function(req, res, next) {
 
 exports.GET_first_Setup_Link = function(req, res, next) {
     //Only run on user's very first login
-    if ((req.user.portfolioUrl === `NOT SET`) && (req.user.portfolioType === `NOT SET`)) {
+    if (req.user.websites.length === 0) {
         res.render(`firstSetup/setupLink`, {errors: [], User: req.user});
     }
 
@@ -217,8 +278,8 @@ exports.renderHome = function(req, res, next) {
 
         if (err) {return next(err);}
 
-        //First time setup will run if params are not set
-        if ( (result.country === 'NOT SET') || (result.emailDisplay === `NOT SET`) ) {
+        //First time setup will run if params are n/a
+        if ( (result.country === "n/a") || (result.emailDisplay === "n/a") ) {
             res.redirect(`/users/first_time_setup`);
         }
 
@@ -231,7 +292,7 @@ exports.renderHome = function(req, res, next) {
 
 /* discover new */
 exports.GET_discover_new = function(req, res, next) {
-    renderDiscover(req, res, "new",{dateJoined: -1});
+    renderDiscover(req, res, "new",{date: -1});
 };
 
 exports.POST_newQryNext = function(req, res, next) {
@@ -244,24 +305,13 @@ exports.POST_newQryPrev = function(req, res, next) {
 
 //Discover Highest rated
 exports.GET_discover_highestRated = function(req, res, next) {
-    renderDiscover(req, res, "highest_rated", {portfolioLikes: -1});
+    renderDiscover(req, res, "highest_rated", {likes: -1});
 };
 
 //Discover Highest Views
 exports.GET_discover_mostViewed = function(req, res, next) {
-    renderDiscover(req, res, "most_viewed", {portfolioViews: -1});
+    renderDiscover(req, res, "most_viewed", {views: -1});
 };
-
-
-
-//Suggestions omit for build
-/*
-exports.GET_discover_suggestions = function(req, res, next) {
-    
-    res.render(`homePage/homeSuggestions`, {layout: `homePage/homeLayout`, User: req.user, userHistory: functionCntrl.userHistory(req.user)}); //toFix
-};
-
-*/
 
 //Friends Display
 exports.GET_discover_friends = function(req, res, next) { //error in pageination  page=2 toFix
@@ -374,7 +424,7 @@ exports.GET_search_home = [
                 User.find({"username":req.query.q}).populate(`friendRequests`).exec(cb); //Case sensitive Search
             },
             qrySix: (cb) => {
-                User.find({"portfolioType": searchQry}).populate(`friendRequests`).exec(cb);
+                Website.find({"type": searchQry}).populate("owner").populate(`friendRequests`).exec(cb);
             }
 
         }, function(err, results) {
@@ -441,18 +491,24 @@ exports.GET_confirmation = function(req, res, next) {
         if (err) {return next(err);}
 
         if (!result) {
-
-            res.sendStatus(404 + " Error at GET_confirmation ");
+            res.sendStatus(404);
         }
 
         else {
+
             User.findById(result._userId._id).exec((err, userRes)=> {
                 if (err) {return next(err);}
+
+                if (userRes.isVerified === true) {
+                    res.send("Token Expired");
+                    return;
+                }
     
-                let userUpdate = new User({
-                    _id: userRes._id,
-                    isVerified: true
-                });
+                let userUpdate ={
+                    $set: {
+                        isVerified: true
+                    }
+                };
     
                 User.findByIdAndUpdate(userRes._id, userUpdate, {}, (err, udpateRes)=> {
                     if (err) {return next(err);}
@@ -526,64 +582,4 @@ exports.GET_settings = function(req, res, next) {
 //About page
 exports.GET_aboutPage = function(req, res, next) {
     res.render("homePage/portlogue-about", {layout: "visitorLayout"});
-}
-
-//Initialize Functions
-let renderDiscover = function (req, res, pageSection, sortSetting) {
-
-    //requried vars for pagination
-    const pagination = req.query.pagination ? parseInt(req.query.pagination) : 6;
-    const page = req.query.page ? parseInt(req.query.page) : 1;
-    const filterQry = req.query.filter ? {portfolioType: req.query.filter} : {};
-
-    User.find(filterQry).skip((page-1) * pagination).limit(pagination).sort(sortSetting).exec((err, results)=> {
-        if (err) throw `routeController > GET_discover_new`;
-
-        FriendStatus.find({"requestTo": req.user._id}).populate(`requestFrom`).exec((err, fstatRes)=> {
-            if (err) {
-                console.log(`renderHome> fstatRes`) 
-                return next(err);
-            }
-            //Filter active users from inactive users
-            let qUsers = functionCntrl.filterStatus(results);
-
-
-            let fStatDisplay = [];
-
-            for (let val of fstatRes) {
-                if (val.status === 1) {
-                    fStatDisplay.push(val);
-                }
-                else {
-                            
-                }
-            }
-
-            if (fStatDisplay.length === 0) {
-                console.log(`No requests`);
-                //Add a function if fStat is empty
-
-                //toFix queries pagination
-                if (results.length < 6) {
-                    res.render(`homePage/discoverRender`, {pageSection ,qryNextStat: "disabled", page, filter: filterQry.portfolioType, layout: `homePage/homeLayout`, User: req.user, qUsers, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
-                    return;
-                }
-                //
-                res.render(`homePage/discoverRender`, { pageSection ,qryNextStat: "", page, filter: filterQry.portfolioType, layout: `homePage/homeLayout`, User: req.user, qUsers, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
-                return;
-            }
-
-            else {
-
-                if (results.length < 6) {
-                    res.render(`homePage/discoverRender`, {pageSection, qryNextStat: "disabled", page, filter: filterQry.portfolioType, layout: `homePage/homeLayout`, User: req.user, qUsers, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
-                    return;
-                }
-
-                res.render(`homePage/discoverRender`, {pageSection, qryNextStat: "", page, layout: `homePage/homeLayout`, filter: filterQry.portfolioType, User: req.user, qUsers, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
-                return;
-            }
-        });
-    })
-
 }

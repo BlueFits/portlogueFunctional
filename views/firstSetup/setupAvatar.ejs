@@ -11,12 +11,12 @@
     </div>
     <div class="setup-avatar">
         <div class="avatar-wrapper">
-                <img src="<%= avatar %>"/>
+                <img src="/publicAvatar/<%=User.email%>"/>
         </div>
         <div class="setup-avatar-desc">
-            <h2><%= User.fullNameDisplay %></h2>
-            <p><%= User.occupation %></p>
-            <p><%= User.country %></p>
+            <h2><%= User.fullName %></h2>
+            <p><%= User.occupationDisplay %></p>
+            <p><%= User.countryDisplay %></p>
         </div>
     </div>
 

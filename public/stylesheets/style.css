@@ -348,6 +348,7 @@ h3 {
 /* Country and postal code  */
 
 .country-setup {
+    padding-top: 150px;
     display: flex;
     flex-direction: column;
 

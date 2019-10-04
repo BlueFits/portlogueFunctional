@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const MessageSchema = new Schema({
     mA: {type: Schema.Types.ObjectId, ref: `User`},
-    mB: {type: Schema.Types.ObjectId, red: `User`},
+    mB: {type: Schema.Types.ObjectId, ref: `User`},
     message: [{type: String, required: false}],
 });
 

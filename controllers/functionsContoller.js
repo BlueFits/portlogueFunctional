@@ -12,7 +12,7 @@ exports.userHistory = function(reqUser) {
     let displayControl = [];
     let history = [];
 
-                for (let val of reqUser.viewedPortfolios) {
+                for (let val of reqUser.viewedSites) {
                     displayControl.push(val);
                 }
 

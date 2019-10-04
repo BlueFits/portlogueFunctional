@@ -25,18 +25,18 @@
     <div class="discover-results">
     <ul class="discover-results-ul" id="userQry"><!-- Custom Limited-->
 
-        <% for(let user of qUsers) { %>
-            <li class="portfolio-select"><a target="_top" href="/users/profile/<%=user.username%>">
+        <% for(let website of webResults) { %>
+            <li class="portfolio-select"><a target="_top" href="/users/profile/<%=website.owner.username%>">
                 <div class="portfolio-thumbnail">
                     <div class="portfolio-thumbnail-bar"><!--Grey bar--></div>
-                    <div><img class="portfolio-thumbnail-img" src="/userWebThumb/<%=user.email%>"/></div>
+                    <div><img class="portfolio-thumbnail-img" src="/userWebThumb/<%=website.owner._id%>"/></div>
                 </div></a>
                 <div class="thumbnail-desc">
                     <div class="profile-name-wrapper">
-                        <div class="thumb-profile-wrapper"><img class="thumbnail-profile-img" src="/publicAvatar/<%=user.email%>"/></div>
-                        <a href="/users/profile/<%=user.username%>"><%=user.fullNameDisplay%></a>
+                        <div class="thumb-profile-wrapper"><img class="thumbnail-profile-img" src="/publicAvatar/<%=website.owner.email%>"/></div>
+                        <a href="/users/profile/<%=website.owner.username%>"><%=website.owner.fullName%></a>
                     </div>
-                    <span class="occupation-flex"><%=user.occupation%></span>
+                    <span class="occupation-flex"><%=website.categoryDisplay%></span>
                 </div>
             </li>
         <% } %>

@@ -1,5 +1,7 @@
 const mongoose = require(`mongoose`);
 const Grid = require('gridfs-stream');
+const fs = require("fs");
+const path = require("path");
 
 //
 const conn = mongoose.createConnection(require(`../config/config`).devLogin, {useNewUrlParser: true});
@@ -16,16 +18,20 @@ conn.once('open', () => {
 //GET user public avatar
 exports.GET_publicAvtr = function(req, res, next) {
 
-  gfs.files.findOne({ filename: `${req.params.email}-avatar` }, function(err, results) {
+  gfs.collection("uploads").findOne({ filename: `${req.params.email}-avatar` }, function(err, results) {
     if (err) throw `uploadController > publicAvtr`;
 
     if (!results) {
-      res.send(`CANNOT FIND AVATAR`);//toFix
+      const noAvatarStream = fs.readFileSync(path.join(__dirname, `../public/assets/avatars/placeholder.png`));
+      res.contentType(`image/png`);
+      res.send(noAvatarStream);
       return;
     }
 
-    const readstream = gfs.createReadStream(results.filename);
-    readstream.pipe(res);
+    else {
+      const readstream = gfs.createReadStream(results.filename);
+      readstream.pipe(res);
+    }
 
   });
 
@@ -39,7 +45,7 @@ exports.GET_first_Setup_Avatar = function(req, res, next) {
     if (err) {return next(err);}
 
     if (!result) {
-      res.render(`firstSetup/setupAvatar`, { errors:[], User: req.user, avatar: `/assets/avatars/placeholder.png`});
+      res.render(`firstSetup/setupAvatar`, { errors:[], User: req.user});
       return;
     }
     else {

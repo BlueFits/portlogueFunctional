@@ -8,9 +8,12 @@ const path = require(`path`);
 const randomString = require(`randomstring`);
 const mailer = require(`../misc/mailer`);
 
+const Website = require("../models/Website");
 const User = require(`../models/User`);
 const FriendStatus = require(`../models/friendStatus`);
 const Token = require(`../models/Token`);
+
+/* Settings System */
 
 //Change web url
 exports.POST_changeWebUrl = [
@@ -315,28 +318,30 @@ exports.POST_changeAvatar = function(req, res, next) {
     res.redirect(req.get(`Referrer`));
 }
 
+/* Website Interaction */
+
 //Liking Process
-exports.POST_likeProfile = function(req, res, next) {
+exports.POST_likeSite = function(req, res, next) {
     //Push qUser to User's likedportfolios and increment qUser's portfolioLikes
-    User.findOne({"username": req.body.qUsername}).exec((err, qUserRes)=> {
+    Website.findOne({ owner: req.body.qUser_id }).populate("owner").exec((err, webRes)=> {
 
         if (err) {return next(err);}
 
         if (!qUserRes) {    
-            res.send(`Error in the profile rendering :( it's lacks a parameter.`);
+            res.send(`Error in the profile rendering :( it's lacking a parameter.`);
         }
 
         else {
             //Case where it is User to qUser
-            //Run a check wether qUser is already in User's likedportfolios
+            //Run a check wether qUser's site is already in User's liked sites
             let checkLikes = false;
 
-            User.findById(req.user._id).populate("likedPortfolios").exec((err, userRes)=> {
+            User.findById(req.user._id).populate("likedSites").exec((err, userRes)=> {
                 if (err) {return next(err);}
-                //For loop that iterates over likedPortfolios
+                //For loop that iterates over liked websites
 
-                for (let val of userRes.likedPortfolios) {
-                    if (val.username.toString() === qUserRes.username.toString()) {
+                for (let val of userRes.likedSites) {
+                    if (val._id === webRes._id) {
                         checkLikes = true;
                     }
                 }
@@ -344,44 +349,33 @@ exports.POST_likeProfile = function(req, res, next) {
                 if (checkLikes === true) {
                     //Make the process for unliking
 
-                    let userResNewList = [];
-                    //Make a copy of user liked portfolios
-                    for (let val of userRes.likedPortfolios) {
-                        userResNewList.push(val);
-                    }
+                    //Make a copy of user liked websites
+                    let userResNewList = [...userRes.likedSites];
 
-                    //Gets rid of the liked portfolio
+                    //Gets rid of the liked sites
                     for (let i = 0; i < userResNewList.length; i++) {
-                        if (userResNewList[i].username.toString() === qUserRes.username.toString()) {
+                        if (userResNewList[i]._id === webRes._id) {
                             userResNewList.splice(i, 1);
                         }
                     }
 
-
-                    let userUpdate = new User({
-                        _id: userRes._id,
-                        status: userRes.status,
-                        likedPortfolios: userResNewList,
-                        viewedPortfolios: userRes.viewedPortfolios,
-                        portfolioLikes: userRes.portfolioLikes,
-                        friendList: userRes.friendList,
-                        dateJoined: userRes.dateJoined
-                    });
+                    //Update user
+                    let userUpdate = {
+                        $set: {
+                            likedSites: userResNewList,
+                        }
+                    };
 
                     User.findByIdAndUpdate(userRes._id, userUpdate, {}, (err, updateRes)=> {
                         if (err) {return next(err);}
-                        //Update user again to decrease like count
-                        let qUserUpdate = new User({
-                            _id: qUserRes._id,
-                            status: qUserRes.status,
-                            likedPortfolios: qUserRes.likedPortfolios,
-                            viewedPortfolios: qUserRes.viewedPortfolios,
-                            friendList: qUserRes.friendList,
-                            portfolioLikes: qUserRes.portfolioLikes - 1,
-                            dateJoined: qUserRes.dateJoined
-                        });
+                        //Update website to decrease like count
+                        let websiteUpdate = {
+                            $set: {
+                                likes: webRes.likes - 1
+                            }
+                        };
 
-                        User.findByIdAndUpdate(qUserRes._id, qUserUpdate, {},(err, updateRes)=> {
+                        Website.findByIdAndUpdate(webRes._id, websiteUpdate, {}, (err, updateRes)=> {
                             if (err) {return next(err);}
                             res.redirect(req.get(`Referrer`));
                         });
@@ -391,34 +385,31 @@ exports.POST_likeProfile = function(req, res, next) {
                 }
 
                 else {
-                    //
+                    // First time liking a website
 
-                    let userUpdate = new User({
-                        _id: userRes._id,
-                        status: userRes.status,
-                        likedPortfolios: userRes.likedPortfolios,
-                        viewedPortfolios: userRes.viewedPortfolios,
-                        friendList: userRes.friendList,
-                        dateJoined: userRes.dateJoined,
-                        portfolioLikes: userRes.portfolioLikes
-                    });
+                    //Make a copy of userRes's liked sites
+                    let newlikedSitesArray = [...userRes.likedSites];
+                    //Push webres into the new copy 
+                    newlikedSitesArray.push(webRes);
 
-                    userUpdate.likedPortfolios.push(qUserRes);
+                    //update with the new array
+                    let userUpdate = {
+                        $set: {
+                            likedSites: newlikedSitesArray
+                        }
+                    };
+
 
                     User.findByIdAndUpdate(userRes._id, userUpdate, {}, (err, updateRes)=> {
                         if (err) {return next(err);}
-                        
-                        let qUserUpdate = new User({
-                            _id: qUserRes._id,
-                            status: qUserRes.status,
-                            likedPortfolios: qUserRes.likedPortfolios,
-                            viewedPortfolios: qUserRes.viewedPortfolios,
-                            friendList: qUserRes.friendList,
-                            portfolioLikes: qUserRes.portfolioLikes + 1,
-                            dateJoined: qUserRes.dateJoined
-                        });
+                        //Add a like to the website
+                        let websiteUpdate = {
+                            $set: {
+                                likes: webRes.likes + 1,
+                            }
+                        };
 
-                        User.findByIdAndUpdate(qUserRes._id, qUserUpdate, {}, (err, updateRes)=> {
+                        Website.findByIdAndUpdate(webRes._id, websiteUpdate, {}, (err, updateRes)=> {
                             if (err) {return next(err);}
                             res.redirect(req.get(`Referrer`));
                         });
@@ -434,7 +425,9 @@ exports.POST_likeProfile = function(req, res, next) {
 
 }
 
-//Add friend process
+/* Friends System */
+
+//Add friend process toFix
 exports.POST_confirmFriend = function(req, res, next) {
     
     User.findById(req.body.reqFrom).populate(`friendList`).exec((err, reqFrom)=> {
@@ -449,32 +442,28 @@ exports.POST_confirmFriend = function(req, res, next) {
             if (req.body.reqResponse === `accept`) {
 
                 
-                let friendStat = new FriendStatus({
-                    _id: req.body.friendStatId,
-                    status: 2
-                });
+                let friendStat = {
+                    $set: {
+                        _id: req.body.friendStatId,
+                        status: 2
+                    }
+                };
 
-                let user = new User({
-                    _id: req.user._id,
-                    status: req.user.status,
-                    friendList: req.user.friendList,
-                    dateJoined: req.user.dateJoined,
-                    likedPortfolios: req.user.likedPortfolios,
-                    viewedPortfolios: req.user.viewedPortfolios
-                });
+                let user = {
+                    $set: {
+                        friendList: req.user.friendList,
+                    }
+                };
     
-                let otherUser = new User({
-                    _id: reqFrom._id,
-                    status: reqFrom.status,
-                    friendList: reqFrom.friendList,
-                    dateJoined: reqFrom.dateJoined,
-                    likedPortfolios: reqFrom.likedPortfolios,
-                    viewedPortfolios:  reqFrom.viewedPortfolios
-                });
+                let otherUser = {
+                    $set: {
+                        friendList: reqFrom.friendList,
+                    }
+                };
 
-                user.friendList.push(reqFrom);
+                user.$set.friendList.push(reqFrom);
 
-                otherUser.friendList.push(req.user);
+                otherUser.$set.friendList.push(req.user);
 
                 FriendStatus.findByIdAndUpdate(req.body.friendStatId, friendStat, {}, (err, fStatAcc)=> {
                     if (err) {return next(err);}
@@ -495,10 +484,12 @@ exports.POST_confirmFriend = function(req, res, next) {
             else {
 
                 
-                let friendStat = new FriendStatus({
-                    _id: req.body.friendStatId,
-                    status: 3
-                }); 
+                let friendStat = {
+                    $set: {
+                        _id: req.body.friendStatId,
+                        status: 3
+                    }
+                }; 
 
                 FriendStatus.findByIdAndUpdate(req.body.friendStatId, friendStat, {}, (err, fStatDec)=> {
                     if (err) {return next(err);}
@@ -537,7 +528,7 @@ exports.GET_addFriend = function(req, res, next) {
     });
 }
 
-/* Send Message */
+/* Message System */
 
 exports.POST_send_message = function(req, res, next) {
 
@@ -545,21 +536,36 @@ exports.POST_send_message = function(req, res, next) {
 
 };
 
-// First time Setup
+/* First Time Setup System */
+
 exports.POST_first_Setup_Link = [
     
     //Validate Fields
     body(`link`).isURL().withMessage(`The link you have entered is invalid`),
     body(`websiteType`).isLength({ min: 1}).trim().withMessage(`Please choose a website type`),
+    body("siteName").isLength({ min: 1 }).trim().withMessage("Website name is required"),
+    body("category").isLength({ min: 1 }).trim().withMessage("Need at least one category"),
+    body("color").isLength({ min: 1 }).trim().withMessage("Need at least one color"),
+    body("description").isLength({ max: 500 }).optional({ checkFalsy: true }).withMessage("Max of 500 chars"),
 
     //Sanitize Fields
     sanitizeBody(`link`),
     sanitizeBody(`websiteType`).escape(),
+    sanitizeBody("siteName").escape(),
+    sanitizeBody("category").escape(),
+    sanitizeBody("color").escape(),
+    sanitizeBody("description").escape(),
 
     (req, res, next) => {
         //Initialize Validation
         let errors = validationResult(req);
 
+        //Deconstruct
+        let { link, websiteType, siteName, category, color, description } = req.body;
+
+        //Make colors and category an array
+        let colorArray = color.toLowerCase().split(" ");
+        
         //Check for errors
         if (!errors.isEmpty()) {
             res.render(`firstSetup/setupLink`, { errors:errors.array(), User:req.user });
@@ -572,30 +578,33 @@ exports.POST_first_Setup_Link = [
                 await captureWebsite.file(req.body.link, `${req.user.email}-webthumbnail.png`, {
                     width: 1024,
                     height: 576,
-                    launchOptions: {
+                    /*launchOptions: {
                         args: [
                             '--no-sandbox',
                             '--disable-setuid-sandbox',
                             '--disable-dev-shm-usage',
                             '--single-process'
                           ],
-                    }
+                    }*/
                 });
                 console.log(`capture website ran`);
             }; 
             snap().then((cb)=> {
                 console.log(`Saving User`);
-                let newWebThumb = new User({
-                    _id: req.user._id,
-                    status: "active",
-                    portfolioImg: {data: fs.readFileSync(path.join(__dirname, `../${req.user.email}-webthumbnail.png`)), contentType:`image/png` },
-                    portfolioType: req.body.websiteType.toLowerCase(),
-                    portfolioUrl: req.body.link,
+                let newWebThumb = new Website({
+                    owner: req.user._id,
+                    url: link,
+                    siteName,
+                    type: websiteType,
+                    colors: colorArray,
+                    category,
+                    description,
+                    webThumb: { data: fs.readFileSync(path.join(__dirname, `../${req.user.email}-webthumbnail.png`)), contentType:`image/png` },
                 });
 
                 //Update props
-                User.findByIdAndUpdate(req.user._id, newWebThumb, {}, function(err, results) {
-                    console.log(`User saved`);
+                newWebThumb.save(function(err, results) {
+                    console.log(`Website saved`);
                     if (err) {return next(err);}
                     //Delete image after Upload
                     fs.unlink(path.join(__dirname, `../${req.user.email}-webthumbnail.png`), (err) => {
@@ -622,8 +631,8 @@ exports.POST_first_Setup_Profile = [
     //Validate all fields
     body(`emailDisplay`).isEmail().withMessage(`Email is invalid`),
     body(`phone`).optional({ checkFalsy: true }).trim(),
-    body(`occupation`).isLength({ min:1 }).trim().withMessage(`Occupation is required`),
     body(`bio`).isLength({ min: 3, max: 160 }).optional({ checkFalsy: true }).withMessage(`Max characters of 160`),
+    body("occupation").isLength({ min: 1 }).withMessage("Occupation is required"),
     //Santize fields
     sanitizeBody(`emailDisplay`).escape(),
     sanitizeBody(`phone`).escape(),
@@ -634,6 +643,9 @@ exports.POST_first_Setup_Profile = [
         //Initialize validation
         let errors = validationResult(req);
 
+        //Deconstruct
+        let {emailDisplay, phone, occupation, bio} = req.body;
+
         //If any errors occur run the if statement
         if (!errors.isEmpty()) {
             console.log(`there are errors`);
@@ -643,17 +655,14 @@ exports.POST_first_Setup_Profile = [
 
         else {
 
-            let occupationValue = req.body.occupation.toLowerCase();
-
-            occupationValue = occupationValue.replace(occupationValue[0], occupationValue[0].toUpperCase());
-
-            let user = new User({
-                _id: req.user._id,
-                emailDisplay: req.body.emailDisplay.toLowerCase(),
-                phone: req.body.phone,
-                occupation: occupationValue,
-                bio: req.body.bio
-            });
+            let user = {
+                $set: {
+                    emailDisplay,
+                    phone,
+                    occupation: occupation.toString(),
+                    bio
+                }
+            };
 
             User.findByIdAndUpdate(req.user._id, user, {}, function(err, results) {
                 if (err) {return next(err);}
@@ -675,6 +684,9 @@ exports.POST_first_Setup_CountryandPostal = [
         //Initialize validation
         let errors = validationResult(req);
 
+        //Deconstruct req.body
+        let { country, postalCode } = req.body;
+
         //If any errors occur run the if statement
         if (!errors.isEmpty()) {
             res.render(`firstSetup/getCountryandPostal`, {errors: errors.array(), User: req.user, selectCountry: require(`../arrayList/arrays`).countryList});
@@ -683,21 +695,25 @@ exports.POST_first_Setup_CountryandPostal = [
 
         else {
 
-            let user = new User({
-                _id: req.user._id,
-                country: req.body.country,
-                postalCode: req.body.postalCode.toLowerCase(),
-            });
+            let user = {
+                $set : {
+                    status: "active",
+                    country,
+                    postalCode: postalCode.toString()
+                }
+            };
 
-            //Confirm country and POstal Code 
+            //Confirm country and Postal Code 
 
-            User.findByIdAndUpdate(req.user._id, user, {}, function(err, results) {
+            User.findByIdAndUpdate(req.user._id, user, {}, function(err, updateRes) {
                 if (err) {return next(err);}
                 res.redirect(`/users/first_time_setup_profile`);
             });
         }
     }
 ]
+
+/* User Creation System*/
 
 exports.create_User = [
     //Validate all fields
@@ -743,34 +759,22 @@ exports.create_User = [
         //Data is Valid
         else {
             let user = new User({
-                username: req.body.userName,
-                firstName: req.body.firstName.toLowerCase(),
-                lastName: req.body.lastName.toLowerCase(),
-                fullName: req.body.firstName.toLowerCase()+req.body.lastName.toLowerCase(),
-                email: req.body.email.toLowerCase(),
-                password: req.body.password,
-                country: `NOT SET`,
-                emailDisplay: `NOT SET`,
-                phone: `NOT SET`,
-                postalCode: `NOT SET`,
-                occupation: `NOT SET`,
-                bio: `NOT SET`,
-                portfolioType: `NOT SET`,
-                portfolioUrl: `NOT SET`,
-                portfolioImg: {data: fs.readFileSync(path.join(__dirname, `../portfolioThumb/no-img.png`)), contentType:`image/png` },
-                portfolioLikes: 0,
-                portfolioViews: 0,
-                isVerified: false
+                isVerified: false,
+                username: userName,
+                firstName,
+                lastName,
+                email: email,
+                password: password,
             });
 
             //Check if user already exists
 
             async.parallel({
                 check1: function(cb) {
-                    User.findOne({"email": req.body.email}).exec(cb);
+                    User.findOne({ "email": email }).exec(cb);
                 },
                 check2: function(cb) {
-                    User.findOne({"username": req.body.userName}).exec(cb);
+                    User.findOne({ "username": userName }).exec(cb);
                 }
             }, function(err, results) {
 
@@ -825,7 +829,7 @@ exports.create_User = [
 
                                     const mailOptions = {
                                         from: `info@portlogue.com`,
-                                        to: req.body.email,
+                                        to: email,
                                         subject: "Portlogue Verification Email.",
                                         html: confirmationEmail
                                     }
@@ -838,7 +842,7 @@ exports.create_User = [
                                     });
 
                                     //Go back to login after saving
-                                    req.flash(`success`, `An email has been sent to ${savedUser.email}. Please check it to proceed.`); //Change this for user confirmation only
+                                    req.flash(`success`, `A verification email has been sent to ${savedUser.email}.`); //Change this for user confirmation only
                                     res.redirect(`/users/login`);
                                 });
                             });

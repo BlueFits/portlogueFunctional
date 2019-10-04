@@ -44,19 +44,19 @@
         <ul class="search-result-ul">
             <% for (let val of qUsers) { %>
                 <li class="search-result">
-                    <a class="search-result-a" href="/users/profile/<%= val.username %>">
-                        <div class="search-result-img-wrap"><img src="/publicAvatar/<%= val.email %>"></div>
+                    <a class="search-result-a" href="/users/profile/<%= val.username ? val.username : val.owner.username %>">
+                        <div class="search-result-img-wrap"><img src="/publicAvatar/<%= val.email ? val.email : val.owner.email %>"></div>
                         <div>
-                            <p><%=val.fullNameDisplay%></p>
-                            <p><%=val.username%>&nbsp;||&nbsp;<%=val.email%></p>
-                            <p><%=val.occupation%></p>
-                            <p><%=val.country%></p>
+                            <p><%=val.fullName ? val.fullName : val.owner.fullName;%></p>
+                            <p><%=val.username ? val.username : val.owner.username%>&nbsp;||&nbsp;<%=val.email ? val.email : val.owner.email;%></p>
+                            <p><%=val.occupationDisplay ? val.occupationDisplay : val.owner.occupationDisplay;%></p>
+                            <p><%=val.countryDisplay ? val.countryDisplay : val.owner.countryDisplay%></p>
                         </div>
                     </a>
                     <div class="search-functions">
-                        <a href="/users/send_message/<%= val.username %>">Send message</a>
-                        <a href="<%= val.portfolioUrl%>">Visit official website</a>
-                        <a href="/users/report/<%=val.username%>">Report</a>
+                        <a href="/users/send_message/<%= val.username ? val.username : val.owner.username %>">Send message</a>
+                        <a href="<%= val.owner.url %>">Visit official website</a>
+                        <a href="/users/report/<%=val.username ? val.username : val.owner.username%>">Report</a>
                     </div>
                 </li>
                 <%}%> 
