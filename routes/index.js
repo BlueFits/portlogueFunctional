@@ -58,4 +58,7 @@ router.get(`/discover/friends`, ensureAuth, routeController.GET_discover_friends
 //GET home search
 router.get(`/search`, ensureAuth, routeController.GET_search_home);
 
+//Profile render without login
+
+
 module.exports = router;
