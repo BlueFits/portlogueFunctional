@@ -139,7 +139,11 @@ exports.GET_profile = function(req, res, next) {
         const page = req.query.page ? parseInt(req.query.page) : 1;
     
         Website.find({ owner: profile._id }).populate("owner").skip((page-1) * pagination).limit(pagination).sort(sortSetting).exec((err, webResults)=> {
-            if (err) throw `routeController > GET_discover_new`;            
+            if (err) throw `routeController > GET_discover_new`;      
+            
+            //quick fix
+            friendVal.class === "no-display" ? friendVal.messageStat = "View Messages" : friendVal.messageStat = "Message";
+            friendVal.class === "no-display" ? friendVal.styleAddWebsite = "display: flex;" : friendVal.styleAddWebsite = "display: none;";
     
             FriendStatus.find({"requestTo": req.user._id}).populate(`requestFrom`).exec((err, fstatRes)=> {
                 if (err) {
@@ -231,7 +235,7 @@ exports.GET_profile = function(req, res, next) {
                             friendVal = {val: `Request Sent`, action: ``, class:`href-disabled`};
                             break;
                         case 2:
-                            friendVal = {val: `Friends`, action: `/`, class:`href-disabled`};
+                            friendVal = {val: `✓ Friends`, action: `/`, class:`href-disabled`};
                             break;
                         case 3:
                             friendVal = {val: `Request Rejected`, action: `/`, class:`href-disabled`};
@@ -247,7 +251,7 @@ exports.GET_profile = function(req, res, next) {
                             friendVal = {val: `Respond To Request`, action: ``, class:`href-disabled`};
                             break;
                         case 2:
-                            friendVal = {val: `Friends`, action: `/`, class:`href-disabled`};
+                            friendVal = {val: `✓ Friends`, action: `/`, class:`href-disabled`};
                             break;
                         case 3:
                             friendVal = {val: `Request Rejected`, action: `/`, class:`href-disabled`};
@@ -259,18 +263,6 @@ exports.GET_profile = function(req, res, next) {
             });
         }
     })
-
-
-
-    /*
-        
-                //Push viewed website in the viewedSites
-                for (let val of req.user.viewedSites) {
-                    if (val._id === profileRes._id) {
-                        userCheck = true;
-                    }
-                }
-    */
 }
 
 //id redirect

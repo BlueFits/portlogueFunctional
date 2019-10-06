@@ -1650,6 +1650,112 @@ footer li {
 
 /* PROFILE PAGE*/
 
+.profile-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border-bottom: 1px solid #bbbbbb;
+    height: 320px;
+}
+
+.profile-info {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profile-avatar-wrapper {
+    background-color: #bbbbbb;
+    height: 120px;
+    width: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 100px;
+}
+
+.profile-avatar {
+    height: 100%;
+}
+
+.profile-fullName {
+    font-size: 24px;
+    color: #7f7f7f;
+}
+
+.profile-location-email {
+    display: flex;
+    color: #bbbbbb;
+}
+
+.profile-location-email > div > img {
+    margin: 0 2px 0 5px;
+}
+
+.profile-bio {
+    color: #7f7f7f;
+}
+
+.profile-location-email > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-interact {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.profile-addFriend,
+.profile-message-button  {
+    text-align: center;
+    text-decoration: none;
+    padding: 12px 0;
+    width: 120px;
+    border-radius: 20px;
+    color: #fff;
+    border: none;
+    background-color: #3498db;
+    cursor: pointer;
+    margin: 0 5px;
+}
+
+.profile-message-button {
+    background-color: #464646;
+}
+
+.profile-website-display {
+    background-color: #f4f4f4;
+    min-height: 300px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.profile-website-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 90%;
+    color: #7f7f7f;
+    margin-top: 5px;
+}
+
+.profile-website-topbar > a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #7f7f7f;
+    text-decoration: none;
+}
+
 /*.profile-ui-button {
     position: fixed;
     z-index: 10;

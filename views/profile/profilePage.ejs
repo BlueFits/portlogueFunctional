@@ -1,4 +1,4 @@
-<section>
+<section class="profile-header">
 
         <ul class="flash-settings">
                 <% for (let val of error_msg) {%>
@@ -22,44 +22,83 @@
             </ul>
 
     <div class="profile-info">
-        <div class="profile-avatar-wrapepr">
-            <img class="profile-avatar" src="/publicAvatar/someEmail.com"/>
+        <div class="profile-avatar-wrapper">
+            <img class="profile-avatar" src="/publicAvatar/<%=profile.email%>"/>
         </div>
-        <span><%=profile.fullName%></span>
-        <div>
+        <span class="profile-fullName"><%=profile.fullName%></span>
+        <div class="profile-location-email">
             <div>
-                <img class="" src="#"/><span><%=profile.locationDisplay%></span>
+                <img class="nav-icons" src="/assets/icons/icons8-marker-96-light.png"/><span><%=profile.countryDisplay%></span>
             </div>
             <div>
-                <img class="" src="#"/><span><%=profile.email%></span>
+                <img class="nav-icons" src="/assets/icons/icons8-new-post-96-lite.png"/><span><%=profile.email%></span>
             </div>
-        <span><%=profile.bio%></span>
         </div>
+        <span class="profile-bio"><%=profile.bio%></span>
     </div>
 
-    <div class="<%=friendVal.class%>">
+    <div class="profile-interact">
 
         <form method="POST" action="<%=friendVal.action%>">
             <input type="hidden" name="id" value="<%=profile._id%>"/>
-            <button type="submit"><%=friendVal.val%></button>
+            <button class="profile-addFriend <%=friendVal.class%>" type="submit"><%=friendVal.val%></button>
         </form>
 
-        <a class="profile-message-button" href="/willBeImplemented">Message</a>
+        <a class="profile-message-button" href="/willBeImplemented"><%= friendVal.messageStat %></a>
 
     </div>
 
 </section>
 
-<section>
+<section class="profile-website-display">
 
-    <div>
+    <div class="profile-website-topbar">
         <span><%=webResults.length%> <%= webResults.length === 1 ? "Website" : "Websites"; %></span>
 
-        <a href="#"><img src="#"/><span>Add Website</span></a>
+        <a style="<%=friendVal.styleAddWebsite%>" href="/WillBeImplemented"><img class="nav-icons" src="/assets/icons/icons8-add-96.png"/><span>Add Website</span></a>
     </div>
 
-    <div class="profile-display-websites">
-
-    </div>
+    <div class="discover-results">
+        <ul class="discover-results-ul" id="userQry"><!-- Custom Limited-->
+    
+            <% for(let website of webResults) { %>
+                <li class="portfolio-select"><a target="_top" href="/willBeImplemented">
+                    <div class="portfolio-thumbnail">
+                        <div class="portfolio-thumbnail-bar"><!--Grey bar--></div>
+                        <div><img class="portfolio-thumbnail-img" src="/userWebThumb/<%=website.owner._id%>"/></div>
+                    </div></a>
+                    <div class="thumbnail-desc">
+                        <div class="profile-name-wrapper">
+                            <a href="/users/profile/<%=website.owner.username%>"><div class="thumb-profile-wrapper"><img class="thumbnail-profile-img" src="/publicAvatar/<%=website.owner.email%>"/></div><%=website.owner.fullName%></a>
+                        </div>
+                        <span class="occupation-flex"><%=website.categoryDisplay%></span>
+                    </div>
+                </li>
+            <% } %>
+    
+        </ul>
+        <div class="pageControl">
+            <form method="POST" action="/newQryPrev">
+                <input type="hidden" value="<%=page%>" name="pageNumber"/>
+                <button class="prevPag" type="submit">Back</button>
+            </form>
+    
+    
+            <form method="POST" action="/newQryNext">
+                <input type="hidden" value="<%=page%>" name="pageNumber"/>
+                <button class="nextPag" type="submit" <%=qryNextStat%>>Next</button>
+            </form>
+        </div>
+    
+        </div>
 
 </section>
+
+
+<script>
+
+if (`<%=page%>` === `1`) {
+    $(`.prevPag`).attr("disabled","true");
+}
+
+</script>
