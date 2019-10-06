@@ -26,15 +26,14 @@
     <ul class="discover-results-ul" id="userQry"><!-- Custom Limited-->
 
         <% for(let website of webResults) { %>
-            <li class="portfolio-select"><a target="_top" href="/users/profile/<%=website.owner.username%>">
+            <li class="portfolio-select"><a target="_top" href="/willBeImplemented">
                 <div class="portfolio-thumbnail">
                     <div class="portfolio-thumbnail-bar"><!--Grey bar--></div>
                     <div><img class="portfolio-thumbnail-img" src="/userWebThumb/<%=website.owner._id%>"/></div>
                 </div></a>
                 <div class="thumbnail-desc">
                     <div class="profile-name-wrapper">
-                        <div class="thumb-profile-wrapper"><img class="thumbnail-profile-img" src="/publicAvatar/<%=website.owner.email%>"/></div>
-                        <a href="/users/profile/<%=website.owner.username%>"><%=website.owner.fullName%></a>
+                        <a href="/users/profile/<%=website.owner.username%>"><div class="thumb-profile-wrapper"><img class="thumbnail-profile-img" src="/publicAvatar/<%=website.owner.email%>"/></div><%=website.owner.fullName%></a>
                     </div>
                     <span class="occupation-flex"><%=website.categoryDisplay%></span>
                 </div>

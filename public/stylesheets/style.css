@@ -71,6 +71,10 @@ h3 {
     pointer-events: none;
 }
 
+.no-display{
+    display: none;
+}
+
 .Login-Register {
     height: 100%;
     width: 100%;
@@ -1536,7 +1540,7 @@ h3 {
     margin-left: 10px; /* toFix not sure why I have to do this */
 }
 
-.profile-name-wrapper {
+.profile-name-wrapper > a {
     display: flex;
     align-items: center;
 }
@@ -1646,7 +1650,7 @@ footer li {
 
 /* PROFILE PAGE*/
 
-.profile-ui-button {
+/*.profile-ui-button {
     position: fixed;
     z-index: 10;
     width: 52px;
@@ -1732,13 +1736,13 @@ footer li {
 .profile-left-nav,
 .profile-right-nav {
     display: flex;
-    justify-content: center; /* Debugg For now that functions are not complete */
+    justify-content: center;
     align-items: center;
     margin: 0 35px;
 }
 
 .profile-right-nav {
-    width: 248px; /* I cant beleibe this is the fucking adjustment for the search bar */
+    width: 248px; 
     justify-content: flex-end;
 }
 
@@ -1912,7 +1916,7 @@ footer li {
 }
 
 .profile-like-button:disabled {
-    /* toFix */
+    
     cursor: default;
 }
 
@@ -1934,6 +1938,7 @@ footer li {
 
 }
 
+*/
 
 /** media queries **/
 

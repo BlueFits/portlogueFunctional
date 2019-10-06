@@ -54,7 +54,7 @@ router.get(`/send_message/:username`, ensureAuth, routeController.GET_send_messa
 //Add friend
 router.post(`/confirm_friend`, ensureAuth, userController.POST_confirmFriend);
 
-router.get(`/add_friend/:id`, ensureAuth, userController.GET_addFriend);
+router.post(`/add_friend`, ensureAuth, userController.POST_addFriend);
 
 
 //Friend Confirm Panel

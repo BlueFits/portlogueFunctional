@@ -1,0 +1,65 @@
+<section>
+
+        <ul class="flash-settings">
+                <% for (let val of error_msg) {%>
+                    <li class="flash-style f-error">
+                            <div class="flash-info">
+                                <span><strong>Error</strong></span>
+                                <span><%=val.msg%></span>
+                            </div>
+                            <div class="flash-close"><img src="/assets/icons/icons8-delete-96.png"/></div>
+                    </li>
+                <% } %>
+                <% for (let val of success_msg) {%>
+                    <li class="flash-style f-success">
+                            <div class="flash-info">
+                                <span><strong>Success</strong></span>
+                                <span><%=val.msg%></span>
+                            </div>
+                            <div class="flash-close"><img src="/assets/icons/icons8-delete-96.png"/></div>
+                    </li>
+                <% } %>        
+            </ul>
+
+    <div class="profile-info">
+        <div class="profile-avatar-wrapepr">
+            <img class="profile-avatar" src="/publicAvatar/someEmail.com"/>
+        </div>
+        <span><%=profile.fullName%></span>
+        <div>
+            <div>
+                <img class="" src="#"/><span><%=profile.locationDisplay%></span>
+            </div>
+            <div>
+                <img class="" src="#"/><span><%=profile.email%></span>
+            </div>
+        <span><%=profile.bio%></span>
+        </div>
+    </div>
+
+    <div class="<%=friendVal.class%>">
+
+        <form method="POST" action="<%=friendVal.action%>">
+            <input type="hidden" name="id" value="<%=profile._id%>"/>
+            <button type="submit"><%=friendVal.val%></button>
+        </form>
+
+        <a class="profile-message-button" href="/willBeImplemented">Message</a>
+
+    </div>
+
+</section>
+
+<section>
+
+    <div>
+        <span><%=webResults.length%> <%= webResults.length === 1 ? "Website" : "Websites"; %></span>
+
+        <a href="#"><img src="#"/><span>Add Website</span></a>
+    </div>
+
+    <div class="profile-display-websites">
+
+    </div>
+
+</section>

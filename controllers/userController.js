@@ -501,31 +501,41 @@ exports.POST_confirmFriend = function(req, res, next) {
     });
 }
 
-exports.GET_addFriend = function(req, res, next) {
-    User.findById(req.params.id).exec((err, qUser)=> {
+exports.POST_addFriend = function(req, res, next) {
+
+    console.log("User findbyid running");
+    //Find profile's user and make a new friendStatus model
+    User.findById(req.body.id).exec((err, qUser)=> {
         if (err) {return next(err);}
 
-        FriendStatus.findOne({"requestFrom":req.user, "requestTo": qUser}).exec((err, result) => {
+        console.log("find by id ran");
+
+        FriendStatus.findOne({ requestFrom: req.user, requestTo: qUser }).exec((err, request)=> {
             if (err) {return next(err);}
 
-            if (result) {
-                res.send(`Already made a request to the user`);
+            if (request) {
+                res.send("Already made a request to the user");
             }
 
             else {
                 let friendStat = new FriendStatus({
-                    requestFrom: req.user,
-                    requestTo: qUser,
+                    requestFrom: req.user._id,
+                    requestTo: qUser._id,
                     status: 1
                 });
 
-                friendStat.save((err)=> {
+                friendStat.save((err, saveResult)=> {
                     if (err) {return next(err);}
-                    res.redirect(req.get(`Referrer`));
+                    req.flash("success", [{ msg: "Friend request sent" }]);
+                    res.redirect(req.get("Referrer"));
                 });
+
             }
-        }); 
+
+        });
+
     });
+
 }
 
 /* Message System */

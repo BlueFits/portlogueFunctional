@@ -63,7 +63,7 @@
 
                             <% for (let val of friendRequests) { %>
                         <li class="frequestTab">
-                            <div class="freq-wrapper"><div class="thumb-profile-wrapper"><img class="thumbnail-profile-img" src="/publicAvatar/<%= val.requestFrom.email %>"/></div><span><%= val.requestFrom.fullNameDisplay %></span></div>
+                            <div class="freq-wrapper"><div class="thumb-profile-wrapper"><img class="nav-profile-icon" src="/publicAvatar/<%= val.requestFrom.email %>"/></div><span><%= val.requestFrom.fullName %></span></div>
                             <div class="freq-response">
                             <form method="POST" action="/users/confirm_friend">
                                 <input type="hidden" value="accept" name="reqResponse"/>
