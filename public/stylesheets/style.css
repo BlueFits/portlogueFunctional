@@ -1716,9 +1716,9 @@ footer li {
 .profile-message-button  {
     text-align: center;
     text-decoration: none;
-    padding: 12px 0;
+    padding: 11px 0;
     width: 120px;
-    border-radius: 20px;
+    border-radius: 50px;
     color: #fff;
     border: none;
     background-color: #3498db;
@@ -1745,7 +1745,7 @@ footer li {
     justify-content: space-between;
     width: 90%;
     color: #7f7f7f;
-    margin-top: 5px;
+    margin-top: 10px;
 }
 
 .profile-website-topbar > a {
