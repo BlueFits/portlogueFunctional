@@ -427,7 +427,6 @@ exports.POST_likeSite = function(req, res, next) {
 
 /* Friends System */
 
-//Add friend process toFix
 exports.POST_confirmFriend = function(req, res, next) {
     
     User.findById(req.body.reqFrom).populate(`friendList`).exec((err, reqFrom)=> {
@@ -588,14 +587,14 @@ exports.POST_first_Setup_Link = [
                 await captureWebsite.file(req.body.link, `${req.user.email}-webthumbnail.png`, {
                     width: 1024,
                     height: 576,
-                    /*launchOptions: {
+                    launchOptions: {
                         args: [
                             '--no-sandbox',
                             '--disable-setuid-sandbox',
                             '--disable-dev-shm-usage',
                             '--single-process'
                           ],
-                    }*/
+                    }
                 });
                 console.log(`capture website ran`);
             }; 
