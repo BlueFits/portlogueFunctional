@@ -1435,7 +1435,7 @@ h3 {
 .discover-nav {
     width: 100%;
     height: 60px;
-    background-color: #fbfbfb;
+    background-color: #ffffff;
 
     display: flex;
     justify-content: space-between;
@@ -1684,6 +1684,7 @@ footer li {
 .profile-fullName {
     font-size: 24px;
     color: #7f7f7f;
+    margin: 5px 0;
 }
 
 .profile-location-email {
@@ -1714,6 +1715,7 @@ footer li {
 
 .profile-addFriend,
 .profile-message-button  {
+    font-size: 16px;
     text-align: center;
     text-decoration: none;
     padding: 11px 0;
@@ -1740,6 +1742,7 @@ footer li {
 }
 
 .profile-website-topbar {
+    font-size: 18px;
     display: flex;
     align-items: center;
     justify-content: space-between;
