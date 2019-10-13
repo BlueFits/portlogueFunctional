@@ -9,9 +9,48 @@ const randomString = require(`randomstring`);
 const mailer = require(`../misc/mailer`);
 
 const Website = require("../models/Website");
+const Comment = require("../models/Comments")
 const User = require(`../models/User`);
 const FriendStatus = require(`../models/friendStatus`);
 const Token = require(`../models/Token`);
+
+
+/* Comment System */
+exports.POST_comment = [
+    //Validate
+    body("value").trim(),
+    //Sanitize
+    sanitizeBody("value").escape(),
+    //Function
+    function(req, res, next) {
+
+        let  { value, websiteId } = req.body;
+
+        let comment = new Comment({
+            user: req.user._id,
+            comment: value
+        });
+
+        comment.save((err, commentUpdate)=> {
+            console.log("Comment saved "+commentUpdate);
+            Website.findById(websiteId).exec((err, website)=> {
+                if (err) {return next(err);}
+                let comment = {
+                    $set: {
+                        comments: website.comments
+                    }
+                };
+
+                comment.$set.comments.push(commentUpdate._id);
+
+                Website.findByIdAndUpdate(websiteId, comment, {}, (err, webUpdate)=> {
+                    res.send(value);
+                });
+            });
+        });
+
+    }
+]
 
 /* Settings System */
 

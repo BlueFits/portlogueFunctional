@@ -2,6 +2,7 @@ const requiredObjects = require(`../objecList/objects`);
 const { body } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 const async = require(`async`);
+const moment = require("moment");
 
 
 
@@ -73,6 +74,29 @@ let renderDiscover = function (req, res, pageSection, sortSetting) {
 }
 
 /* */
+
+//Website Hover and website views
+exports.GET_websiteHover = function(req, res, next) {
+    let websiteId = req.params.id;
+
+    //Find website
+    Website.findById(websiteId).populate("owner").populate({ path: "comments", populate: { path: "user" } }).exec((err, website)=> {
+        if (err) { return next(err);}
+
+        if (!website) {
+            res.send("Website Doesnt Exist"); //toFix
+        }
+
+        if (website.comments.length === 0) {
+            res.render("indivs/websiteDisplay", { moment: moment, website, owner: website.owner, user: req.user, comments: [] });
+        }
+
+        else {
+            res.render("indivs/websiteDisplay", { moment: moment, website, owner: website.owner, user: req.user, comments: website.comments.reverse() });
+        }
+
+    });
+}
 
 //GET user web thumb 
 exports.GET_webthumb =  function(req, res, next) {
@@ -194,11 +218,11 @@ exports.GET_profile = function(req, res, next) {
             async.parallel({
                 //From user's perspective
                 user: function(cb) {
-                    FriendStatus.findOne({ "requestFrom": req.user._id, "requestTo": userProfile._id }).exec(cb);
+                    FriendStatus.findOne({ "requestFrom": req.user._id, "requestTo": userProfile._id }).populate("owner").exec(cb);
                 },
                 //From qUser's perspective
                 qUser: function(cb) {
-                    FriendStatus.findOne({ "requestFrom": userProfile._id, "requestTo": req.user }).exec(cb);
+                    FriendStatus.findOne({ "requestFrom": userProfile._id, "requestTo": req.user }).populate("owner").exec(cb);
                 }
 
             }, (err, asyncResult)=> {

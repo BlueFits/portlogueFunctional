@@ -62,11 +62,14 @@
         <ul class="discover-results-ul" id="userQry"><!-- Custom Limited-->
     
             <% for(let website of webResults) { %>
-                <li class="portfolio-select"><a target="_top" href="/willBeImplemented">
-                    <div class="portfolio-thumbnail">
-                        <div class="portfolio-thumbnail-bar"><!--Grey bar--></div>
-                        <div><img class="portfolio-thumbnail-img" src="/userWebThumb/<%=website.owner._id%>"/></div>
-                    </div></a>
+                <li class="portfolio-select">
+                    <span style="display: none;"><%=website._id%></span>
+                    <div>
+                        <div onClick="getWebsite(this);" class="portfolio-thumbnail">
+                            <div class="portfolio-thumbnail-bar"><!--Grey bar--></div>
+                            <div><img class="portfolio-thumbnail-img" src="/userWebThumb/<%=website.owner._id%>"/></div>
+                        </div>
+                    </div>
                     <div class="thumbnail-desc">
                         <div class="profile-name-wrapper">
                             <a href="/users/profile/<%=website.owner.username%>"><div class="thumb-profile-wrapper"><img class="thumbnail-profile-img" src="/publicAvatar/<%=website.owner.email%>"/></div><%=website.owner.fullName%></a>
@@ -96,6 +99,21 @@
 
 
 <script>
+
+//Initialize websiteDisplay
+let websiteId;
+
+//Function to grab info from chosen website
+function getWebsite(element) {
+    websiteId = element.parentNode.parentNode.childNodes[1].textContent;
+}
+
+//Display website now that websiteDisplay has value
+$(".portfolio-thumbnail").on("click", ()=> {
+    $("#web-frame").attr("src", `/users/website_hover/${websiteId}`);
+    $(".web-popup").css("z-index", "2");
+    $("body").css("overflow", "hidden");
+});
 
 if (`<%=page%>` === `1`) {
     $(`.prevPag`).attr("disabled","true");

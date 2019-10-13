@@ -1,0 +1,150 @@
+<!-- Make body transparent for hover -->
+<style>
+    body {
+        background-color: transparent;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        color: #7f7f7f;
+    }
+</style>
+
+<section id="hover-section">
+
+        <div id="hover-overlay" onclick="parent.closeHover();"><!-- Black overlay -->
+            <span id="close-hover"><img class="nav-icons" src="/assets/icons/icons8-delete-96.png"/></span>
+        </div>
+
+        <div class="website-view">
+            <div class="website-topbar">
+                <span><a target="_blank" href="<%=website.url%>" target="_blank"><%=website.url%></a></span>
+                <span><%=website.views%> views</span>
+            </div>
+            <iframe id="profile-iframe"
+                title="Inline Frame"
+                width="100%;"
+                height="100%"
+                scrolling="yes"
+                src="<%=website.url%>">
+            </iframe>
+        </div>
+
+        <div id="hover-interact">
+
+            <div class="hover-head">
+                <div class="hover-header">
+                    <a target="_blank" href="/users/profile/<%=owner.username%>" class="hover-avatar-wrapper"><img style="height:100%;" src="/publicAvatar/<%=owner.email%>"/></a>
+                    <span class="sitename-fullname">
+                        <span><h3><%-website.siteName%></h3></span>
+                        <a target="_blank" href="/users/profile/<%=owner.username%>" class="h3-sub hover-head-fullname">By <span style="color:#3498db;"><%=owner.fullName%></span></a>
+                    </span>
+                </div>
+
+                <div class="like-favourite">
+                    <form method="POST" action="">
+                        <input type="hidden" name="" value=""/>
+                        <button type="submit"><img/><%=website.likes%></button>
+                    </form>
+                    <form method="POST" action="">
+                        <input type="hidden" name="" value=""/>
+                        <button type="submit"><img/>Favourite</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="hover-description">
+                <span>After tons of icon explorations, i want to try something different. This is UI exploration 
+                    for an app that offer some articles based on our interest</span>
+            </div>
+
+            <div class="comment-post">
+                <span>Comments</span>
+                <form id="commentForm">
+                    <div>
+                        <div class="avatar-squish-fix">
+                            <div class="hover-avatar-wrapper" style="width: 40px; height: 40px;"><img style="height: 100%" src="/publicAvatar/<%=user.email%>"/></div>
+                        </div>
+                        <textarea id="commentValue" minlength="1" maxlength="400" placeholder="" required></textarea>
+                    </div>
+                    <div>
+                        <button id="comment">Comment</button>
+                    </div>
+                </form>
+            </div>
+
+            <ul id="comment-render">
+
+                <span id="no-comment-placeholder" style="text-align: center;"><%- comments.length === 0 ? "There are no comments": ""%></span>
+                <% for (let val of comments) {%>
+                    <li>
+                        <a target="_blank" href="/users/profile/<%=val.user.username%>" class="hover-avatar-wrapper" style="width: 40px; height: 40px;"><img style="height: 100%" src="/publicAvatar/<%=val.user.email%>"/></a>
+                        <div class="comment-head">
+                            <div>
+                                <a target="_blank" class="comment-head-fullname" href="/users/profile/<%=val.user.username%>"><strong><%=val.user.fullName%></strong></a>
+                                <span><%=val.comment%></span>
+                            </div>
+                            <div class="comment-foot">
+                                <span><%= moment(val.date).fromNow() %></span>
+                            </div>
+                        </div>
+                    </li>
+                <% } %>
+            </ul> 
+
+        </div>
+
+</section>
+
+<script>
+
+$( document ).ready(()=> {
+
+ /* Website Popup */
+
+    //Prepend comments
+    function loadComments(comment, user) {
+        //Prepend the exact same structure for the comment Render list
+        $("#comment-render").prepend(`<li>
+                    <a target="_blank" href="/users/profile/${user.username}" class="hover-avatar-wrapper" style="width: 40px; height: 40px;"><img style="height: 100%" src="/publicAvatar/${user.email}"/></a>
+                    <div class="comment-head">
+                        <div>
+                            <a target="_blank" class="comment-head-fullname" href="/users/profile/${user.username}"><strong>${user.firstName.replace(user.firstName[0], user.firstName[0].toUpperCase())} ${user.lastName.replace(user.lastName[0], user.lastName[0].toUpperCase())}</strong></a>
+                            <span>${comment}</span>
+                        </div>
+                        <div class="comment-foot">
+                            <span>a few seconds ago</span>
+                        </div>
+                    </div>
+                </li>`);
+
+        $("#no-comment-placeholder").css("display", "none");
+    }   
+
+//Grab website id
+let websiteId = <%-JSON.stringify(website._id)%>;
+
+let user = <%- JSON.stringify(user) %>;
+
+$("#commentForm").on("submit", ()=> {
+    event.preventDefault(); //Prevent page from refreshing
+
+    let value = $("#commentValue").val();
+
+    //Ajax request to handle post data
+    $.ajax({
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({ value, websiteId }),
+        success: (response)=> { //Response is the data that the server processed
+            console.log(response);
+            $("#commentValue").val("");
+            loadComments(response, user);
+        }
+    });
+});
+
+});
+
+
+</script>

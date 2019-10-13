@@ -12,6 +12,11 @@ const { upload } = require(`../config/multerConfig`);
 //Protect Routes
 const { ensureAuth } = require(`../config/authenticate`);
 
+//Render website hover with req.user and Comments POST request
+router.get("/website_hover/:id", ensureAuth, routeController.GET_websiteHover);
+
+router.post("/website_hover/:id", ensureAuth, userController.POST_comment);
+
 //POST request to change url
 router.post("/change_web_url", ensureAuth, userController.POST_changeWebUrl);
 
