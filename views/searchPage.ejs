@@ -55,7 +55,7 @@
                     </a>
                     <div class="search-functions">
                         <a href="/users/send_message/<%= val.username ? val.username : val.owner.username %>">Send message</a>
-                        <a href="<%= val.owner.url %>">Visit official website</a>
+                        <a href="<%= val.username? val.username : val.owner.url %>">Visit official website</a>
                         <a href="/users/report/<%=val.username ? val.username : val.owner.username%>">Report</a>
                     </div>
                 </li>
