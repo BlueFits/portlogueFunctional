@@ -19,7 +19,7 @@ const UserSchema = new Schema({
     bio: { type: String, min: 3, max: 160, required: false },
     websites: [{ type: Schema.Types.ObjectId, ref: "Website" }],
     likedSites: [{ type:Schema.Types.ObjectId, ref: `Website` }], //Use .populate on objectId
-    viewedSites: { type:[{type: Schema.Types.ObjectId, ref: `Website` }]},
+    viewedSites: [{ type: Schema.Types.ObjectId, ref: "Website" }],
     friendList: [{ type: Schema.Types.ObjectId, ref: `User` }],
     dateJoined: { type: Date, default: Date.now }
 });

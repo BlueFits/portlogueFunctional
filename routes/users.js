@@ -12,6 +12,16 @@ const { upload } = require(`../config/multerConfig`);
 //Protect Routes
 const { ensureAuth } = require(`../config/authenticate`);
 
+/* Like, Favorite, and Viewed sites */
+
+//Favorite POST request
+
+//Like POST request
+router.post("/like_site", ensureAuth, userController.POST_likeSite);
+
+//Viewed sites
+router.post("/viewed_sites", ensureAuth, userController.POST_viewedSites);
+
 //Render website hover with req.user and Comments POST request
 router.get("/website_hover/:id", ensureAuth, routeController.GET_websiteHover);
 

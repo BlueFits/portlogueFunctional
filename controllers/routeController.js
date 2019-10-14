@@ -79,7 +79,8 @@ let renderDiscover = function (req, res, pageSection, sortSetting) {
 exports.GET_websiteHover = function(req, res, next) {
     let websiteId = req.params.id;
 
-    //Find website
+
+    //Find website and do deep population
     Website.findById(websiteId).populate("owner").populate({ path: "comments", populate: { path: "user" } }).exec((err, website)=> {
         if (err) { return next(err);}
 
@@ -191,12 +192,12 @@ exports.GET_profile = function(req, res, next) {
 
                 //Websites are less than 6 disable the next page
                 if (webResults.length < 6) {
-                    res.render(`profile/profilePage`, { profile, webResults, friendVal, qryNextStat: "disabled", page, layout: `homePage/homeLayout`, User: req.user, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                    res.render(`homePage/profilePage`, { profile, webResults, friendVal, qryNextStat: "disabled", page, layout: `homePage/homeLayout`, User: req.user, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
                     return;
                 }
                 
                 else {
-                    res.render(`profile/profilePage`, { profile, webResults, friendVal, qryNextStat: "", page, layout: `homePage/homeLayout`, User: req.user, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                    res.render(`homePage/profilePage`, { profile, webResults, friendVal, qryNextStat: "", page, layout: `homePage/homeLayout`, User: req.user, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
                     return;
                 }
 
@@ -341,23 +342,19 @@ exports.GET_first_Setup_Link = function(req, res, next) {
     }
 };
 
-//Home Page Route
+//Home Page Route toFix
 exports.renderHome = function(req, res, next) {
-    //Check for first time users
-    User.findById(req.user._id).exec(function(err, result) {
 
-        if (err) {return next(err);}
+    //First time setup will run if params are n/a
+    if ( (req.user.country === "n/a") || (req.user.emailDisplay === "n/a") ) {
+        res.redirect(`/users/first_time_setup`);
+    }
 
-        //First time setup will run if params are n/a
-        if ( (result.country === "n/a") || (result.emailDisplay === "n/a") ) {
-            res.redirect(`/users/first_time_setup`);
-        }
+    //Proceed Normally
+    else {
+        renderDiscover(req, res, "new", {dateJoined: -1});
+    }
 
-        //Proceed Normally
-        else {
-            renderDiscover(req, res, "new", {dateJoined: -1});
-        }
-    });
 };
 
 /* discover new */

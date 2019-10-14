@@ -1842,7 +1842,7 @@ footer li {
     width: 35%;
     height: 80%;
     border-radius: 10px;
-    padding: 16px 15px;
+    padding: 35px 25px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1897,24 +1897,44 @@ footer li {
     justify-content: center;
 }
 
-.like-favourite > form:first-of-type > button {
-    margin-right: 10px;
+.likeStyle.liked {
     background-color: #464646;
+    color: #ffffff;
 }
 
-.like-favourite > form > button {
-    width: 140px;
-    height: 45px;
-    border-radius: 50px;
+/* #464646;  ed2553 */
+.likeStyle {
+    margin-right: 10px;
+}
+
+.likeStyle:hover,
+.favStyle:hover {
+    border: 1px solid #464646;
+}
+
+.likeStyle,
+.favStyle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 90px;
+    height: 43px;
+    border-radius: 5px;
     outline: none;
-    border: none;
-    background-color: #ed2553;
-    color: #fff;
+    background-color: #fff;
+    border: 1px solid #bbbbbb;
+    color: #464646;
     cursor: pointer;
 }
 
+.like-favourite > form > button > img {
+    margin-right: 3px;
+}
+
+
 .hover-description {
     border-bottom: 1px solid #bbbbbb;
+    width: 100%;
 }
 
 .comment-post {
@@ -2037,10 +2057,10 @@ footer li {
     .setup-button{
         margin-bottom: 50px;
     }
-    .like-favourite > form > button{
+    .likeStyle,
+    .favStyle{
         width: 85px;
-        height: 35px;
-        border-radius: 50px;
+        height: 38px;
     }
 }
 

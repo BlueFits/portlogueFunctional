@@ -75,6 +75,17 @@ function getWebsite(element) {
 
 //Display website now that websiteDisplay has value
 $(".portfolio-thumbnail").on("click", ()=> {
+    //Ajax to increment viewed site and push to user database
+    $.ajax({
+        method: "POST",
+        contentType: "application/json",
+        url: "/users/viewed_sites",
+        data: JSON.stringify({ websiteId }),
+        success: (data) => {
+            console.log(data);
+        }
+    });
+
     $("#web-frame").attr("src", `/users/website_hover/${websiteId}`);
     $(".web-popup").css("z-index", "2");
     $("body").css("overflow", "hidden");

@@ -15,6 +15,145 @@ const FriendStatus = require(`../models/friendStatus`);
 const Token = require(`../models/Token`);
 
 
+/* like, favourite, save in history POST processes */
+
+//Liking websites
+exports.POST_likeSite = function(req, res, next) {
+    const { websiteId } = req.body;
+    User.findById(req.user._id).populate("likedSites").exec((err, user)=> {
+        if (err) {return next(err);}
+
+        Website.findById(websiteId).exec((err, website)=> {
+            if (err) {return next(err);}
+
+            //Check if website is already liked
+            let liked = false;
+
+            //Check if it already liked
+            for (let val of user.likedSites) {
+                if (val._id.toString() === websiteId.toString()) {
+                    liked = true;
+                }
+            }
+            //Unlike sites
+            if (liked) { 
+                
+                //Make a copy of the array
+                let likedSitesCopy = [...user.likedSites];
+
+                //Loop over the copy and get rid of the current website
+                for (let i = 0; i < likedSitesCopy.length; i++) {
+                    if (likedSitesCopy[i]._id.toString() === website._id.toString()) {
+                        console.log("Removed " + likedSitesCopy[i].siteName);
+                        likedSitesCopy.splice(i, 1);
+                    }
+                }
+
+                //Save the new likedSites array and decrement website likes
+                let unlikeUser = {
+                    $set: {
+                        likedSites: likedSitesCopy
+                    }
+                };
+
+                let unlikeWebsite = {
+                    $set: {
+                        likes: website.likes - 1
+                    }
+                };
+
+                User.findByIdAndUpdate(user._id, unlikeUser, {}, (err, userUpdate)=> {
+                    if (err) {return next(err);}
+                    Website.findByIdAndUpdate(website._id, unlikeWebsite, {}, (err, websiteUpdate)=> {
+                        if (err) {return next(err);}
+                        res.send({status: "unliked", likes: unlikeWebsite.$set.likes});
+                    });
+                });
+
+            }
+            //like sites
+            if (!liked) {
+
+                let newUser = {
+                    $set: {
+                        likedSites: user.likedSites
+                    }
+                }
+                newUser.$set.likedSites.push(website._id);
+
+                let newWeb = {
+                    $set: {
+                        likes: website.likes + 1
+                    }
+                }
+
+                User.findByIdAndUpdate(user._id, newUser, {}, (err, userUpdate)=> {
+                    if (err) {return next(err);}
+                    Website.findByIdAndUpdate(website._id, newWeb, {}, (err, webUpdate)=> {
+                        if (err) {return next(err);}
+                        res.send({status: "liked", likes: newWeb.$set.likes});//toFix
+                    });
+                });
+            }
+        });
+    });
+}
+
+//viewed sites/history saving
+exports.POST_viewedSites = function(req, res, next) {
+    
+    //Deconstruct
+    const { websiteId } = req.body;
+
+    User.findById(req.user._id).populate("viewedSites").exec((err, user)=> {
+        if (err) {return next(err);}
+
+        Website.findById(websiteId).exec((err, website)=> {
+            if (err) {return next(err);}
+
+            //Check if website is in viewedSites if not then add it, if it is then leave it
+            let viewed = false;
+
+            //(Iterate over user viewed site)
+            for (let val of user.viewedSites) {
+                if (val._id.toString() === websiteId.toString()) {
+                    viewed = true;
+                }
+            }
+            
+            //Add to user viewedSites and Increment website views
+            if (!viewed) {
+                
+                let newUser = {
+                    $set: {
+                        viewedSites: user.viewedSites
+                    }
+                };
+                newUser.$set.viewedSites.push(websiteId);
+                let newWeb = {
+                    $set: {
+                        views: website.views + 1
+                    }
+                }
+                
+                //Update user and update website
+                User.findByIdAndUpdate(user._id, newUser, {}, (err, userUpdate)=> {
+                    if (err) {return next(err);}
+                    Website.findByIdAndUpdate(website._id, newWeb, {}, (err, webUpdate)=> {
+                        if (err) {return next(err);}
+                        res.send("Site has been updated");//toFix
+                    });
+                });
+            }
+
+            else {
+                res.send("already viewed site");//toFix
+            }
+
+        });
+    });
+}
+
 /* Comment System */
 exports.POST_comment = [
     //Validate
@@ -355,113 +494,6 @@ exports.POST_personalInfo =  [
 exports.POST_changeAvatar = function(req, res, next) {
     req.flash("success", [{ msg: "Successfully changed profile picture." }]);
     res.redirect(req.get(`Referrer`));
-}
-
-/* Website Interaction */
-
-//Liking Process
-exports.POST_likeSite = function(req, res, next) {
-    //Push qUser to User's likedportfolios and increment qUser's portfolioLikes
-    Website.findOne({ owner: req.body.qUser_id }).populate("owner").exec((err, webRes)=> {
-
-        if (err) {return next(err);}
-
-        if (!qUserRes) {    
-            res.send(`Error in the profile rendering :( it's lacking a parameter.`);
-        }
-
-        else {
-            //Case where it is User to qUser
-            //Run a check wether qUser's site is already in User's liked sites
-            let checkLikes = false;
-
-            User.findById(req.user._id).populate("likedSites").exec((err, userRes)=> {
-                if (err) {return next(err);}
-                //For loop that iterates over liked websites
-
-                for (let val of userRes.likedSites) {
-                    if (val._id === webRes._id) {
-                        checkLikes = true;
-                    }
-                }
-
-                if (checkLikes === true) {
-                    //Make the process for unliking
-
-                    //Make a copy of user liked websites
-                    let userResNewList = [...userRes.likedSites];
-
-                    //Gets rid of the liked sites
-                    for (let i = 0; i < userResNewList.length; i++) {
-                        if (userResNewList[i]._id === webRes._id) {
-                            userResNewList.splice(i, 1);
-                        }
-                    }
-
-                    //Update user
-                    let userUpdate = {
-                        $set: {
-                            likedSites: userResNewList,
-                        }
-                    };
-
-                    User.findByIdAndUpdate(userRes._id, userUpdate, {}, (err, updateRes)=> {
-                        if (err) {return next(err);}
-                        //Update website to decrease like count
-                        let websiteUpdate = {
-                            $set: {
-                                likes: webRes.likes - 1
-                            }
-                        };
-
-                        Website.findByIdAndUpdate(webRes._id, websiteUpdate, {}, (err, updateRes)=> {
-                            if (err) {return next(err);}
-                            res.redirect(req.get(`Referrer`));
-                        });
-
-                    });
-
-                }
-
-                else {
-                    // First time liking a website
-
-                    //Make a copy of userRes's liked sites
-                    let newlikedSitesArray = [...userRes.likedSites];
-                    //Push webres into the new copy 
-                    newlikedSitesArray.push(webRes);
-
-                    //update with the new array
-                    let userUpdate = {
-                        $set: {
-                            likedSites: newlikedSitesArray
-                        }
-                    };
-
-
-                    User.findByIdAndUpdate(userRes._id, userUpdate, {}, (err, updateRes)=> {
-                        if (err) {return next(err);}
-                        //Add a like to the website
-                        let websiteUpdate = {
-                            $set: {
-                                likes: webRes.likes + 1,
-                            }
-                        };
-
-                        Website.findByIdAndUpdate(webRes._id, websiteUpdate, {}, (err, updateRes)=> {
-                            if (err) {return next(err);}
-                            res.redirect(req.get(`Referrer`));
-                        });
-
-                    });
-
-                }
-
-            });
-        }
-
-    });
-
 }
 
 /* Friends System */

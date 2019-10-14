@@ -42,13 +42,11 @@
                 </div>
 
                 <div class="like-favourite">
-                    <form method="POST" action="">
-                        <input type="hidden" name="" value=""/>
-                        <button type="submit"><img/><%=website.likes%></button>
+                    <form id="likeForm">
+                        <button class="likeStyle" id="likeButton"><img class="nav-icons" src="/assets/icons/icons8-facebook-like-96.png"/><span><%=website.likes%></span></button>
                     </form>
-                    <form method="POST" action="">
-                        <input type="hidden" name="" value=""/>
-                        <button type="submit"><img/>Favourite</button>
+                    <form id="favForm">
+                        <button class="favStyle" id="favButton"><img class="nav-icons" src="/assets/icons/icons8-heart-96-dark.png"/>Favorite</button>
                     </form>
                 </div>
             </div>
@@ -99,7 +97,18 @@
 
 $( document ).ready(()=> {
 
- /* Website Popup */
+    /* Initialize Variables */
+
+    //Grab website id
+    let websiteId = <%-JSON.stringify(website._id)%>;
+    //User info
+    let user = <%- JSON.stringify(user) %>;
+    //Website info
+    let webLikes = <%- JSON.stringify(website.likes) %>;
+
+    let likeStatus = false;
+
+    /* Front end changes */
 
     //Prepend comments
     function loadComments(comment, user) {
@@ -120,28 +129,63 @@ $( document ).ready(()=> {
         $("#no-comment-placeholder").css("display", "none");
     }   
 
-//Grab website id
-let websiteId = <%-JSON.stringify(website._id)%>;
+    //Check if website is liked, if it is render the button as liked
+    for (let val of user.likedSites) {
+        if (val.toString() === websiteId.toString()) {
+            likeStatus = true;
+            $("#likeButton").addClass("liked");
+            $("#likeButton > img").attr("src", "/assets/icons/icons8-facebook-like-96-white.png");
+        }
+    }
 
-let user = <%- JSON.stringify(user) %>;
+    $("#likeButton").on("click", ()=> {
+        if (!likeStatus) {
+            $("#likeButton").addClass("liked");
+            $("#likeButton > img").attr("src", "/assets/icons/icons8-facebook-like-96-white.png");
+            $("#likeButton span").html(webLikes + 1);
+            likeStatus = true;
+        }
 
-$("#commentForm").on("submit", ()=> {
-    event.preventDefault(); //Prevent page from refreshing
-
-    let value = $("#commentValue").val();
-
-    //Ajax request to handle post data
-    $.ajax({
-        method: "POST",
-        contentType: "application/json",
-        data: JSON.stringify({ value, websiteId }),
-        success: (response)=> { //Response is the data that the server processed
-            console.log(response);
-            $("#commentValue").val("");
-            loadComments(response, user);
+        else {
+            $("#likeButton").removeClass("liked");
+            $("#likeButton > img").attr("src", "/assets/icons/icons8-facebook-like-96.png");
+            $("#likeButton > span").html(webLikes - 1);
+            likeStatus = false;
         }
     });
-});
+
+    /*  Ajax Request */
+
+    $("#commentForm").on("submit", ()=> {
+        event.preventDefault(); //Prevent page from refreshing
+
+        let value = $("#commentValue").val();
+
+        //Ajax request to handle post data
+        $.ajax({
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({ value, websiteId }),
+            success: (response)=> { //Response is the data that the server processed
+                $("#commentValue").val("");
+                loadComments(response, user);
+            }
+        });
+    });
+
+    $("#likeForm").on("submit", ()=> {
+        event.preventDefault();
+
+        $.ajax({
+            url: "/users/like_site",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({ websiteId }),
+            success: (data)=> {
+                console.log(data);
+            }
+        });
+    }); 
 
 });
 
