@@ -12,8 +12,8 @@ const WebsiteSchema = new Schema({
     category:{ type: String, required: true, lowercase: true },
     description: { type: String, required: false, max: 500 },
     comments: [{ type: Schema.Types.ObjectId, ref: "Comments" }],
-    likes: { type: Number, default: 0 },
-    views: { type: Number, default: 0 },
+    likes: { type: Number, default: 0, min: 0 },
+    views: { type: Number, default: 0, min: 0},
     webThumb: {data: Buffer, contentType: String},
     date: { type: Date, default: Date.now },
 });

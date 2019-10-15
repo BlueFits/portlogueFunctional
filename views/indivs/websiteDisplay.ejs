@@ -108,6 +108,8 @@ $( document ).ready(()=> {
 
     let likeStatus = false;
 
+    let favStatus = false;
+
     /* Front end changes */
 
     //Prepend comments
@@ -151,6 +153,31 @@ $( document ).ready(()=> {
             $("#likeButton > img").attr("src", "/assets/icons/icons8-facebook-like-96.png");
             $("#likeButton > span").html(webLikes - 1);
             likeStatus = false;
+        }
+    });
+
+    //Check if website is in favourites
+    for (let val of user.favorites) {
+        if (val.toString() === websiteId.toString()) {
+            favStatus = true;
+            $("#favButton").addClass("faved");
+            $("#favButton > img").attr("src", "/assets/icons/icons8-heart-96.png")
+        }
+    }
+
+    $("#favButton").on("click", ()=> {
+        //Add to fav
+        if (!favStatus) {
+            $("#favButton").addClass("faved");
+            $("#favButton > img").attr("src", "/assets/icons/icons8-heart-96.png");
+            favStatus = true;
+        }
+
+        //Remove from fav
+        else {
+            $("#favButton").removeClass("faved");
+            $("#favButton > img").attr("src", "/assets/icons/icons8-heart-96-dark.png");
+            favStatus = false;
         }
     });
 

@@ -1900,6 +1900,18 @@ footer li {
 .likeStyle.liked {
     background-color: #464646;
     color: #ffffff;
+    border: none;
+}
+
+
+.favStyle.faved {
+    background-color: #ed2553;
+    color: #ffffff;
+    border: none;
+}
+
+.favStyle.faved:hover {
+    border: 1px solid #ed2553;
 }
 
 /* #464646;  ed2553 */

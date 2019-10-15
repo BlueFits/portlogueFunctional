@@ -66,8 +66,6 @@
 
 <script>
 
-$( document ).ready(()=> {
-
 
 //Initialize websiteDisplay
 let websiteId;
@@ -75,6 +73,7 @@ let websiteId;
 //Function to grab info from chosen website
 function getWebsite(element) {
     websiteId = element.parentNode.parentNode.childNodes[1].textContent;
+    console.log(websiteId);
 }
 
 //Display website now that websiteDisplay has value
@@ -96,12 +95,12 @@ $(".portfolio-thumbnail").on("click", ()=> {
 });
 
 
+
 //Disable back
 if (`<%=page%>` === `1`) {
     $(`.prevPag`).attr("disabled","true");
 }
 
 
-});
 
 </script>
