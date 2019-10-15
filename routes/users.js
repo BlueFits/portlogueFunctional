@@ -15,6 +15,7 @@ const { ensureAuth } = require(`../config/authenticate`);
 /* Like, Favorite, and Viewed sites */
 
 //Favorite POST request
+router.post("/favorite", ensureAuth, userController.POST_favorite);
 
 //Like POST request
 router.post("/like_site", ensureAuth, userController.POST_likeSite);

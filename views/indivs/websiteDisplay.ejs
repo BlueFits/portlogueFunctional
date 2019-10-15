@@ -187,6 +187,20 @@ $( document ).ready(()=> {
         });
     }); 
 
+    $("#favForm").on("submit", ()=> {
+        event.preventDefault();
+
+        $.ajax({
+            url: "/users/favorite",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({ websiteId }),
+            success: (data)=> {
+                console.log(data);
+            }
+        });
+    });
+
 });
 
 

@@ -20,6 +20,7 @@ const UserSchema = new Schema({
     websites: [{ type: Schema.Types.ObjectId, ref: "Website" }],
     likedSites: [{ type:Schema.Types.ObjectId, ref: `Website` }], //Use .populate on objectId
     viewedSites: [{ type: Schema.Types.ObjectId, ref: "Website" }],
+    favorites: [{ type:Schema.Types.ObjectId, ref: "Website" }],
     friendList: [{ type: Schema.Types.ObjectId, ref: `User` }],
     dateJoined: { type: Date, default: Date.now }
 });

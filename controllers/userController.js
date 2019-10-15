@@ -15,7 +15,70 @@ const FriendStatus = require(`../models/friendStatus`);
 const Token = require(`../models/Token`);
 
 
-/* like, favourite, save in history POST processes */
+/* like, favourite, save in history POST processes (Consider remocing Website.findById to improve performance)*/
+
+//Add to Favorite websites
+exports.POST_favorite = function(req, res, next) {
+
+    const { websiteId } = req.body;
+    
+    User.findById(req.user._id).populate("favorites").exec((err, user)=> {
+
+        if (err) {return next(err);}
+
+        //Check if website is already in the favorites
+        let fav = false;
+
+        for (let val of user.favorites) {
+            if (val._id.toString() === websiteId.toString()) {
+                fav = true;
+            }
+        }
+
+        //Unfav process
+        if (fav) {
+
+            let favoritesCopy = [...user.favorites];
+
+            for (let i = 0; i < favoritesCopy.length; i++) {
+                if (favoritesCopy[i]._id.toString() === websiteId.toString()) {
+                    favoritesCopy.splice(i, 1);
+                }
+            }
+
+            //Save the new favorites
+            let favRemove = {
+                $set: {
+                    favorites: favoritesCopy
+                }
+            }
+
+            User.findByIdAndUpdate(user._id, favRemove, {}, (err)=> {
+                if (err) {return next(err);}
+                res.send("Removed from favorites");
+            });
+
+        }
+
+        //Fav process
+        if (!fav) {
+
+            let favAdd = {
+                $set: {
+                    favorites: user.favorites
+                }
+            }
+            favAdd.$set.favorites.push(websiteId.toString());
+
+            User.findByIdAndUpdate(user._id, favAdd, {}, (err)=> {
+                if (err) {return next(err);}
+                res.send("Added to favorites");
+            });
+        }
+
+    });
+
+}
 
 //Liking websites
 exports.POST_likeSite = function(req, res, next) {
@@ -29,7 +92,6 @@ exports.POST_likeSite = function(req, res, next) {
             //Check if website is already liked
             let liked = false;
 
-            //Check if it already liked
             for (let val of user.likedSites) {
                 if (val._id.toString() === websiteId.toString()) {
                     liked = true;
@@ -44,7 +106,6 @@ exports.POST_likeSite = function(req, res, next) {
                 //Loop over the copy and get rid of the current website
                 for (let i = 0; i < likedSitesCopy.length; i++) {
                     if (likedSitesCopy[i]._id.toString() === website._id.toString()) {
-                        console.log("Removed " + likedSitesCopy[i].siteName);
                         likedSitesCopy.splice(i, 1);
                     }
                 }
