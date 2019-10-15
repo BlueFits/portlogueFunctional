@@ -66,7 +66,6 @@ exports.POST_likeSite = function(req, res, next) {
                     if (err) {return next(err);}
                     Website.findByIdAndUpdate(website._id, unlikeWebsite, {}, (err, websiteUpdate)=> {
                         if (err) {return next(err);}
-                        res.send({status: "unliked", likes: unlikeWebsite.$set.likes});
                     });
                 });
 
@@ -91,7 +90,6 @@ exports.POST_likeSite = function(req, res, next) {
                     if (err) {return next(err);}
                     Website.findByIdAndUpdate(website._id, newWeb, {}, (err, webUpdate)=> {
                         if (err) {return next(err);}
-                        res.send({status: "liked", likes: newWeb.$set.likes});//toFix
                     });
                 });
             }

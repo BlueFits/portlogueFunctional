@@ -65,6 +65,10 @@
 </section>
 
 <script>
+
+$( document ).ready(()=> {
+
+
 //Initialize websiteDisplay
 let websiteId;
 
@@ -96,5 +100,8 @@ $(".portfolio-thumbnail").on("click", ()=> {
 if (`<%=page%>` === `1`) {
     $(`.prevPag`).attr("disabled","true");
 }
+
+
+});
 
 </script>
