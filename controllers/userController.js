@@ -617,9 +617,12 @@ exports.POST_first_Setup_Link = [
         else {
 
             async function snap() {
-                await captureWebsite.file(req.body.link, `${req.user.email}-webthumbnail.png`, {
+                await captureWebsite.file(req.body.link, `${req.user.email}-webthumbnail`, {
                     width: 1024,
                     height: 576,
+                    disableAnimations: true,
+                    type: "jpeg",
+                    quality: 0,
                     launchOptions: {
                         args: [
                             '--no-sandbox',
@@ -641,7 +644,7 @@ exports.POST_first_Setup_Link = [
                     colors: colorArray,
                     category,
                     description,
-                    webThumb: { data: fs.readFileSync(path.join(__dirname, `../${req.user.email}-webthumbnail.png`)), contentType:`image/png` },
+                    webThumb: { data: fs.readFileSync(path.join(__dirname, `../${req.user.email}-webthumbnail`)), contentType:`image/jpeg` },
                 });
 
                 //Update props
@@ -649,7 +652,7 @@ exports.POST_first_Setup_Link = [
                     console.log(`Website saved`);
                     if (err) {return next(err);}
                     //Delete image after Upload
-                    fs.unlink(path.join(__dirname, `../${req.user.email}-webthumbnail.png`), (err) => {
+                    fs.unlink(path.join(__dirname, `../${req.user.email}-webthumbnail`), (err) => {
                     if (err) throw `Error at userController fs.unlink`;
                     console.log(`File has been deleted`);
                     res.redirect(`/`);
