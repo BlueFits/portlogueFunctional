@@ -1,5 +1,18 @@
-$( document ).ready(()=> {
 
+/* Needed outside document ready */
+
+/*  Hover System */
+    
+function closeHover() {
+    $(".web-popup").css("z-index", "-1");
+    $("body").css("overflow", "auto");
+    $("#web-frame").attr("src", ``);
+}
+
+
+/*  */
+
+$( document ).ready(()=> {
 
     $(`.profile-icon-wrapper`).on(`click`,()=> {
         $(`.home-nav-dropdown`).toggle();

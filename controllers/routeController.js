@@ -79,7 +79,6 @@ let renderDiscover = function (req, res, pageSection, sortSetting) {
 exports.GET_websiteHover = function(req, res, next) {
     let websiteId = req.params.id;
 
-
     //Find website and do deep population
     Website.findById(websiteId).populate("owner").populate({ path: "comments", populate: { path: "user" } }).exec((err, website)=> {
         if (err) { return next(err);}
