@@ -332,14 +332,17 @@ exports.GET_first_Setup_Profile = function(req, res, next) {
 };
 
 exports.GET_first_Setup_Link = function(req, res, next) {
-    //Only run on user's very first login
-    if (req.user.websites.length === 0) {
-        res.render(`firstSetup/setupLink`, {errors: [], User: req.user});
-    }
 
-    else {
-        res.redirect(`/`);
-    }
+    //Produces an array
+    Website.find({ owner: req.user._id }).exec((err, websites)=> {
+        if (websites.length === 0) {
+            res.render(`firstSetup/setupLink`, {errors: [], User: req.user});
+        }
+        else {
+            res.redirect("/");
+        }
+    });
+
 };
 
 //Home Page Route toFix

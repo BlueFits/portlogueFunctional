@@ -73,11 +73,15 @@ let websiteId;
 //Function to grab info from chosen website
 function getWebsite(element) {
     websiteId = element.parentNode.parentNode.childNodes[1].textContent;
-    console.log(websiteId);
 }
 
 //Display website now that websiteDisplay has value
 $(".portfolio-thumbnail").on("click", ()=> {
+
+    $("#web-frame").attr("src", `/users/website_hover/${websiteId}`);
+    $(".web-popup").css("z-index", "2");
+    $("body").css("overflow", "hidden");
+    console.log("functions ran");
     //Ajax to increment viewed site and push to user database
     $.ajax({
         method: "POST",
@@ -85,13 +89,9 @@ $(".portfolio-thumbnail").on("click", ()=> {
         url: "/users/viewed_sites",
         data: JSON.stringify({ websiteId }),
         success: (data) => {
-            console.log(data);
+            //Empty
         }
     });
-
-    $("#web-frame").attr("src", `/users/website_hover/${websiteId}`);
-    $(".web-popup").css("z-index", "2");
-    $("body").css("overflow", "hidden");
 });
 
 

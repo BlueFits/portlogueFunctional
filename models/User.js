@@ -17,7 +17,7 @@ const UserSchema = new Schema({
     postalCode: { type: String, required: false, max: 32, default: "n/a", lowercase: true }, //This is uppercase
     occupation: { type: String, required: true, default: "n/a", lowercase: true },
     bio: { type: String, min: 3, max: 160, required: false },
-    websites: [{ type: Schema.Types.ObjectId, ref: "Website" }],
+    //websites: [{ type: Schema.Types.ObjectId, ref: "Website" }], Eachwebsite has an owner
     likedSites: [{ type:Schema.Types.ObjectId, ref: `Website` }], //Use .populate on objectId
     viewedSites: [{ type: Schema.Types.ObjectId, ref: "Website" }],
     favorites: [{ type:Schema.Types.ObjectId, ref: "Website" }],
