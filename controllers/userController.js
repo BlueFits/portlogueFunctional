@@ -55,7 +55,6 @@ exports.POST_favorite = function(req, res, next) {
 
             User.findByIdAndUpdate(user._id, favRemove, {}, (err)=> {
                 if (err) {return next(err);}
-                res.send("Removed from favorites");
             });
 
         }
@@ -72,7 +71,6 @@ exports.POST_favorite = function(req, res, next) {
 
             User.findByIdAndUpdate(user._id, favAdd, {}, (err)=> {
                 if (err) {return next(err);}
-                res.send("Added to favorites");
             });
         }
 
@@ -200,13 +198,12 @@ exports.POST_viewedSites = function(req, res, next) {
                     if (err) {return next(err);}
                     Website.findByIdAndUpdate(website._id, newWeb, {}, (err, webUpdate)=> {
                         if (err) {return next(err);}
-                        res.send("Site has been updated");//toFix
                     });
                 });
             }
 
             else {
-                res.send("already viewed site");//toFix
+
             }
 
         });
@@ -242,7 +239,7 @@ exports.POST_comment = [
                 comment.$set.comments.push(commentUpdate._id);
 
                 Website.findByIdAndUpdate(websiteId, comment, {}, (err, webUpdate)=> {
-                    res.send(value);
+                    if (err) {return next(err);}
                 });
             });
         });

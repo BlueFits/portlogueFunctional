@@ -95,8 +95,6 @@
 
 <script>
 
-$( document ).ready(()=> {
-
     /* Initialize Variables */
 
     //Grab website id
@@ -140,7 +138,6 @@ $( document ).ready(()=> {
         }
     }
 
-    console.log(webLikes);
     $("#likeButton").on("click", ()=> {
         if (!likeStatus) {
             $("#likeButton").addClass("liked");
@@ -224,12 +221,9 @@ $( document ).ready(()=> {
             contentType: "application/json",
             data: JSON.stringify({ websiteId }),
             success: (data)=> {
-                console.log(data);
+                //Empty
             }
         });
     });
-
-});
-
 
 </script>
