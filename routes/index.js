@@ -24,7 +24,6 @@ router.get(`/publicAvatar/:email`, uploadController.GET_publicAvtr);
 
 router.get(`/publicAvatar/redirect/:id`, routeController.idRedirect);
 
-
 /* GET home page. */
 router.get('/', ensureAuthHome, routeController.renderHome);
 
