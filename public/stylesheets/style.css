@@ -356,7 +356,6 @@ h3 {
 /* Country and postal code  */
 
 .country-setup {
-    padding-top: 150px;
     display: flex;
     flex-direction: column;
 
@@ -483,6 +482,11 @@ h3 {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.avatar-button.finish-setup{ 
+    margin-top: 10px;
+    text-decoration: none;
 }
 
 .avatar-button:disabled {
@@ -2075,6 +2079,9 @@ footer li {
 @media only screen and (min-width: 961px) and (max-width: 1919px) {/** for 1336x 728 **/
     .qUser-info {
         height: 75%;
+    }
+    .country-setup {
+        padding-top: 150px;
     }
     .avatar-button.finish-setup{ /* toFix */
         margin-top: 10px;
