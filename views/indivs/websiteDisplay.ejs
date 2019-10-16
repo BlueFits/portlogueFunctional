@@ -142,7 +142,7 @@ $( document ).ready(()=> {
 
     $("#likeButton").on("click", ()=> {
         if (!likeStatus) {
-            webLikes++;
+            webLikes = webLikes + 1;
             $("#likeButton").addClass("liked");
             $("#likeButton > img").attr("src", "/assets/icons/icons8-facebook-like-96-white.png");
             $("#likeButton span").html(webLikes);
@@ -150,7 +150,7 @@ $( document ).ready(()=> {
         }
 
         else {
-            weblikes--;
+            weblikes = webLikes - 1;
             $("#likeButton").removeClass("liked");
             $("#likeButton > img").attr("src", "/assets/icons/icons8-facebook-like-96.png");
             $("#likeButton > span").html(webLikes);
