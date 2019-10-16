@@ -250,7 +250,7 @@ exports.POST_comment = [
     }
 ]
 
-/* Settings System */
+/* Settings System   (KNOW THAT I INTENTIONALLY UNESCAPED DESCRIPTION AND BIO DUE TO LAZINESS)*/
 
 //Update password
 exports.POST_changePassword = [
@@ -376,7 +376,7 @@ exports.POST_aboutYou = [
     sanitizeBody(`country`).escape(),
     sanitizeBody(`postalCode`).escape(),
     sanitizeBody(`occupation`).escape(),
-    sanitizeBody(`bio`).escape(),
+    sanitizeBody(`bio`),
 
     //
     (req, res, next) => {
@@ -584,7 +584,7 @@ exports.POST_send_message = function(req, res, next) {
 
 };
 
-/* First Time Setup System */
+/* First Time Setup System   (UNESCAPED CATEGORY WILL FIX)*/
 
 exports.POST_first_Setup_Link = [
     
@@ -599,10 +599,7 @@ exports.POST_first_Setup_Link = [
     //Sanitize Fields
     sanitizeBody(`link`),
     sanitizeBody(`websiteType`).escape(),
-    sanitizeBody("siteName").escape(),
-    sanitizeBody("category").escape(),
-    sanitizeBody("color").escape(),
-    sanitizeBody("description").escape(),
+    sanitizeBody(`color`).escape(),
 
     (req, res, next) => {
         //Initialize Validation
