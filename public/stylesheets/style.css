@@ -316,8 +316,6 @@ h3 {
     background-color: #3498db;
     color: #fff;
     font-size: 21px;
-    margin-top: 25px;
-    margin-bottom: 130px;
     cursor: pointer;
     display: flex;
     justify-content: center;
@@ -363,7 +361,6 @@ h3 {
     justify-content: space-between;
     align-items: center;
     height: 100%;
-    
 }
 
 .country-setup-form {
@@ -2077,8 +2074,10 @@ footer li {
     .qUser-info {
         height: 75%;
     }
-    .setup-button{
+    .avatar-button.finish-setup{ /* toFix */
+        margin-top: 10px;
         margin-bottom: 50px;
+        text-decoration: none;
     }
     .likeStyle,
     .favStyle{
