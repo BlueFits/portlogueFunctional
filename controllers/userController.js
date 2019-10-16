@@ -240,6 +240,7 @@ exports.POST_comment = [
 
                 Website.findByIdAndUpdate(websiteId, comment, {}, (err, webUpdate)=> {
                     if (err) {return next(err);}
+                    res.send(value);
                 });
             });
         });

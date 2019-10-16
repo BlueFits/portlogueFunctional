@@ -353,6 +353,15 @@ h3 {
     position: absolute;
   }
 
+  .loaderC {
+    border: 3px solid #7f7f7f; /* Light grey */
+    border-top: 3px solid #e5e5e5; /* Blue */
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    animation: spin 0.8s linear infinite;
+  }
+
 /* Country and postal code  */
 
 .country-setup {
@@ -1840,8 +1849,9 @@ footer li {
 }
 
 .website-view {
+    background-color: #747474;
+    border-radius: 10px;
     z-index:0;
-    background-color: grey;
     width: 57%;
     height: 80%;
     margin-right: 15px;
@@ -1871,6 +1881,7 @@ footer li {
 }
 
 .hover-avatar-wrapper {
+    background-color: #747474;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -2009,6 +2020,10 @@ footer li {
 }
 
 #comment {
+    outline: none;
+    display: flex;
+    justify-content: center;
+    width: 60px;
     border: none;
     background-color: transparent;
     cursor: pointer;

@@ -184,6 +184,9 @@
     $("#commentForm").on("submit", ()=> {
         event.preventDefault(); //Prevent page from refreshing
 
+        $("#comment").prop("disabled", true);
+        $(`#comment`).html(`<div class="loaderC"></div>`);
+
         let value = $("#commentValue").val();
 
         //Ajax request to handle post data
@@ -194,6 +197,9 @@
             success: (response)=> { //Response is the data that the server processed
                 $("#commentValue").val("");
                 loadComments(response, user);
+
+                $("#comment").prop("disabled", false);
+                $(`#comment`).html(`Comment`);
             }
         });
     });
