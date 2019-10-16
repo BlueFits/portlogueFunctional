@@ -809,58 +809,69 @@ h3 {
     height: 100%;
 }
 
-.settings-sub-heading{
+.settings-sub-heading-wrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+#personalInfo-show,
+#aboutYou-show {
+    cursor: pointer;
+}
+
+.settings-sub-heading {
     color: #7f7f7f;
     font-size: 18px;
 }
 
 .settings-section {
     background-color: #f4f4f4;
-    padding: 40px 0 40px 0;
 }
 
 .settings-wrapper {
     display: flex;
-    justify-content: space-between;
-    width: 70%;
+    flex-direction: column;
+    width: 80%;
     margin: 0 auto;
+}
+
+.settings-header{
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    padding: 35px 0 10px 0;
 }
 
 
 .settings-selection {
-    background-color: #fff;
-    box-shadow: 0px 1px 10px -2px rgba(133,133,133,1);
-    border-radius: 5px;
-    
+    /*border-bottom:1px solid #d1d1d1;  */  
     color: #969696;
     display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    width: 20%;
 }
 
 .settings-selection a {
-    color: #969696;
+    color: #bbbbbb;
     text-decoration: none;
-    padding: 10px 20px;
-    font-size: 16px;
     display: flex;
     align-items: center;
+    padding: 5px 20px;
+}
+
+.settings-selected-a {
+    background-color: #21283e; 
+    border-radius: 5px;
+}
+
+.settings-selected-a > span {
+    color: #ffffff;
 }
 
 .setting-select-name {
     margin-left: 5px;
 }
 
-.settings-selection > a:first-of-type {
-    border-radius: 5px 5px 0 0;
-}
-
 .settings-options {
-    box-shadow: 0px 1px 10px -2px rgba(133,133,133,1);
-    background-color: #fff;
-    border-radius: 5px;
-    width: 79.3%;
+    margin-top: 15px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -925,7 +936,7 @@ h3 {
 
 .personal-info-form {
     margin-top: 20px;
-    display: flex;
+    display: none;
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
@@ -976,7 +987,7 @@ h3 {
 
 .aboutYou-info-form {
     margin-top: 20px;
-    display: flex;
+    display: none;
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;

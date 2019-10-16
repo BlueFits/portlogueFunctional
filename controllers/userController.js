@@ -252,77 +252,6 @@ exports.POST_comment = [
 
 /* Settings System */
 
-//Change web url
-exports.POST_changeWebUrl = [
-    //Validate Fields
-    body(`url`).isURL().withMessage(`The link you have entered is invalid`),
-    body(`websiteType`).isLength({ min: 1}).trim().withMessage(`Please choose a website type`),
-
-    //Sanitize Fields
-    sanitizeBody(`url`),
-    sanitizeBody(`websiteType`).escape(),
-
-    (req, res, next) => {
-        //Initialize Validation
-        let errors = validationResult(req);
-
-        //Check for errors
-        if (!errors.isEmpty()) {
-            req.flash(`error`, errors.array());
-            res.redirect(req.get("Referrer"));
-        }
-        
-        else {
-
-            //This will run in heroku
-            async function snap() {
-                await captureWebsite.file(req.body.url, `${req.user.email}-webthumbnail.png`, {
-                    width: 1024,
-                    height: 576,
-                    launchOptions: {
-                        args: [
-                            '--no-sandbox',
-                            '--disable-setuid-sandbox',
-                            '--disable-dev-shm-usage',
-                            '--single-process'
-                          ],
-                    }
-                });
-                console.log(`capture website ran`);
-            }; 
-            snap().then((cb)=> {
-                console.log(`Saving User`);
-                let newWebThumb = new User({
-                    //Immutable values
-                    _id: req.user._id,
-                    status: req.user.status,
-                    likedPortfolios: req.user.likedPortfolios,
-                    viewedPortfolios: req.user.viewedPortfolios,
-                    portfolioLikes: req.user.portfolioLikes,
-                    friendList: req.user.friendList,
-                    dateJoined: req.user.dateJoined,
-                    //
-                    portfolioImg: {data: fs.readFileSync(path.join(__dirname, `../${req.user.email}-webthumbnail.png`)), contentType:`image/png` },
-                    portfolioType: req.body.websiteType.toLowerCase(),
-                    portfolioUrl: req.body.url,
-                });
-
-                //Update props
-                User.findByIdAndUpdate(req.user._id, newWebThumb, {}, function(err, results) {
-                    if (err) {return next(err);}
-                    //Delete image after Upload
-                    fs.unlink(path.join(__dirname, `../${req.user.email}-webthumbnail.png`), (err) => {
-                    if (err) throw `Error at userController fs.unlink`;
-                    console.log(`File has been deleted`);
-                    req.flash("success", [ {msg: "Successfully changed url."} ]);
-                    res.redirect(req.get("Referrer"));
-                    });
-                });
-            });            
-        }
-    }
-]
-
 //Update password
 exports.POST_changePassword = [
 
@@ -337,7 +266,7 @@ exports.POST_changePassword = [
     (req, res, next)=> {
         let errors = validationResult(req);
 
-        let {currentPass, newPass, retypeNewPass} =  req.body;
+        let { currentPass, newPass, retypeNewPass } =  req.body;
 
         if (!errors.isEmpty()) {
             req.flash(`error`, errors.array());
@@ -354,18 +283,11 @@ exports.POST_changePassword = [
         else {
                     bcrypt.compare(currentPass, req.user.password, (err, isMatch)=> {
                         if (isMatch) {                            
-                            let userUpdatePassword = new User({
-                                //Immutable values
-                                _id: req.user._id,
-                                status: req.user.status,
-                                likedPortfolios: req.user.likedPortfolios,
-                                viewedPortfolios: req.user.viewedPortfolios,
-                                portfolioLikes: req.user.portfolioLikes,
-                                friendList: req.user.friendList,
-                                dateJoined: req.user.dateJoined,
-                                //
-                                password: newPass
-                            });
+                            let userUpdatePassword = {
+                                $set: {
+                                    password: newPass
+                                }
+                            };
 
                             bcrypt.genSalt(10, function(err, salt) {
                                 bcrypt.hash(newPass, salt, function(err, hash) {
@@ -400,6 +322,8 @@ exports.POST_changeAccEmail = [
     (req, res, next)=> {
         let errors = validationResult(req);
 
+        const { email } = req.body;
+
         if (!errors.isEmpty()) {
             req.flash(`error`, errors.array());
             res.redirect(req.get("Referrer"));
@@ -407,7 +331,7 @@ exports.POST_changeAccEmail = [
 
         else {
 
-            User.findOne({"email": req.body.email}).exec((err, result)=> {
+            User.findOne({ email }).exec((err, result)=> {
 
                 if (err) {return next(err);}
 
@@ -418,21 +342,14 @@ exports.POST_changeAccEmail = [
 
                 else {
 
-                    let newEmail = req.body.email.toLowerCase();
+                    let newEmail = email.toLowerCase();
                     let oldEmail = req.user.email;
 
-                    let userUpdate = new User({
-                        //Unchangeable values
-                        _id: req.user._id,
-                        status: req.user.status,
-                        likedPortfolios: req.user.likedPortfolios,
-                        viewedPortfolios: req.user.viewedPortfolios,
-                        portfolioLikes: req.user.portfolioLikes,
-                        friendList: req.user.friendList,
-                        dateJoined: req.user.dateJoined,
-                        //
-                        email: newEmail
-                    });
+                    let userUpdate = {
+                        $set : {
+                            email
+                        }
+                    };
 
                     require("./uploadController").email_change_handler(oldEmail, newEmail);
 
@@ -465,26 +382,21 @@ exports.POST_aboutYou = [
     (req, res, next) => {
         let errors = validationResult(req);
 
+        const { country, postalCode, occupation, bio } = req.body;
+
         if (!errors.isEmpty()) {
             req.flash(`error`, errors.array());
             res.redirect(req.get(`Referrer`));
         }
         else {
-            let userAboutYou = new User({
-                //Unchangeable values
-                _id: req.user._id,
-                status: req.user.status,
-                likedPortfolios: req.user.likedPortfolios,
-                viewedPortfolios: req.user.viewedPortfolios,
-                portfolioLikes: req.user.portfolioLikes,
-                friendList: req.user.friendList,
-                dateJoined: req.user.dateJoined,
-                //
-                country: req.body.country || req.user.country,
-                postalCode: req.body.postalCode.toLowerCase() || req.user.postalCode,
-                occupation: req.body.occupation ||req.user.occupation,
-                bio: req.body.bio || req.user.bio
-            });
+            let userAboutYou = {
+                $set: {
+                    country: country || req.user.country,
+                    postalCode: postalCode || req.user.postalCode,
+                    occupation: occupation || req.user.occupation,
+                    bio: bio || req.user.bio
+                }
+            };
 
             User.findByIdAndUpdate(req.user._id, userAboutYou, {} , (err, updateRes)=> {
                 if (err) {return next(err);}
@@ -502,18 +414,21 @@ exports.POST_personalInfo =  [
     body('firstName').optional({ checkFalsy: true }).trim().withMessage('First name must be specified.').isAlphanumeric().withMessage('First name has non-alphanumeric characters.'),
     body('lastName').optional({ checkFalsy: true }).trim().withMessage('Last name must be specified.').isAlphanumeric().withMessage('Last name has non-alphanumeric characters.'),
     check(`emailDisplay`).optional({ checkFalsy: true }).isEmail().withMessage(`Email is invalid`),
-    body(`phoneNumber`).optional({ checkFalsy: true }).trim(),
+    body(`phone`).optional({ checkFalsy: true }).trim(),
     //Santize fields
     sanitizeBody(`firstName`).escape(),
     sanitizeBody(`lastName`).escape(),
     sanitizeBody(`email`).escape(),
-    sanitizeBody(`phoneNumber`).escape(),
+    sanitizeBody(`phone`).escape(),
 
     //Function 
     (req, res, next) => {
 
         //Initialize validation
         let errors = validationResult(req);
+
+        //Deconstruct information
+        const { firstName, lastName, emailDisplay, phone } = req.body;
 
         //Check for errors
         if (!errors.isEmpty()) {
@@ -522,22 +437,14 @@ exports.POST_personalInfo =  [
         }
 
         else {
-            let userUpdate = new User({
-                //Unchangeable values
-                _id: req.user._id,
-                status: req.user.status,
-                likedPortfolios: req.user.likedPortfolios,
-                viewedPortfolios: req.user.viewedPortfolios,
-                portfolioLikes: req.user.portfolioLikes,
-                friendList: req.user.friendList,
-                dateJoined: req.user.dateJoined,
-                //
-                firstName: req.body.firstName || req.user.firstName,
-                lastName: req.body.lastName || req.user.lastName,
-                fullname: req.body.firstName.toLowerCase()+req.body.lastName.toLowerCase() || req.user.fullname,
-                emailDisplay: req.body.emailDisplay || req.user.emailDisplay,
-                phone: req.body.phoneNumber || req.user.phone
-            });
+            let userUpdate = {
+                $set: {
+                    firstName: firstName || req.user.firstName,
+                    lastName: lastName || req.user.lastName,
+                    emailDisplay: emailDisplay || req.user.emailDisplay,
+                    phone: phone || req.user.phone
+                }
+            };
         
             User.findByIdAndUpdate(req.user._id, userUpdate, {}, (err, updateRes)=> {
                 if (err) {return next(err);}
@@ -557,6 +464,8 @@ exports.POST_changeAvatar = function(req, res, next) {
 
 /* Friends System */
 
+
+//Confirm Friend
 exports.POST_confirmFriend = function(req, res, next) {
     
     User.findById(req.body.reqFrom).populate(`friendList`).exec((err, reqFrom)=> {

@@ -22,15 +22,15 @@
     </ul>
     <div class="settings-wrapper">
 
+        <header class="settings-header"><h1 style="color: #7f7f7f;">Settings</h1></header>
+
         <div class="settings-selection">                
-            <a href="/users/settings?tab=profile" style="color: #fff; background-color: #21283e;"><img class="nav-icons" src="/assets/icons/icons8-user-96.png" alt="profile"/><span class="setting-select-name">Profile</span></a>
-            <a href="/users/settings?tab=account"><img class="nav-icons" src="/assets/icons/icons8-settings-96.png" alt="Account Settings"/><span class="setting-select-name">Account Settings</span></a>
+                <a href="/users/settings?tab=profile" class="settings-selected-a"><img class="nav-icons" src="/assets/icons/icons8-user-96.png" alt="profile"/><span class="setting-select-name">Profile</span></a>
+                <a href="/users/settings?tab=account"><img class="nav-icons" src="/assets/icons/icons8-settings-96.png" alt="Account Settings"/><span class="setting-select-name">Account Settings</span></a>
+                <a href="/users/settings?tab=account"><img class="nav-icons" src="/assets/icons/icons8-settings-96.png" alt="Account Settings"/><span class="setting-select-name">Websites</span></a>
         </div>
 
         <div class="settings-options">
-            <div>
-                <span class="settings-sub-heading">Profile</span>
-            </div>
             <!-- Avatar change -->
             <div class="avatar-change">
                 <div class="set-avatar-formOne">
@@ -52,7 +52,10 @@
             </div>
             <!-- Personal information -->
             <div class="personal-info">
-                <span class="settings-sub-heading">Personal Information</span>
+                <div class="settings-sub-heading-wrapper">
+                    <span class="settings-sub-heading">Personal Information</span>
+                    <span id="personalInfo-show">Change</span>
+                </div>
                     <form class="personal-info-form" method="POST" action="/users/change_personalInfo">
                         <div class="personal-info-div">
                                 <div class="personal-info-input">
@@ -71,8 +74,8 @@
                                 <input id="emailDisplay" type="email" name="emailDisplay" placeholder="<%=User.emailDisplay%>"/>
                             </div>
                             <div class="personal-info-input">
-                                <label for="phoneNumber">Phone Number</label>
-                                <input id="phoneNumber" type="number" name="phoneNumber" placeholder="<%=User.phone%>"/>
+                                <label for="phone">Phone Number</label>
+                                <input id="phoneNumber" type="number" name="phone" placeholder="<%=User.phone%>"/>
                             </div>
                             <div class="personal-info-save">
                                 <button id="pInfo-save" type="submit" disabled>Save</button>
@@ -83,7 +86,10 @@
 
             <!-- About You -->
             <div>
-                <span class="settings-sub-heading">About You</span>
+                <div class="settings-sub-heading-wrapper">
+                    <span class="settings-sub-heading">About You</span>
+                    <span id="aboutYou-show">Change</span>
+                </div>
                 <div>
                     <form class="aboutYou-info-form" method="POST" action="/users/change_aboutYou">
                             <div class="aboutYou-info-div">
@@ -99,7 +105,7 @@
                                     </div>
                                     <div class="aboutYou-info-input">
                                             <label for="postalCode-setting">Postal Code</label>
-                                            <input id="postalCode-setting" type="text" name="postalCode" placeholder="<%=User.postalCode%>"/>
+                                            <input id="postalCode-setting" type="text" name="postalCode" placeholder="<%=User.postalDisplay%>"/>
                                     </div>
                             </div>
                             <div class="aboutYou-info-div">
@@ -133,6 +139,9 @@
 
 <script>
 
+$( document ).ready(()=> {
+
+
     $(`#set-changeAvatar`).on("click", ()=> {
         $(`.set-avatarChange-form`).toggle();
     });
@@ -144,5 +153,15 @@
     $(".aboutYou-info-input > input, .aboutYou-info-input > textarea, .aboutYou-info-input > select ").on("focus", ()=> {
         $("#aboutYou-save").prop("disabled", false);
     })
+
+    $("#personalInfo-show").on("click", ()=> {
+        ($(".personal-info-form").css("display") === "flex") ? $(".personal-info-form").css("display", "none") : $(".personal-info-form").css("display", "flex");
+    })
+
+    $("#aboutYou-show").on("click", ()=> {
+        ($(".aboutYou-info-form").css("display") === "flex") ? $(".aboutYou-info-form").css("display", "none") : $(".aboutYou-info-form").css("display", "flex");
+    })
+
+});
 
 </script>

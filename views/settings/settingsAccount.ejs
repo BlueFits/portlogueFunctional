@@ -24,15 +24,16 @@
 
     <div class="settings-wrapper">
 
+        <header class="settings-header"><h1 style="color: #7f7f7f;">Settings</h1></header>
+
         <div class="settings-selection">                
             <a href="/users/settings?tab=profile"><img class="nav-icons" src="/assets/icons/icons8-user-96.png" alt="profile"/><span class="setting-select-name">Profile</span></a>
-            <a style="color: #fff; background-color: #21283e;" href="/users/settings?tab=account"><img class="nav-icons" src="/assets/icons/icons8-settings-96.png" alt="Account Settings"/><span class="setting-select-name">Account Settings</span></a>
+            <a href="/users/settings?tab=account" class="settings-selected-a"><img class="nav-icons" src="/assets/icons/icons8-settings-96.png" alt="Account Settings"/><span class="setting-select-name">Account Settings</span></a>
+            <a href="/users/settings?tab=account"><img class="nav-icons" src="/assets/icons/icons8-settings-96.png" alt="Account Settings"/><span class="setting-select-name">Websites</span></a>
         </div>
 
         <div class="settings-options">
-            <div>
-                <span class="settings-sub-heading">Account Settings</span>
-            </div>
+
             <!-- Email change -->
             <div class="acc-email-change">
                 <form method="POST" action="/users/change_acc_email">
@@ -72,39 +73,6 @@
                             <label></label>
                         </div>
                     </form>
-            </div>
-            <!-- Portfolio Link change -->
-            <div>
-                <div class="acc-pass-divOne">
-                    <span class="settings-sub-heading">Website Url</span>
-                    <span id="urlChangeShow" class="set-edit">Edit</span>
-                </div>
-                <form class="acc-port-divTwo" method="POST" action="/users/change_web_url">
-                    <div>
-                        <label>Website Link</label>
-                        <input type="url" placeholder="<%=User.portfolioUrl%>" name="url"/>
-                        <label></label>
-                    </div>
-                    <div>
-                        <label>Website Type</label>
-                        <select name="websiteType">
-                                <option value="" disabled selected hidden>Select your option</option>
-                                <option value="generalPortfolio">General Portfolio</option>
-                                <option value="creativePortfolio">Creative Portfolio</option>
-                                <option value="artPortfolio">Art Portfolio</option>
-                                <option value="photographyPortfolio">Photography Portfolio</option>
-                                <option value="videographyPortfolio">Videography Portfolio</option>
-                                <option value="avademicPortfolio">Academic Portfolio</option>
-                                <option value="professionalPortfolio">Professional Portfolio</option>
-                                <option value="businessPortfolio">Business Portfolio</option>
-                            </select>
-                            <label></label>
-                    </div>
-                    <div class="aboutYou-info-save acc-pass-submit">
-                        <button type="submit">Save</button>
-                        <label></label>
-                    </div>
-                </form>
             </div>
         </div>
 

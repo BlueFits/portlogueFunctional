@@ -14,7 +14,7 @@ const UserSchema = new Schema({
     country: { type: String, default: "n/a", required: true, lowercase: true },
     emailDisplay: { type: String, required: false, default: "n/a" },
     phone: { type: String, required: false, max: 10, default: "n/a" },
-    postalCode: { type: String, required: false, max: 32, default: "n/a", uppercase: true }, //This is uppercase
+    postalCode: { type: String, required: false, max: 32, default: "n/a", lowercase: true }, //This is uppercase
     occupation: { type: String, required: true, default: "n/a", lowercase: true },
     bio: { type: String, min: 3, max: 160, required: false },
     websites: [{ type: Schema.Types.ObjectId, ref: "Website" }],
@@ -58,6 +58,11 @@ UserSchema.virtual("occupationDisplay").get(function() {
 //Country Display
 UserSchema.virtual("countryDisplay").get(function() {
     return this.country.replace(this.country[0], this.country[0].toUpperCase());
+});
+
+//Postal Code Display
+UserSchema.virtual("postalDisplay").get(function() {
+    return this.postalCode.toUpperCase();
 });
 
 module.exports = mongoose.model(`User`, UserSchema);
