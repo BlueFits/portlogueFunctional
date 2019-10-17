@@ -849,11 +849,22 @@ h3 {
 
 .settings-header{
     display: flex; 
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 35px 0 10px 0;
+    padding: 40px 0;
 }
 
+.settings-header > h1 {
+    color: #7f7f7f;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.settings-header > h1 > img {
+    margin-right: 5px;
+}
 
 .settings-selection {
     /*border-bottom:1px solid #d1d1d1;  */  
@@ -1128,38 +1139,143 @@ h3 {
     justify-content: flex-end;
 }
 
-.acc-port-divTwo {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 20px;
-}
+/* Website settings */
 
-.acc-port-divTwo > div {
-    display: flex;
+.delete-overlay {
+    display: none;
     justify-content: center;
     align-items: center;
-    width: 510px;
+    z-index: 2;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.delete-overlay-color {
+    background-color: black;
+    opacity: 0.5;
+    width: 100%;
+    height: 100%;
+}
+
+.delete-prompt {
+    position: absolute;
+    box-shadow: 0 0 5px grey;
+    padding: 20px;
+    width: 350px;
+    height: 200px;
+    background-color: #ffffff;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.delete-prompt > span:first-of-type {
+    font-size: 21px;
+
+}
+
+.delete-prompt > span {
+    border-bottom: 1px solid #bbbbbb;
+    padding: 10px 0;
+}
+
+.delete-prompt > div {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.delete-prompt > div > span {
+    border: 1px solid #bbbbbb;
+    padding: 7px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.1s linear;
+}
+
+.delete-prompt > div > span:last-of-type:hover {
+    background-color: #c0392b;
+    color: #ffffff;
+    border: 1px solid #c0392b;
+}
+
+.delete-prompt > div > span:last-of-type {
+    margin-left: 10px;
+    
+}
+
+.acc-web-delete-edit {
+    display: flex;
+}
+
+.set-edit.acc-web-spacing {
+    margin-left: 10px;
+}
+
+.acc-web-div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+    border: 1px solid;
+    height: 100%;
+    width: 100%;
+}
+
+.acc-web-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.acc-web-inner-div {
+    border: 1px solid blue;
+    display: flex;
+    flex-direction: column;
     margin-bottom: 10px;
 }
 
-.acc-port-divTwo > div > label {
-    width: 20%;
-    display: flex;
-    justify-content: flex-end;
-    margin-right: 5px;
+.acc-web-inner-div > label {
+    margin-bottom: 5px;
 }
 
-.acc-port-divTwo > div > input,
-.acc-port-divTwo > div > select {
+.acc-web-inner-div > input,
+.acc-web-inner-div > select {
+    
     width: 60%;
     padding: 5px;
-    border-radius: 5px;
+    border-radius: 3px;
     border: 1px solid #7f7f7f;
 }
 
-.acc-port-divTwo > div:last-of-type {
+.acc-web-inner-div:last-of-type {
     justify-content: flex-end;
+}
+
+.acc-website-save {
+    border: 1px solid;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.acc-website-save button {
+    border: none;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #3498db;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.acc-website-save button:disabled {
+    color: #bbbbbb;
+    cursor: default;
 }
 
 /* Search Page */

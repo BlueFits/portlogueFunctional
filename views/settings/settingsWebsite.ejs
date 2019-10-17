@@ -1,0 +1,141 @@
+<body>
+
+    <div class="delete-overlay">
+        <div class="delete-overlay-color"></div>
+        <div class="delete-prompt">
+            <span>Delete Website</span>
+            <span>Are you sure that you want to delete <strong>Site Name</strong></span>
+            <div>
+                <span onclick="closeOverlay()">Cancel</span>
+                <span id="submitDelete">Delete</span>
+            </div>
+        </div>
+
+    </div>
+
+    <section class="settings-section">
+    
+            <ul class="flash-settings">
+                    <% for (let val of error_msg) {%>
+                        <li class="flash-style f-error">
+                                <div class="flash-info">
+                                    <span><strong>Error</strong></span>
+                                    <span><%=val.msg%></span>
+                                </div>
+                                <div class="flash-close"><img src="/assets/icons/icons8-delete-96.png"/></div>
+                        </li>
+                    <% } %>
+                    <% for (let val of success_msg) {%>
+                        <li class="flash-style f-success">
+                                <div class="flash-info">
+                                    <span><strong>Success</strong></span>
+                                    <span><%=val.msg%></span>
+                                </div>
+                                <div class="flash-close"><img src="/assets/icons/icons8-delete-96.png"/></div>
+                        </li>
+                    <% } %>        
+            </ul>
+    
+        <div class="settings-wrapper">
+    
+            <header class="settings-header"><h1 style="color: #7f7f7f;">Settings</h1></header>
+    
+            <div class="settings-selection">                
+                <a href="/users/settings?tab=profile"><img class="nav-icons" src="/assets/icons/icons8-user-96.png" alt="profile"/><span class="setting-select-name">Profile</span></a>
+                <a href="/users/settings?tab=account"><img class="nav-icons" src="/assets/icons/icons8-settings-96.png" alt="Account Settings"/><span class="setting-select-name">Account Settings</span></a>
+                <a href="/users/settings?tab=account" class="settings-selected-a"><img class="nav-icons" src="/assets/icons/icons8-settings-96.png" alt="Account Settings"/><span class="setting-select-name">Websites</span></a>
+            </div>
+    
+            <div class="settings-options">
+    
+                <!-- Password change -->
+                <div class="acc-pass-change">
+                    <div class="acc-pass-divOne">
+                        <span class="settings-sub-heading">Site Name #1</span>
+                        <div class="acc-web-delete-edit">
+                            <form method="POST" action="/users/delete_website">
+                                <input type="hidden" name="webId" value="webId"/>
+                                <span style="cursor: pointer;" onclick="deleteWeb(this);">Delete</span>
+                            </form>
+                            <span class="set-edit acc-web-spacing">Edit</span>
+                        </div>
+                    </div>
+                        <form class="acc-web-div" method="POST" action="/users/change_password">
+                            <div class="acc-web-wrapper">
+                                <div class="acc-web-inner-div">
+                                    <label>Site Name</label>
+                                    <input type="password" name="currentPass"/>
+                                </div>
+                                <div class="acc-web-inner-div">
+                                    <label>Url</label>
+                                    <input type="password" name="newPass"/>
+                                </div>
+                                <div class="acc-web-inner-div">
+                                    <label>Description</label>
+                                    <input type="password" name="retypeNewPass"/>
+                                </div>
+                            </div>
+
+                            <div class="acc-web-wrapper">
+                                <div class="acc-web-inner-div">
+                                    <label>Type</label>
+                                    <input type="password" name="currentPass"/>
+                                </div>
+                                <div class="acc-web-inner-div">
+                                    <label>Category</label>
+                                    <input type="password" name="newPass"/>
+                                </div>
+                                <div class="acc-web-inner-div">
+                                    <label>Colors</label>
+                                    <input type="password" name="retypeNewPass"/>
+                                </div>
+                            </div>
+                    
+                            <div class="acc-website-save">
+                                <button type="submit">Save</button>
+                            </div>
+                        </form>
+                </div>
+
+
+            </div>
+    
+        </div>
+    
+    </section>
+    </body>
+    
+    <script>
+
+        //Initialize Function
+        let toDelete;
+
+        function deleteWeb(element) {
+            toDelete = element.parentNode;
+            $(".delete-overlay").css("display", "flex");
+        }
+
+        function closeOverlay() {
+            $(".delete-overlay").css("display","none");
+        }
+
+        $("#submitDelete").on("click", ()=> {
+            toDelete.submit();
+        });
+
+    
+        $("#email-input").on("focus", ()=> {
+            $("#email-change-submit").prop("disabled", false);
+        });
+    
+        $("#changePassShow").on("click", ()=> {
+            ($(".acc-pass-divTwo").css("display") == "flex") ? $(".acc-pass-divTwo").css("display", "none") : $(".acc-pass-divTwo").css("display", "flex");
+            $(".acc-port-divTwo").css("display", "none");
+        });
+    
+        $("#urlChangeShow").on("click", ()=> {
+            ($(".acc-port-divTwo").css("display") == "flex") ? $(".acc-port-divTwo").css("display", "none") : $(".acc-port-divTwo").css("display", "flex");
+            $(".acc-pass-divTwo").css("display", "none");
+        });
+    
+    </script>

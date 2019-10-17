@@ -250,6 +250,13 @@ exports.POST_comment = [
 
 /* Settings System   (KNOW THAT I INTENTIONALLY UNESCAPED DESCRIPTION AND BIO DUE TO LAZINESS)*/
 
+//Delete Website
+exports.POST_deleteWebsite = function(req, res, next) {
+
+    
+
+}
+
 //Update password
 exports.POST_changePassword = [
 

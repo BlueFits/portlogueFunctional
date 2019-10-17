@@ -645,6 +645,10 @@ exports.GET_settings = function(req, res, next) {
         case (`account`):
             renderSettings("settingsAccount");
             break;
+
+        case ("website"):
+            renderSettings("settingsWebsite");
+            break;
     }
 }
 
