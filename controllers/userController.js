@@ -797,14 +797,14 @@ exports.POST_first_Setup_Link = [
                     disableAnimations: true,
                     type: "jpeg",
                     quality: 0,
-                    /*launchOptions: {
+                    launchOptions: {
                         args: [
                             '--no-sandbox',
                             '--disable-setuid-sandbox',
                             '--disable-dev-shm-usage',
                             '--single-process'
                           ],
-                    }*/
+                    }
                 });
                 console.log(`capture website ran`);
             }; 
