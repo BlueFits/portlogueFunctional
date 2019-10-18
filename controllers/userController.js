@@ -267,6 +267,7 @@ exports.POST_addWebsite = [
         let errors = validationResult(req);
 
         let { siteName, url, description, type, category, colors } = req.body;
+
         if (!errors.isEmpty()) {
             req.flash("error", errors.array());
             res.redirect(req.get("Referrer"));
@@ -759,27 +760,25 @@ exports.POST_send_message = function(req, res, next) {
 exports.POST_first_Setup_Link = [
     
     //Validate Fields
-    body(`link`).isURL().withMessage(`The link you have entered is invalid`),
-    body(`websiteType`).isLength({ min: 1}).trim().withMessage(`Please choose a website type`),
+    body(`url`).isURL().withMessage(`The link you have entered is invalid`),
+    body(`type`).isLength({ min: 1}).trim().withMessage(`Please choose a website type`),
     body("siteName").isLength({ min: 1 }).trim().withMessage("Website name is required"),
     body("category").isLength({ min: 1 }).trim().withMessage("Need at least one category"),
-    body("color").isLength({ min: 1 }).trim().withMessage("Need at least one color"),
+    body("colors").isLength({ min: 1 }).trim().withMessage("Need at least one color"),
     body("description").isLength({ max: 500 }).optional({ checkFalsy: true }).withMessage("Max of 500 chars"),
 
     //Sanitize Fields
-    sanitizeBody(`link`),
-    sanitizeBody(`websiteType`).escape(),
-    sanitizeBody(`color`).escape(),
+    sanitizeBody(`url`),
+    sanitizeBody(`colors`).escape(),
 
     (req, res, next) => {
         //Initialize Validation
         let errors = validationResult(req);
 
         //Deconstruct
-        let { link, websiteType, siteName, category, color, description } = req.body;
+        let { url, type, siteName, category, colors, description } = req.body;
 
-        //Make colors and category an array
-        let colorArray = color.toLowerCase().split(" ");
+        
         
         //Check for errors
         if (!errors.isEmpty()) {
@@ -789,35 +788,48 @@ exports.POST_first_Setup_Link = [
         
         else {
 
+            let siteNameCopy = siteName.replace(/\ /g, "-").toLowerCase();
+            
             async function snap() {
-                await captureWebsite.file(req.body.link, `${req.user.email}-webthumbnail`, {
+                await captureWebsite.file(url, `${siteNameCopy}-webthumbnail`, {
                     width: 1024,
                     height: 576,
                     disableAnimations: true,
                     type: "jpeg",
                     quality: 0,
-                    launchOptions: {
+                    /*launchOptions: {
                         args: [
                             '--no-sandbox',
                             '--disable-setuid-sandbox',
                             '--disable-dev-shm-usage',
                             '--single-process'
                           ],
-                    }
+                    }*/
                 });
                 console.log(`capture website ran`);
             }; 
             snap().then((cb)=> {
+
+                //turn category and colors into an array
+                let categoryCopy = category;
+
+                let colorsCopy = colors;
+
+                let categoryArray = categoryCopy.toString().split(",");
+
+                let colorsArray = colorsCopy.toString().split(",");
+
+                
                 console.log(`Saving User`);
                 let newWebThumb = new Website({
                     owner: req.user._id,
-                    url: link,
+                    url,
                     siteName,
-                    type: websiteType,
-                    colors: colorArray,
-                    category,
+                    type,
+                    colors: colorsArray,
+                    category: categoryArray,
                     description,
-                    webThumb: { data: fs.readFileSync(path.join(__dirname, `../${req.user.email}-webthumbnail`)), contentType:`image/jpeg` },
+                    webThumb: { data: fs.readFileSync(path.join(__dirname, `../${siteNameCopy}-webthumbnail`)), contentType:`image/jpeg` },
                 });
 
                 //Update props
@@ -825,13 +837,15 @@ exports.POST_first_Setup_Link = [
                     console.log(`Website saved`);
                     if (err) {return next(err);}
                     //Delete image after Upload
-                    fs.unlink(path.join(__dirname, `../${req.user.email}-webthumbnail`), (err) => {
+                    fs.unlink(path.join(__dirname, `../${siteNameCopy}-webthumbnail`), (err) => {
                     if (err) throw `Error at userController fs.unlink`;
                     console.log(`File has been deleted`);
-                    res.redirect(`/`);
+                    req.flash("success", [{ msg: "Successfully added website" }]);
+                    res.redirect(req.get("Referrer"));
                     });
                 });
-            });            
+            });       
+            //    
         }
     }
     
