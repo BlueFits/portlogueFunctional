@@ -4,7 +4,7 @@
         <div class="delete-overlay-color"></div>
         <div class="delete-prompt">
             <span>Delete Website</span>
-            <span>Are you sure that you want to delete <strong>Site Name</strong></span>
+            <span>Are you sure that you want to delete <strong id="deleteName"></strong>?</span>
             <div>
                 <span onclick="closeOverlay()">Cancel</span>
                 <span id="submitDelete">Delete</span>
@@ -165,7 +165,7 @@
                         <div class="acc-web-delete-edit">
                             <form method="POST" action="/users/delete_website">
                                 <input type="hidden" name="webId" value="<%=website._id%>"/>
-                                <span style="cursor: pointer; margin-right: 10px;" onclick="deleteWeb(this);">Delete</span>
+                                <span data-name="<%=website.siteName%>" style="cursor: pointer; margin-right: 10px;" onclick="deleteWeb(this);">Delete</span>
                             </form>
                             <span data-webId="<%=website._id%>" onclick="getWebId(this)" class="set-edit">Edit</span>
                         </div>
@@ -312,6 +312,8 @@
 
         function deleteWeb(element) {
             toDelete = element.parentNode;
+            let websiteName = element.getAttribute("data-name");
+            $("#deleteName").html(websiteName);
             $(".delete-overlay").css("display", "flex");
         }
 
