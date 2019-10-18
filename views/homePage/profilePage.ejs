@@ -55,7 +55,7 @@
     <div class="profile-website-topbar">
         <span><%=webResults.length%> <%= webResults.length === 1 ? "Website" : "Websites"; %></span>
 
-        <a style="<%=friendVal.styleAddWebsite%>" href="/WillBeImplemented"><img class="nav-icons" src="/assets/icons/icons8-add-96.png"/><span>Add Website</span></a>
+        <a style="<%=friendVal.styleAddWebsite%>" href="/users/settings?tab=website"><img class="nav-icons" src="/assets/icons/icons8-add-96.png"/><span>Add Website</span></a>
     </div>
 
     <div class="discover-results">
@@ -67,7 +67,7 @@
                     <div>
                         <div onClick="getWebsite(this);" class="portfolio-thumbnail">
                             <div class="portfolio-thumbnail-bar"><!--Grey bar--></div>
-                            <div><img class="portfolio-thumbnail-img" src="/userWebThumb/<%=website.owner._id%>"/></div>
+                            <div><img class="portfolio-thumbnail-img" src="/webThumb/<%=website._id%>"/></div>
                         </div>
                     </div>
                     <div class="thumbnail-desc">

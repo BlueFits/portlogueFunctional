@@ -48,6 +48,115 @@
     
             <div class="settings-options">
 
+                <li>
+                    <div class="acc-web-add"><img style="margin-right: 5px;" class="nav-icons" src="/assets/icons/icons8-add-96.png"/><span>Add Website</span></div>
+                            <form id="add-web" class="acc-web-div" method="POST" action="/users/add_website">
+                                    <div class="acc-web-wrapper">
+                                        <div class="acc-web-inner-div">
+                                            <label for="siteName">Site Name</label>
+                                            <input required type="text" name="siteName" placeholder=""/>
+                                        </div>
+                                        <div class="acc-web-inner-div">
+                                            <label for="url">Url</label>
+                                            <input required type="url" name="url" placeholder=""/>
+                                        </div>
+                                        <div class="acc-web-inner-div">
+                                            <label for="description">Description</label>
+                                            <textarea placeholder="" name="description"></textarea>
+                                        </div>
+                                    </div>
+        
+                                    <div class="acc-web-wrapper">
+                                        <div class="acc-web-inner-div">
+                                            <label for="type">Type</label>
+                                            <select data-placeholder="" class="chosen-select" name="type">
+                                                <option value=""></option>
+                                                <option value="Personal Website">Personal Website</option>
+                                                <option value="E-Commerce">E-Commerce</option>
+                                                <option value="Photo Sharing Website">Photo Sharing Website</option>
+                                                <option value="Writers/Authors Websites<">Writers/Authors Websites</option>
+                                                <option value="Community Building Websites">Community Building Websites</option>
+                                                <option value="Mobile Device Websites">Mobile Device Websites</option>
+                                                <option value="Blogs">Blogs</option>
+                                                <option value="Informational Websites">Informational Websites</option>
+                                                <option value="Online Business Brochure/Catalog">Online Business Brochure/Catalog</option>
+                                            </select>
+                                        </div>
+                                        <div class="acc-web-inner-div">
+                                            <label for="category">Category</label>
+                                            <select data-placeholder="Edit category" multiple class="chosen-select" name="category">
+                                                    <option value="Architecture">Architecture</option>
+                                                    <option value="Art & Illustration">Art & Illustration</option>
+                                                    <option value="business & corporate">Business & Corporate</option>
+                                                    <option value="Business & Corporate">Culture & Education</option>
+                                                    <option value="Design Agencies">Design Agencies</option>
+                                                    <option value="Events">Events</option>
+                                                    <option value="Experimental">Experimental</option>
+                                                    <option value="Fashion">Fashion</option>
+                                                    <option value="Film & TV">Film & TV</option>
+                                                    <option value="Food & Drink">Food & Drink</option>
+                                                    <option value="Games & Entertainment">Games & Entertainment</option>
+                                                    <option value="Hotel/Restaurant">Hotel/Restaurant</option>
+                                                    <option value="Institutions">Institutions</option>
+                                                    <option value="Magazine/Newspaper/Blog">Magazine/Newspaper/Blog</option>
+                                                    <option value="Mobile & Apps">Mobile & Apps</option>
+                                                    <option value="Music & Sound">Music & Sound</option>
+                                                    <option value="Photography">Photography</option>
+                                                    <option value="Promotional">Promotional</option>
+                                                    <option value="Real Estate">Real Estate</option>
+                                                    <option value="Sports">Sports</option>
+                                                    <option value="Startups">Startups</option>
+                                                    <option value="Technology">Technology</option>
+                                                    <option value="Web & Interactive">Web & Interactive</option>
+                                                    <option value="Other">Other</option>
+                                                </select>
+                                        </div>
+                                        <div class="acc-web-inner-div">
+                                            <label for="colors">Colors</label>
+                                            <input id="newWebColors" type="hidden" name="colors"/>
+        
+                                            <div class="color-wrapper">
+                                                <div onclick="colorSelect(this)" data-color="black" class="color-shape">
+                                                    <div class="cc color-black"><!--Color --></div>
+                                                </div>
+                                                <div onclick="colorSelect(this)" data-color="blue" class="color-shape">
+                                                        <div class="cc color-blue"><!--Color --></div>
+                                                </div>
+                                                <div onclick="colorSelect(this)" data-color="brown" class="color-shape">
+                                                        <div class="cc color-brown"><!--Color --></div>
+                                                </div>
+                                                <div onclick="colorSelect(this)" data-color="turqoise" class="color-shape">
+                                                        <div class="cc color-turqoise"><!--Color --></div>
+                                                </div>
+                                                <div onclick="colorSelect(this)" data-color="orange" class="color-shape">
+                                                        <div class="cc color-orange"><!--Color --></div>
+                                                </div>
+                                                <div onclick="colorSelect(this)" data-color="pink" class="color-shape">
+                                                        <div class="cc color-pink"><!--Color --></div>
+                                                </div>
+                                                <div onclick="colorSelect(this)" data-color="red" class="color-shape">
+                                                        <div class="cc color-red"><!--Color --></div>
+                                                </div>
+                                                <div onclick="colorSelect(this)" data-color="grey" class="color-shape">
+                                                        <div class="cc color-grey"><!--Color --></div>
+                                                </div>
+                                                <div onclick="colorSelect(this)" data-color="white" class="color-shape">
+                                                        <div class="cc color-white"><!--Color --></div>
+                                                </div>
+                                                <div onclick="colorSelect(this)" data-color="yellow" class="color-shape">
+                                                        <div class="cc color-yellow"><!--Color --></div>
+                                                </div>
+                                            </div>
+        
+                                        </div>
+                                    </div>
+                            
+                                    <div class="acc-website-save">
+                                        <button type="submit">Add Website</button>
+                                    </div>
+                                </form>
+                </li>
+
                 <% for(website of Websites) { %>
     
                 <li class="acc-pass-change">
@@ -83,43 +192,43 @@
                                     <label for="type">Type</label>
                                     <select data-placeholder="<%=website.type%>" class="chosen-select" name="type">
                                         <option value=""></option>
-                                        <option value="Personal Website">Personal Website</option>
+                                        <option value="Personal-Website">Personal Website</option>
                                         <option value="E-Commerce">E-Commerce</option>
-                                        <option value="Photo Sharing Website">Photo Sharing Website</option>
-                                        <option value="Writers/Authors Websites<">Writers/Authors Websites</option>
-                                        <option value="Community Building Websites">Community Building Websites</option>
-                                        <option value="Mobile Device Websites">Mobile Device Websites</option>
+                                        <option value="Photo-Sharing-Website">Photo Sharing Website</option>
+                                        <option value="Writers/Authors-Websites<">Writers/Authors Websites</option>
+                                        <option value="Community-Building-Websites">Community Building Websites</option>
+                                        <option value="Mobile-Device-Websites">Mobile Device Websites</option>
                                         <option value="Blogs">Blogs</option>
-                                        <option value="Informational Websites">Informational Websites</option>
-                                        <option value="Online Business Brochure/Catalog">Online Business Brochure/Catalog</option>
+                                        <option value="Informational-Websites">Informational Websites</option>
+                                        <option value="Online-Business-Brochure/Catalog">Online Business Brochure/Catalog</option>
                                     </select>
                                 </div>
                                 <div class="acc-web-inner-div">
                                     <label for="category">Category</label>
                                     <select data-placeholder="Edit category" multiple class="chosen-select" name="category">
                                             <option value="Architecture">Architecture</option>
-                                            <option value="Art & Illustration">Art & Illustration</option>
-                                            <option value="business & corporate">Business & Corporate</option>
-                                            <option value="Business & Corporate">Culture & Education</option>
-                                            <option value="Design Agencies">Design Agencies</option>
+                                            <option value="Art-&-Illustration">Art & Illustration</option>
+                                            <option value="business-&-corporate">Business & Corporate</option>
+                                            <option value="Business-&-Corporate">Culture & Education</option>
+                                            <option value="Design-Agencies">Design Agencies</option>
                                             <option value="Events">Events</option>
                                             <option value="Experimental">Experimental</option>
                                             <option value="Fashion">Fashion</option>
-                                            <option value="Film & TV">Film & TV</option>
-                                            <option value="Food & Drink">Food & Drink</option>
-                                            <option value="Games & Entertainment">Games & Entertainment</option>
+                                            <option value="Film-&-TV">Film & TV</option>
+                                            <option value="Food-&-Drink">Food & Drink</option>
+                                            <option value="Games-&-Entertainment">Games & Entertainment</option>
                                             <option value="Hotel/Restaurant">Hotel/Restaurant</option>
                                             <option value="Institutions">Institutions</option>
                                             <option value="Magazine/Newspaper/Blog">Magazine/Newspaper/Blog</option>
-                                            <option value="Mobile & Apps">Mobile & Apps</option>
-                                            <option value="Music & Sound">Music & Sound</option>
+                                            <option value="Mobile-&-Apps">Mobile & Apps</option>
+                                            <option value="Music-&-Sound">Music & Sound</option>
                                             <option value="Photography">Photography</option>
                                             <option value="Promotional">Promotional</option>
-                                            <option value="Real Estate">Real Estate</option>
+                                            <option value="Real-Estate">Real Estate</option>
                                             <option value="Sports">Sports</option>
                                             <option value="Startups">Startups</option>
                                             <option value="Technology">Technology</option>
-                                            <option value="Web & Interactive">Web & Interactive</option>
+                                            <option value="Web-&-Interactive">Web & Interactive</option>
                                             <option value="Other">Other</option>
                                         </select>
                                 </div>
@@ -181,14 +290,10 @@
     
     <script>
 
-        $(".chosen-select").chosen({
-            no_results_text: "Nothing found"
-        });
-
         //Initialize Function
-        let toDelete;
+        let toDelete = null;
 
-        let websiteSelected;
+        let websiteSelected = null;
 
         let colorArray = [];
 
@@ -198,8 +303,11 @@
             colorArray = [];
             websiteSelected = element.getAttribute("data-webId");
 
-            $(".acc-web-div").css("visibility", "hidden");
-            $("#form"+websiteSelected).css("visibility","visible");
+            $(".acc-web-div").css("display", "none");
+            $("#form"+websiteSelected).css("display","flex");
+            //Chosen FIX
+            $(".chosen-select").chosen('destroy');
+            $(".chosen-select").chosen({ width: '60%' });
         }
 
         function deleteWeb(element) {
@@ -214,6 +322,16 @@
         //Delete Website
         $("#submitDelete").on("click", ()=> {
             toDelete.submit();
+        });
+
+        //add web
+        $(".acc-web-add").on("click", ()=> {
+            $(".acc-web-div").css("display", "none");
+            $(".color-shape").removeClass("active");
+            colorArray = [];
+            $("#add-web").css("display", "flex");
+            $(".chosen-select").chosen('destroy');
+            $(".chosen-select").chosen({ width: '60%' });
         });
 
         //Choose color value
@@ -248,12 +366,21 @@
             else {
                 colorArray.push(color);
             }
-            
-            let colorVal = colorArray.join(",");
-            
-            $(`#colors${websiteSelected}`).val(colorArray);
 
-            console.log($(`#colors${websiteSelected}`).val());
+            if (websiteSelected === null) {
+                console.log("new website");
+                $("#newWebColors").val(colorArray);
+                console.log($("#newWebColors").val());
+            }
+
+            else {
+                console.log("selected web");
+                $(`#colors${websiteSelected}`).val(colorArray);
+                console.log($(`#colors${websiteSelected}`).val());
+            }
+                        
         };
+
+
     
     </script>

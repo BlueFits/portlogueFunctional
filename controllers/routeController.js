@@ -101,7 +101,7 @@ exports.GET_websiteHover = function(req, res, next) {
 //GET user web thumb 
 exports.GET_webthumb =  function(req, res, next) {
 
-    Website.findOne({owner: req.params.id}).exec((err, result) => {
+    Website.findById(req.params.id).exec((err, result) => {
         if (err) {res.sendStatus(404); return;}
         
         if (result) {
@@ -354,7 +354,7 @@ exports.renderHome = function(req, res, next) {
 
     //Proceed Normally
     else {
-        renderDiscover(req, res, "new", {dateJoined: -1});
+        renderDiscover(req, res, "new", {date: -1});
     }
 
 };

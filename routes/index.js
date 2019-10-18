@@ -17,7 +17,7 @@ router.get(`/willBeImplemented`, (req, res, next)=> {
 });
 
 //GET user website thumbnail
-router.get(`/userWebThumb/:id`, routeController.GET_webthumb);
+router.get(`/webThumb/:id`, routeController.GET_webthumb);
 
 //GET user avatar 
 router.get(`/publicAvatar/:email`, uploadController.GET_publicAvtr);

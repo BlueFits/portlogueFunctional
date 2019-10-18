@@ -898,7 +898,7 @@ h3 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 720px;
+    min-height: 75vh;
 }
 
 .settings-options > div {
@@ -1223,10 +1223,19 @@ h3 {
     display: flex;
 }
 
+.acc-web-add {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    width: 20%;
+}
+
+#add-web {
+    display: none;
+}
 
 .acc-web-div {
-    visibility: hidden;
-    display: flex;
+    display: none;
     flex-direction: column;
     justify-content: space-between;
     margin-top: 20px;

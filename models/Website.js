@@ -24,5 +24,7 @@ WebsiteSchema.virtual("dateDisplay").get(function() {
 });
 
 
+//Choose how to display category
+
 
 module.exports = mongoose.model("Website", WebsiteSchema);

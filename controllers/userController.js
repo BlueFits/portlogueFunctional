@@ -250,6 +250,97 @@ exports.POST_comment = [
 
 /* Settings System   (KNOW THAT I INTENTIONALLY UNESCAPED DESCRIPTION AND BIO DUE TO LAZINESS)*/
 
+//Add Website
+exports.POST_addWebsite = [
+    
+    body("siteName").isLength({ min: 1 }).withMessage("Site name is required"),
+    body("url").isURL().withMessage("Invalid url"),
+    body("description").isLength({ max: 500 }).withMessage("Description has a max of 500 characters"),
+    body("type").isLength({ min: 1 }).withMessage("Wepsite type is required"),
+    body("category").isLength({ min:1 }).withMessage("Need at least one category"),
+    body("colors").isLength({ min: 1 }).withMessage("Need at least one color"),
+
+    sanitizeBody("colors").escape(),
+
+    function(req, res, next) {
+
+        let errors = validationResult(req);
+
+        let { siteName, url, description, type, category, colors } = req.body;
+        if (!errors.isEmpty()) {
+            req.flash("error", errors.array());
+            res.redirect(req.get("Referrer"));
+        }
+
+        else {
+
+            console.log(`${siteName} : ${url} : ${description} : ${type} : ${category} : ${colors}`);
+
+            //
+
+            let siteNameCopy = siteName.replace(/\ /g, "-").toLowerCase();
+            
+            async function snap() {
+                await captureWebsite.file(url, `${siteNameCopy}-webthumbnail`, {
+                    width: 1024,
+                    height: 576,
+                    disableAnimations: true,
+                    type: "jpeg",
+                    quality: 0,
+                    /*launchOptions: {
+                        args: [
+                            '--no-sandbox',
+                            '--disable-setuid-sandbox',
+                            '--disable-dev-shm-usage',
+                            '--single-process'
+                          ],
+                    }*/
+                });
+                console.log(`capture website ran`);
+            }; 
+            snap().then((cb)=> {
+
+                //turn category and colors into an array
+                let categoryCopy = category;
+
+                let colorsCopy = colors;
+
+                let categoryArray = categoryCopy.toString().split(",");
+
+                let colorsArray = colorsCopy.toString().split(",");
+
+                
+                console.log(`Saving User`);
+                let newWebThumb = new Website({
+                    owner: req.user._id,
+                    url,
+                    siteName,
+                    type,
+                    colors: colorsArray,
+                    category: categoryArray,
+                    description,
+                    webThumb: { data: fs.readFileSync(path.join(__dirname, `../${siteNameCopy}-webthumbnail`)), contentType:`image/jpeg` },
+                });
+
+                //Update props
+                newWebThumb.save(function(err, results) {
+                    console.log(`Website saved`);
+                    if (err) {return next(err);}
+                    //Delete image after Upload
+                    fs.unlink(path.join(__dirname, `../${siteNameCopy}-webthumbnail`), (err) => {
+                    if (err) throw `Error at userController fs.unlink`;
+                    console.log(`File has been deleted`);
+                    req.flash("success", [{ msg: "Successfully added website" }]);
+                    res.redirect(req.get("Referrer"));
+                    });
+                });
+            });       
+            //
+            
+        }
+    }
+]
+
 //Edit Website
 exports.POST_editWebsite = [
 
@@ -292,7 +383,7 @@ exports.POST_editWebsite = [
 
                 (!categoryCopy) ? console.log("Category Undefined") : categoryArray = categoryCopy.toString().split(",") ;
 
-                (!colorsCopy) ? console.log("Colors Undefined") : colorsArray = colorsCopy.toString().split(","); ;
+                (!colorsCopy) ? console.log("Colors Undefined") : colorsArray = colorsCopy.toString().split(",");
 
                 let webUpdate = {
                     $set: {
@@ -322,7 +413,6 @@ exports.POST_editWebsite = [
 
 //Delete Website
 exports.POST_deleteWebsite = function(req, res, next) {
-
 
     Website.findByIdAndRemove(req.body.webId, {}, (err)=> {
         if (err) {return next(err);}
