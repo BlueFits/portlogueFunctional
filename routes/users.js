@@ -28,6 +28,9 @@ router.get("/website_hover/:id", ensureAuth, routeController.GET_websiteHover);
 
 router.post("/website_hover/:id", ensureAuth, userController.POST_comment);
 
+//Website edit
+router.post("/edit_website", ensureAuth, userController.POST_editWebsite);
+
 //Website Delete
 router.post("/delete_website", ensureAuth, userController.POST_deleteWebsite);
 

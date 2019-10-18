@@ -9,7 +9,7 @@ const WebsiteSchema = new Schema({
     siteName: { type: String, required: true, lowercase: true },
     type: { type: String, required: true, lowercase: true },
     colors: [{ type: String, required: false, lowercase: true }],
-    category:{ type: String, required: true, lowercase: true },
+    category:[{ type: String, lowercase: true }],
     description: { type: String, required: false, max: 500 },
     comments: [{ type: Schema.Types.ObjectId, ref: "Comments" }],
     likes: { type: Number, default: 0, min: 0 },
@@ -23,10 +23,6 @@ WebsiteSchema.virtual("dateDisplay").get(function() {
     return moment(this.date).format("MMMM Do, YYYY");
 });
 
-//Category Display return random category
-WebsiteSchema.virtual("categoryDisplay").get(function() {
-    return this.category.replace(this.category[0], this.category[0].toUpperCase());
-});
 
 
 module.exports = mongoose.model("Website", WebsiteSchema);

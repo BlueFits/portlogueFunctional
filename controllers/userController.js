@@ -250,10 +250,85 @@ exports.POST_comment = [
 
 /* Settings System   (KNOW THAT I INTENTIONALLY UNESCAPED DESCRIPTION AND BIO DUE TO LAZINESS)*/
 
+//Edit Website
+exports.POST_editWebsite = [
+
+    body("description").isLength({ max: 500 }).withMessage("Description has a max of 500 characters"),
+
+    sanitizeBody("url").escape(),
+    sanitizeBody("colors").escape(),
+
+    function(req, res, next) {
+        
+        let errors = validationResult(req);
+
+        let { websiteId, siteName, url, description, type, category, colors } = req.body;
+
+        if ( (!siteName && !url && !description && !type && !category && !colors) ) {
+            req.flash("error", [{ msg: "No changes made" }]);
+            res.redirect(req.get("Referrer"));
+            return
+        }
+
+        if (!errors.isEmpty()) {
+            req.flash("error", errors.array());
+            res.redirect(req.get("Referrer"));
+            return
+        }
+
+        else {
+            
+            Website.findById(websiteId).exec((err, website)=> {
+                if (err) {return next(err);}
+
+                //turn category and colors into an array
+                let categoryCopy = category || null;
+
+                let colorsCopy = colors || null;
+
+                let categoryArray = null;
+
+                let colorsArray = null;
+
+                (!categoryCopy) ? console.log("Category Undefined") : categoryArray = categoryCopy.toString().split(",") ;
+
+                (!colorsCopy) ? console.log("Colors Undefined") : colorsArray = colorsCopy.toString().split(","); ;
+
+                let webUpdate = {
+                    $set: {
+                        siteName: siteName || website.siteName,
+                        url: url || website.url,
+                        description: description || website.description,
+                        type: type || website.type,
+                        category: categoryArray || website.category,
+                        colors: colorsArray || website.colors
+                    }
+                };
+
+                Website.findByIdAndUpdate(websiteId, webUpdate, {}, (err, updateRes)=> {
+                    if (err) {return next(err);}
+                    req.flash("success", [{ msg: "Successfully updated website" }]);
+                    res.redirect(req.get("Referrer"));
+                });
+
+            });
+
+        }
+
+    }
+
+
+]
+
 //Delete Website
 exports.POST_deleteWebsite = function(req, res, next) {
 
-    
+
+    Website.findByIdAndRemove(req.body.webId, {}, (err)=> {
+        if (err) {return next(err);}
+        req.flash("success", [{ msg: "Successfully removed website" }]);
+        res.redirect(req.get("Referrer"));
+    });
 
 }
 

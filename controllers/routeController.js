@@ -599,16 +599,23 @@ exports.GET_confirmation = function(req, res, next) {
 exports.GET_settings = function(req, res, next) {
     //render setting page with friendStat
     function renderSettings(settingTab) {
-        FriendStatus.find({"requestTo": req.user._id}).populate(`requestFrom`).exec((err, fstatRes)=> {
-            if (err) {
-                console.log(`renderHome > fstatRes`) 
-                return next(err);
+
+        //
+        async.parallel({
+
+            friends: (cb)=> {
+                FriendStatus.find({ requestTo: req.user._id }).populate("requestFrom").exec(cb);
+            },
+            websites: (cb)=> {
+                Website.find({ owner: req.user._id }).exec(cb);
             }
-            //Filter active users from inactive users
-    
+
+        }, (err, async)=> {
+            if (err) {return next(err);}
+
             let fStatDisplay = [];
     
-            for (let val of fstatRes) {
+            for (let val of async.friends) {
                 if (val.status === 1) {
                     fStatDisplay.push(val);
                 }
@@ -616,7 +623,19 @@ exports.GET_settings = function(req, res, next) {
                             
                 }
             }
-    
+
+            //User has no websites
+            if (async.websites.length === 0) {
+                res.render(`settings/${settingTab}`, { Websites: [], layout: `homePage/homeLayout`, User: req.user, errors: [], friendRequests: fStatDisplay, selectCountry: require(`../arrayList/arrays`).countryList});
+                return;
+            }
+
+            else {
+                res.render(`settings/${settingTab}`, { Websites: async.websites, layout: `homePage/homeLayout`, User: req.user, errors: [], friendRequests: fStatDisplay, selectCountry: require(`../arrayList/arrays`).countryList});
+                return;
+            }
+
+            /*
             if (fStatDisplay.length === 0) {
                 console.log(`No requests`);
                 //Add a function if fStat is empty
@@ -628,11 +647,14 @@ exports.GET_settings = function(req, res, next) {
                 res.render(`settings/${settingTab}`, {layout: `homePage/homeLayout`, User: req.user, errors: [], friendRequests: fStatDisplay, selectCountry: require(`../arrayList/arrays`).countryList});
                 return;
             }
+            */
+
         });
+
+        //
     }
 
     let tab = req.query.tab;
-    console.log(tab);
     switch (tab) {
         case (undefined): 
             renderSettings("settingsProfile");

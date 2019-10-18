@@ -27,9 +27,8 @@
 
         <% for(let website of webResults) { %>
             <li class="portfolio-select">
-                <span style="display: none;"><%=website._id%></span>
                 <div>
-                    <div onClick="getWebsite(this);" class="portfolio-thumbnail">
+                    <div onClick="getWebsite(this);" data-website="<%=website._id%>" class="portfolio-thumbnail">
                         <div class="portfolio-thumbnail-bar"><!--Grey bar--></div>
                         <div><img class="portfolio-thumbnail-img" src="/userWebThumb/<%=website.owner._id%>"/></div>
                     </div>
@@ -38,7 +37,7 @@
                     <div class="profile-name-wrapper">
                         <a href="/users/profile/<%=website.owner.username%>"><div class="thumb-profile-wrapper"><img class="thumbnail-profile-img" src="/publicAvatar/<%=website.owner.email%>"/></div><%=website.owner.fullName%></a>
                     </div>
-                    <span class="occupation-flex"><%=website.categoryDisplay%></span>
+                    <span class="occupation-flex">NOT FUNCITONAL</span>
                 </div>
             </li>
         <% } %>
@@ -72,7 +71,7 @@ let websiteId;
 
 //Function to grab info from chosen website
 function getWebsite(element) {
-    websiteId = element.parentNode.parentNode.childNodes[1].textContent;
+    websiteId = element.getAttribute("data-website");
 }
 
 //Display website now that websiteDisplay has value
