@@ -1958,6 +1958,10 @@ footer li {
     margin: 0 2px 0 5px;
 }
 
+.profile-occupation {
+    color: #bbbbbb;
+}
+
 .profile-bio {
     color: #7f7f7f;
 }

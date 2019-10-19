@@ -33,6 +33,34 @@ function arrayLimit(val) {
 
 /* Virtual for user Schema (DO NOT USER ARROW FUNCTIONS IN VIRTUALS)*/
 
+//Occupation Display
+UserSchema.virtual("occupationShort").get(function() {
+
+    let arrayFilter = [];
+
+    for (let i = 0; i < 3; i++) {
+        if (this.occupation[i]) {
+            arrayFilter.push(this.occupation[i]);
+        }
+    }
+
+    let stringDisplay = arrayFilter.join(", ")
+
+    stringDisplay = stringDisplay.replace(stringDisplay[0], stringDisplay[0].toUpperCase());
+
+    let toDisplay = stringDisplay.split(" ").map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(" ");
+
+    return toDisplay.replace(/-/g, " ") + "...";
+});
+
+UserSchema.virtual("occupationFull").get(function() {
+    let stringDisplay = this.occupation.join(", ")
+
+    stringDisplay = stringDisplay.replace(stringDisplay[0], stringDisplay[0].toUpperCase());
+
+    return stringDisplay.split(" ").map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(" ");
+});
+
 //For full name
 UserSchema.virtual(`fullName`).get(function() {
     let first = this.firstName.replace(this.firstName[0], this.firstName[0].toUpperCase());
