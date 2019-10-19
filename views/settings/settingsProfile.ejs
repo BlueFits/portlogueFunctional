@@ -27,7 +27,7 @@
         <div class="settings-selection">                
                 <a href="/users/settings?tab=profile" class="settings-selected-a"><img class="nav-icons" src="/assets/icons/icons8-user-96.png" alt="profile"/><span class="setting-select-name">Profile</span></a>
                 <a href="/users/settings?tab=account"><img class="nav-icons" src="/assets/icons/icons8-settings-96.png" alt="Account Settings"/><span class="setting-select-name">Account Settings</span></a>
-                <a href="/users/settings?tab=website"><img class="nav-icons" src="/assets/icons/icons8-settings-96.png" alt="Account Settings"/><span class="setting-select-name">Websites</span></a>
+                <a href="/users/settings?tab=website"><img class="nav-icons" src="/assets/icons/icons8-website-96.png" alt="Account Settings"/><span class="setting-select-name">Websites</span></a>
         </div>
 
         <div class="settings-options">
@@ -111,13 +111,14 @@
                             </div>
                             <div class="aboutYou-info-div">
                                 <div class="aboutYou-info-input">
-                                    <label for="occupation-setting">Occupation</label>
-                                    <select name='occupation'>
-                                            <option value="" disabled selected hidden>Select your option</option>
-                                            <% for(let val of selectCountry) {%>
-                                                <option value="<%= val %>"><%= val%></option>
-                                            <% } %>
-                                    </select>
+                                        <label for="occupation">Occupation</label>
+                                        <select data-placeholder="" multiple class="chosen-select" name="occupation">
+                                            <%for (let val of occupation) {%>   
+                        
+                                                <option value="<%=val.replace(/\s+/g,'-')%>"><%=val%></option>
+                                                
+                                            <% } %>      
+                                        </select>
                                 </div>
                                 <div class="aboutYou-info-input">
                                         <label for="bio-setting">Bio</label>
@@ -142,6 +143,11 @@
 
 $( document ).ready(()=> {
 
+    $(".chosen-select").chosen({ width: '60%' });
+
+    $(".chosen-drop").on("click", ()=> {
+        $("#aboutYou-save").prop("disabled", false);
+    });
 
     $(`#set-changeAvatar`).on("click", ()=> {
         $(`.set-avatarChange-form`).toggle();

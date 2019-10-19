@@ -560,11 +560,16 @@ exports.POST_aboutYou = [
             res.redirect(req.get(`Referrer`));
         }
         else {
+
+            let occupationCopy = occupation;
+
+            let occupationArray = occupationCopy.toString().split(",");
+
             let userAboutYou = {
                 $set: {
                     country: country || req.user.country,
                     postalCode: postalCode || req.user.postalCode,
-                    occupation: occupation || req.user.occupation,
+                    occupation: occupationArray || req.user.occupation,
                     bio: bio || req.user.bio
                 }
             };
@@ -777,8 +782,6 @@ exports.POST_first_Setup_Link = [
 
         //Deconstruct
         let { url, type, siteName, category, colors, description } = req.body;
-
-        
         
         //Check for errors
         if (!errors.isEmpty()) {
@@ -797,14 +800,14 @@ exports.POST_first_Setup_Link = [
                     disableAnimations: true,
                     type: "jpeg",
                     quality: 0,
-                    launchOptions: {
+                    /*launchOptions: {
                         args: [
                             '--no-sandbox',
                             '--disable-setuid-sandbox',
                             '--disable-dev-shm-usage',
                             '--single-process'
                           ],
-                    }
+                    }*/
                 });
                 console.log(`capture website ran`);
             }; 
@@ -887,11 +890,15 @@ exports.POST_first_Setup_Profile = [
 
         else {
 
+            let occupationCopy = occupation;
+
+            let occupationArray = occupationCopy.toString().split(",");
+
             let user = {
                 $set: {
                     emailDisplay,
                     phone,
-                    occupation: occupation.toString(),
+                    occupation: occupationArray,
                     bio
                 }
             };

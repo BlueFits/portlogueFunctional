@@ -23,6 +23,17 @@ WebsiteSchema.virtual("dateDisplay").get(function() {
     return moment(this.date).format("MMMM Do, YYYY");
 });
 
+//Type display
+WebsiteSchema.virtual("typeDisplay").get(function() {
+    let type = this.type.replace(/-/g, " ");
+    return type.toLowerCase().split(" ").map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(" ");
+});
+
+//Site name
+WebsiteSchema.virtual("sitenameDisplay").get(function() {
+    return this.siteName.toLowerCase().split(" ").map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(" ");
+});
+
 
 //Choose how to display category
 

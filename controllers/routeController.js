@@ -322,8 +322,11 @@ exports.GET_first_Setup_CountryandPostal = function(req, res, next) {
 
 exports.GET_first_Setup_Profile = function(req, res, next) {
     //Only run on user's very first login
-    if ((req.user.emailDisplay === `n/a`) && (req.user.occupation === `n/a`)) {
-        res.render(`firstSetup/setupProfile`, { errors: [], User: req.user });
+    if ((req.user.emailDisplay === `n/a`) && (req.user.occupation.length === 0)) {
+        console.log(`Setup Profile log ${req.user.occupation.length}`);
+        //load occupation array
+        let occupationList = require("../arrayList/arrays").occupationList();
+        res.render(`firstSetup/setupProfile`, { errors: [], User: req.user, occupationList });
     }
     else {
         res.redirect(`/users/first_time_setup_avatar`);
@@ -598,7 +601,7 @@ exports.GET_confirmation = function(req, res, next) {
 
 exports.GET_settings = function(req, res, next) {
     //render setting page with friendStat
-    function renderSettings(settingTab) {
+    function renderSettings(settingTab, arrayExtra = []) {
 
         //
         async.parallel({
@@ -614,6 +617,7 @@ exports.GET_settings = function(req, res, next) {
             if (err) {return next(err);}
 
             let fStatDisplay = [];
+            
     
             for (let val of async.friends) {
                 if (val.status === 1) {
@@ -622,6 +626,11 @@ exports.GET_settings = function(req, res, next) {
                 else {
                             
                 }
+            }
+
+            if (arrayExtra.length > 0) {
+                res.render(`settings/${settingTab}`, { occupation: arrayExtra, Websites: [], layout: `homePage/homeLayout`, User: req.user, errors: [], friendRequests: fStatDisplay, selectCountry: require(`../arrayList/arrays`).countryList});
+                return;
             }
 
             //User has no websites
@@ -655,13 +664,14 @@ exports.GET_settings = function(req, res, next) {
     }
 
     let tab = req.query.tab;
+    
     switch (tab) {
         case (undefined): 
-            renderSettings("settingsProfile");
+            renderSettings("settingsProfile", require("../arrayList/arrays").occupationList());
             break;
 
         case (`profile`):
-            renderSettings("settingsProfile");
+            renderSettings("settingsProfile", require("../arrayList/arrays").occupationList());
             break;
             
         case (`account`):

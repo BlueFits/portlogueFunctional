@@ -20,7 +20,13 @@
         </div>
         <div class="country-2-div">
                 <label for="occupation">Occupation</label>
-                <input type="text" name="occupation"/>
+                <select data-placeholder="" multiple class="chosen-select" name="occupation">
+                    <%for (let occupation of occupationList) {%>   
+
+                        <option value="<%=occupation.replace(/\s+/g,'-')%>"><%=occupation%></option>
+                        
+                    <% } %>      
+                </select>
         </div>
         <div class="country-2-div">
                 <label for="bio">Bio</label>
@@ -40,6 +46,10 @@
 </div>
 
 <script>
+
+        $(".chosen-select").chosen({ width: 500 });
+
+
         $(`.setup-button`).on(`click`, ()=> {
             $(`.setup-button`).attr(`disabled`,`true`);
             $(`.setup-button`).html(`<div class="loader"></div>`);

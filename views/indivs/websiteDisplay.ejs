@@ -36,7 +36,7 @@
                 <div class="hover-header">
                     <a target="_parent" href="/users/profile/<%=owner.username%>" class="hover-avatar-wrapper"><img style="height:100%;" src="/publicAvatar/<%=owner.email%>"/></a>
                     <span class="sitename-fullname">
-                        <span><h3><%-website.siteName%></h3></span>
+                        <span><h3><%-website.sitenameDisplay%></h3></span>
                         <a target="_parent" href="/users/profile/<%=owner.username%>" class="h3-sub hover-head-fullname">By <span style="color:#3498db;"><%=owner.fullName%></span></a>
                     </span>
                 </div>
@@ -143,6 +143,7 @@
             $("#likeButton").addClass("liked");
             $("#likeButton > img").attr("src", "/assets/icons/icons8-facebook-like-96-white.png");
             $("#likeButton span").html(webLikes + 1);
+            webLikes = webLikes + 1;
             likeStatus = true;
         }
 
@@ -150,6 +151,7 @@
             $("#likeButton").removeClass("liked");
             $("#likeButton > img").attr("src", "/assets/icons/icons8-facebook-like-96.png");
             $("#likeButton span").html(webLikes - 1);
+            webLikes = webLikes - 1;
             likeStatus = false;
         }
     });
