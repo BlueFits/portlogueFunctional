@@ -1644,17 +1644,49 @@ h3 {
     transition: 0.1s ease-in-out;
 }
 
-.filter-dropdown {
-    border-bottom: 1px solid #bbbbbb;
+.align-filter-dropdown {
+    width: 100px;
+    height: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
-    list-style: none;
-    height: 60px;
-    background-color: #ffffff;
 }
 
-.filter-dropdown > li {
+.align-filter-dropdown.clear-filter {
+    cursor: pointer;
+    color: #bbbbbb;
+    overflow: hidden;
+}
+
+.align-filter-dropdown.clear-filter:hover {
+    color: #7f7f7f;
+}
+
+.filter-dropdown {
+    border: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 0px;
+    background-color: #ffffff;
+    transition: 0.1s ease-in-out;
+}
+
+.filter-dropdown.filter-active {
+    height: 60px;
+    border-bottom: 1px solid #bbbbbb;
+}
+
+.filter-dropdown-li {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    height: 100%;
+    background-color: #ffffff;
+    transition: 0.1s ease-in-out;
+}
+
+.filter-dropdown-li > li {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1665,7 +1697,7 @@ h3 {
     position: relative;
 }
 
-.filter-dropdown > li > span {
+.filter-dropdown-li > li > span {
     width: 100%;
     display: flex;
     justify-content: center;
@@ -1673,7 +1705,7 @@ h3 {
     height: 100%;
 }
 
-.filter-dropdown > li:last-of-type {
+.filter-dropdown-li> li:last-of-type {
     border-right: 1px solid #bbbbbb;
 }
 
@@ -1689,17 +1721,22 @@ h3 {
     width: 100%;
     height: 100%;
     transition: 0.1s ease-in-out;
+    cursor: pointer;
 }
 
 #countryDiscId:focus, #colorDiscId:focus, #categoryId:focus, #typeId:focus {
     border: 2px solid black;
 }
 
+#typeId-dropdown, #categoryId-dropdown, #colorDisc-dropdown, #country-dropdown {
+    display: none;
+}
+
 .sub-dropdown {
     border-radius: 0 0 5px 5px;
     background-color: #ffffff;
     max-height: 480px;
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: hidden;
     width: 200px;
     position: absolute;
@@ -1707,6 +1744,11 @@ h3 {
     top: 0;
     margin-top: 60px;
     box-shadow: 0 0 5px -1px grey;
+}
+
+.sub-dropdown > li:hover {
+    background-color: grey;
+    color: #ffffff;
 }
 
 .qry-type {
@@ -1747,11 +1789,13 @@ h3 {
     font-size: 18px;
 }
 
-.discover-nav > ul > li {
+.discover-nav-li {
     margin: 0 20px;
+    padding: 5px 10px;
+    border-radius: 4px;
 }
 
-.discover-nav > ul > li > a{
+.discover-nav-li > a{
     text-decoration: none;
     color: #bbbbbb;
 }

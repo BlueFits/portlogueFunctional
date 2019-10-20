@@ -3,16 +3,19 @@
 <nav class="discover-nav">
     <div class="for-allign"><!-- For allignment --></div>
                 <ul>
-                    <li><a href="/discover/new">New</a></li>
-                    <li><a href="/discover/highest_rated">Highest Rated</a></li>
-                    <li><a href="/discover/most_viewed">Most Viewed</a></li>
-                    <li><a href="/discover/friends">Friends</a></li>
+                    <li class="discover-nav-li"><a href="/discover/new">New</a></li>
+                    <li class="discover-nav-li"><a href="/discover/highest_rated">Highest Rated</a></li>
+                    <li class="discover-nav-li"><a href="/discover/most_viewed">Most Viewed</a></li>
+                    <li class="discover-nav-li"><a href="/discover/friends">Friends</a></li>
                 </ul>
     <div class="for-allign">
         <div id="filterIcon" class="filterLabel"><img src="/assets/icons/icons8-filter-96.png" class="nav-icons"/><span class="filter-icon-span">Filters</span></div>
     </div>
 </nav>
 <ul class="filter-dropdown">
+    <div class="align-filter-dropdown"><!-- For allignment --></div>
+
+        <div class="filter-dropdown-li">
         <li>
             <span><input onkeyup="filterLi('typeId-dropdown','typeId')" id="typeId"/></span>
             <ul id="typeId-dropdown" class="sub-dropdown">
@@ -72,7 +75,7 @@
             </ul>
         </li>
         <li>
-            <span><input onkeyup="filterLi('country-dropdown','countryDiscId')" id="countryDiscId" placeholder="Country"/></span>
+            <span><input onkeyup="filterLi('country-dropdown','countryDiscId')" id="countryDiscId" placeholder="<%=filter.country || 'Country'%>"/></span>
             <ul id="country-dropdown" class="sub-dropdown">
                 <%-(function(countryList) {
                     let toDisplay = [];
@@ -83,6 +86,9 @@
                 }(countryArray))%>
             </ul>
         </li>
+    </div>
+
+        <div class="align-filter-dropdown clear-filter"><span id="clearFilterId">Clear filters</span></div>
 </ul>
     <div class="discover-results">
     <ul class="discover-results-ul" id="userQry"><!-- Custom Limited-->
@@ -133,6 +139,37 @@
 
 <script>
 
+//Initialize websiteDisplay
+let websiteId;
+
+let filterFront = <%-JSON.stringify(filter)%>;
+
+let pageSection = <%-JSON.stringify(pageSection)%>
+
+switch (pageSection) {
+    case "new":
+        $(".discover-nav-li:first-of-type").css("background", "grey");
+        $(".discover-nav-li:first-of-type > a").css("color", "#ffffff");
+        break;
+    case "highest_rated":
+        $(".discover-nav-li:nth-of-type(2)").css("background", "grey");
+        $(".discover-nav-li:nth-of-type(2) > a").css("color", "#ffffff");
+        break;
+    case "most_viewed":
+        $(".discover-nav-li:nth-of-type(3)").css("background", "grey");
+        $(".discover-nav-li:nth-of-type(3) > a").css("color", "#ffffff");
+        break;
+}
+
+
+    //Check if params is empty
+    for (let val in location.params()) {
+        if (location.params().hasOwnProperty(val)) {
+            $(".filter-dropdown").css("transition", "0s")
+            $(".filter-dropdown").addClass("filter-active");
+        }
+    }
+
 function filterLi(ulId, inputId) {
 
     let input, filter, ul, li, a, i, txtValue;
@@ -153,40 +190,71 @@ function filterLi(ulId, inputId) {
     }
 }
 
-//Initialize websiteDisplay
-let websiteId;
+//Clear Filter 
+$("#clearFilterId").on("click", ()=> {
+    window.location = window.location.href.split("?")[0];
+})
 
-let filterFront = <%-JSON.stringify(filter)%>;
+//Show and hide typeId
+$("#typeId").on("click", ()=> {
+    $("#typeId-dropdown").css("display", "block");
+})
+$("#typeId").on("clickout", ()=> {
+    $("#typeId-dropdown").css("display", "none");
+})
+
+//Show category and hide
+$("#categoryId").on("click", ()=> {
+    $("#categoryId-dropdown").css("display", "block");
+})
+$("#categoryId").on("clickout", ()=> {
+    $("#categoryId-dropdown").css("display", "none");
+})
+
+//Show color and hide
+$("#colorDiscId").on("click", ()=> {
+    $("#colorDisc-dropdown").css("display", "block");
+})
+$("#colorDiscId").on("clickout", ()=> {
+    $("#colorDisc-dropdown").css("display", "none");
+})
+
+//Show country and hide
+$("#countryDiscId").on("click", ()=> {
+    $("#country-dropdown").css("display", "block");
+})
+$("#countryDiscId").on("clickout", ()=> {
+    $("#country-dropdown").css("display", "none");
+})
 
 //Render web properly
-
     switch(filterFront.colors) {
         case ("black"):
-            $("#colorDiscId").html("Black");
+            $("#colorDiscId").attr("placeholder","Black");
             break;
             case ("blue"):
-            $("#colorDiscId").html("Blue");
+            $("#colorDiscId").attr("placeholder","Blue");
             break;
             case ("brown"):
-            $("#colorDiscId").html("Brown");
+            $("#colorDiscId").attr("placeholder","Brown");
             break;
             case ("turqoise"):
-            $("#colorDiscId").html("Turqoise");
+            $("#colorDiscId").attr("placeholder","Turqoise");
             break;
             case ("orange"):
-            $("#colorDiscId").html("orange");
+            $("#colorDiscId").attr("placeholder","orange");
             break;
             case ("pink"):
-            $("#colorDiscId").html("Pink");
+            $("#colorDiscId").attr("placeholder","Pink");
             break;
             case ("red"):
-            $("#colorDiscId").html("Red");
+            $("#colorDiscId").attr("placeholder","Red");
             break;
             case ("grey"):
-            $("#colorDiscId").html("Grey");
+            $("#colorDiscId").attr("placeholder","Grey");
             break;
             case ("white"):
-            $("#colorDiscId").html("White");
+            $("#colorDiscId").attr("placeholder","White");
             break;
             case ("yellow"):
             $("#colorDiscId").attr("placeholder", "Yellow");
