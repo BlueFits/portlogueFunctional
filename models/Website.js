@@ -5,6 +5,7 @@ const Schema = mongoose.Schema;
 
 const WebsiteSchema = new Schema({
     owner: { type: Schema.Types.ObjectId, ref: "User" },
+    country: { type: String, lowercase: true },
     url: { type:String, required: true, lowercase: true },
     siteName: { type: String, required: true, lowercase: true },
     type: { type: String, required: true, lowercase: true },
@@ -23,16 +24,48 @@ WebsiteSchema.virtual("dateDisplay").get(function() {
     return moment(this.date).format("MMMM Do, YYYY");
 });
 
-//Type display
-WebsiteSchema.virtual("typeDisplay").get(function() {
-    let type = this.type.replace(/-/g, " ");
-    return type.toLowerCase().split(" ").map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(" ");
-});
-
 //Site name
 WebsiteSchema.virtual("sitenameDisplay").get(function() {
     return this.siteName.toLowerCase().split(" ").map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(" ");
 });
+
+//Website type
+WebsiteSchema.virtual("typeDisplay").get(function() {
+
+    let toDisplay = null;
+
+    switch (this.type) {
+        case "personal":
+            toDisplay = "Personal Website";
+            break;
+        case "ecommerce":
+            toDisplay = "E-commerce";
+            break;
+        case "photosharing":
+            toDisplay = "Photo Sharing Website";
+            break;
+        case "writers":
+            toDisplay = "Writers/Authors Website";
+            break;
+        case "community":
+            toDisplay = "Community Building Website";
+            break;
+        case "mobile":
+            toDisplay ="Mobile Device Website";
+            break;
+        case "blogs":
+            toDisplay ="Blog";
+            break
+        case "informational":
+            toDisplay ="Informational Website";
+            break;
+        case "online-business":
+            toDisplay ="Online Business Brochure/Catalog";
+            break;    
+    }
+
+    return toDisplay;
+})
 
 
 //Choose how to display category

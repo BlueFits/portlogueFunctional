@@ -10,18 +10,80 @@
                 </ul>
     <div class="for-allign">
         <div id="filterIcon" class="filterLabel"><img src="/assets/icons/icons8-filter-96.png" class="nav-icons"/><span class="filter-icon-span">Filters</span></div>
-        <ul class="filter-dropdown">
-            <li><a href="/discover/<%=pageSection%>?filter=generalportfolio">General Portfolio</a></li>
-            <li><a href="/discover/<%=pageSection%>?filter=creativeportfolio">Creative Portfolio</a></li>
-            <li><a href="/discover/<%=pageSection%>?filter=artportfolio">Art Portfolio</a></li>
-            <li><a href="/discover/<%=pageSection%>?filter=photographyportfolio">Photography Portfolio</a></li>
-            <li><a href="/discover/<%=pageSection%>?filter=videographyportfolio">Videography Portfolio</a></li>
-            <li><a href="/discover/<%=pageSection%>?filter=academicportfolio">Academic Portfolio</a></li>
-            <li><a href="/discover/<%=pageSection%>?filter=professionalportfolio">Professional Portfolio</a></li>
-            <li><a href="/discover/<%=pageSection%>?filter=businessportfolio">Business Portfolio</a></li>
-        </ul>
     </div>
 </nav>
+<ul class="filter-dropdown">
+        <li>
+            <span><input onkeyup="filterLi('typeId-dropdown','typeId')" id="typeId"/></span>
+            <ul id="typeId-dropdown" class="sub-dropdown">
+                    <li onclick="loadQry(this)" data-type="personal" data-filter="type" class="qry-type"><span>Personal</span></li>
+                    <li onclick="loadQry(this)" data-type="ecommerce" data-filter="type" class="qry-type"><span>E-Commerce</span></li>
+                    <li onclick="loadQry(this)" data-type="photosharing" data-filter="type" class="qry-type"><span>Photo Sharing</span></li>
+                    <li onclick="loadQry(this)" data-type="writers" data-filter="type" class="qry-type"><span>Writers/Authors</span></li>
+                    <li onclick="loadQry(this)" data-type="community" data-filter="type" class="qry-type"><span>Community Building</span></li>
+                    <li onclick="loadQry(this)" data-type="mobile" data-filter="type" class="qry-type"><span>Mobile Device</span></li>
+                    <li onclick="loadQry(this)" data-type="blogs" data-filter="type" class="qry-type"><span>Blogs</span></li>
+                    <li onclick="loadQry(this)" data-type="informational" data-filter="type" class="qry-type"><span>Informational</span></li>
+                    <li onclick="loadQry(this)" data-type="online-business" data-filter="type" class="qry-type"><span>Online Business Brochure/Catalogs</span></li>
+            </ul>
+        </li>
+        <li>
+                <span><input onkeyup="filterLi('categoryId-dropdown','categoryId')" id="categoryId"/></span>
+            <ul id="categoryId-dropdown" class="sub-dropdown">
+                    <li onclick="loadQry(this)" data-type="architecture" data-filter="category" class="qry-type"><span>Architecture</span></li>
+                    <li onclick="loadQry(this)" data-type="art-illustration" data-filter="category" class="qry-type"><span>Art & Illustration</span></li>
+                    <li onclick="loadQry(this)" data-type="business-corporate" data-filter="category" class="qry-type"><span>Business & Corporate</span></li>
+                    <li onclick="loadQry(this)" data-type="culture-education" data-filter="category" class="qry-type"><span>Culture & Education</span></li>
+                    <li onclick="loadQry(this)" data-type="design-agencies" data-filter="category" class="qry-type"><span>Design Agencies</span></li>
+                    <li onclick="loadQry(this)" data-type="events" data-filter="category" class="qry-type"><span>Events</span></li>
+                    <li onclick="loadQry(this)" data-type="experimental" data-filter="category" class="qry-type"><span>Experimental</span></li>
+                    <li onclick="loadQry(this)" data-type="fashion" data-filter="category" class="qry-type"><span>Fashion</span></li>
+                    <li onclick="loadQry(this)" data-type="film-tv" data-filter="category" class="qry-type"><span>Film & TV</span></li>
+                    <li onclick="loadQry(this)" data-type="food-drink" data-filter="category" class="qry-type"><span>Food & Drink</span></li>
+                    <li onclick="loadQry(this)" data-type="games-entertainment" data-filter="category" class="qry-type"><span>Games & Entertainment</span></li>
+                    <li onclick="loadQry(this)" data-type="hotel/restaurant" data-filter="category" class="qry-type"><span>Hotel/Restaurant</span></li>
+                    <li onclick="loadQry(this)" data-type="institutions" data-filter="category" class="qry-type"><span>Institutions</span></li>
+                    <li onclick="loadQry(this)" data-type="magazine/newspaper/blog" data-filter="category" class="qry-type"><span>Magazine/Newspaper</span></li>
+                    <li onclick="loadQry(this)" data-type="mobile-apps" data-filter="category" class="qry-type"><span>Mobile & Apps</span></li>                    
+                    <li onclick="loadQry(this)" data-type="music-sound" data-filter="category" class="qry-type"><span>Music & Sound</span></li>
+                    <li onclick="loadQry(this)" data-type="photography" data-filter="category" class="qry-type"><span>Photography</span></li>
+                    <li onclick="loadQry(this)" data-type="promotional" data-filter="category" class="qry-type"><span>Promotional</span></li>
+                    <li onclick="loadQry(this)" data-type="real-estate" data-filter="category" class="qry-type"><span>Real Estate</span></li>
+                    <li onclick="loadQry(this)" data-type="sports" data-filter="category" class="qry-type"><span>Sports</span></li>
+                    <li onclick="loadQry(this)" data-type="startups" data-filter="category" class="qry-type"><span>Startups</span></li>
+                    <li onclick="loadQry(this)" data-type="technology" data-filter="category" class="qry-type"><span>Technology</span></li>
+                    <li onclick="loadQry(this)" data-type="web-interactive" data-filter="category" class="qry-type"><span>Web & Interactive</span></li>
+                    <li onclick="loadQry(this)" data-type="other" data-filter="category" class="qry-type"><span>Other</span></li>
+            </ul>
+        </li>
+        <li>
+                <span><input onkeyup="filterLi('colorDisc-dropdown','colorDiscId')" id="colorDiscId"/></span>
+                <ul id="colorDisc-dropdown" class="sub-dropdown">
+                    <li onclick="loadQry(this)" data-type="black" data-filter="colors" class="qry-type"><span>Black</span></li>
+                    <li onclick="loadQry(this)" data-type="blue" data-filter="colors" class="qry-type"><span>Blue</span></li>
+                    <li onclick="loadQry(this)" data-type="brown" data-filter="colors" class="qry-type"><span>Brown</span></li>
+                    <li onclick="loadQry(this)" data-type="turqoise" data-filter="colors" class="qry-type"><span>Turqoise</span></li>
+                    <li onclick="loadQry(this)" data-type="orange" data-filter="colors" class="qry-type"><span>Orange</span></li>
+                    <li onclick="loadQry(this)" data-type="pink" data-filter="colors" class="qry-type"><span>Pink</span></li>
+                    <li onclick="loadQry(this)" data-type="red" data-filter="colors" class="qry-type"><span>Red</span></li>
+                    <li onclick="loadQry(this)" data-type="grey" data-filter="colors" class="qry-type"><span>Grey</span></li>
+                    <li onclick="loadQry(this)" data-type="white" data-filter="colors" class="qry-type"><span>White</span></li>
+                    <li onclick="loadQry(this)" data-type="yellow" data-filter="colors" class="qry-type"><span>Yellow</span></li>
+            </ul>
+        </li>
+        <li>
+            <span><input onkeyup="filterLi('country-dropdown','countryDiscId')" id="countryDiscId" placeholder="Country"/></span>
+            <ul id="country-dropdown" class="sub-dropdown">
+                <%-(function(countryList) {
+                    let toDisplay = [];
+                    for (let val of countryList) {
+                        toDisplay.push(`<li onclick="loadQry(this)" data-type=${val} data-filter="country" class="qry-type"><span>${val}</span></li>`);
+                    }
+                    return toDisplay.join("");
+                }(countryArray))%>
+            </ul>
+        </li>
+</ul>
     <div class="discover-results">
     <ul class="discover-results-ul" id="userQry"><!-- Custom Limited-->
 
@@ -46,7 +108,10 @@
     <div class="pageControl">
         <form method="POST" action="/newQryPrev">
             <input type="hidden" value="<%=page%>" name="pageNumber"/>
-            <input type="hidden" value="<%=filter%>" name="filter">
+            <input type="hidden" value="<%=filter.type%>" name="type">
+            <input type="hidden" value="<%=filter.category%>" name="category">
+            <input type="hidden" value="<%=filter.colors%>" name="colors">
+            <input type="hidden" value="<%=filter.country%>" name="country">
             <input type="hidden" value="<%=pageSection%>" name="pageSection"/>
             <button class="prevPag" type="submit">Back</button>
         </form>
@@ -54,7 +119,10 @@
 
         <form method="POST" action="/newQryNext">
             <input type="hidden" value="<%=page%>" name="pageNumber"/>
-            <input type="hidden" value="<%=filter%>" name="filter">
+            <input type="hidden" value="<%=filter.type%>" name="type">
+            <input type="hidden" value="<%=filter.category%>" name="category">
+            <input type="hidden" value="<%=filter.colors%>" name="colors">
+            <input type="hidden" value="<%=filter.country%>" name="country">
             <input type="hidden" value="<%=pageSection%>" name="pageSection"/>
             <button class="nextPag" type="submit" <%=qryNextStat%>>Next</button>
         </form>
@@ -65,9 +133,195 @@
 
 <script>
 
+function filterLi(ulId, inputId) {
+
+    let input, filter, ul, li, a, i, txtValue;
+
+    ul = document.getElementById(ulId);
+    input = document.getElementById(inputId);
+    filter = input.value.toUpperCase();
+    li = ul.getElementsByTagName("li");
+
+    for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName("span")[0];
+        txtValue = a.innerHTML || a.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+        } else {
+            li[i].style.display = "none";
+        }
+    }
+}
 
 //Initialize websiteDisplay
 let websiteId;
+
+let filterFront = <%-JSON.stringify(filter)%>;
+
+//Render web properly
+
+    switch(filterFront.colors) {
+        case ("black"):
+            $("#colorDiscId").html("Black");
+            break;
+            case ("blue"):
+            $("#colorDiscId").html("Blue");
+            break;
+            case ("brown"):
+            $("#colorDiscId").html("Brown");
+            break;
+            case ("turqoise"):
+            $("#colorDiscId").html("Turqoise");
+            break;
+            case ("orange"):
+            $("#colorDiscId").html("orange");
+            break;
+            case ("pink"):
+            $("#colorDiscId").html("Pink");
+            break;
+            case ("red"):
+            $("#colorDiscId").html("Red");
+            break;
+            case ("grey"):
+            $("#colorDiscId").html("Grey");
+            break;
+            case ("white"):
+            $("#colorDiscId").html("White");
+            break;
+            case ("yellow"):
+            $("#colorDiscId").attr("placeholder", "Yellow");
+            break;
+        default:
+            $("#colorDiscId").attr("placeholder", "Color");
+    }
+
+    switch (filterFront.type) {
+        case "personal":
+            $("#typeId").attr("placeholder","Personal");
+            break;
+        case "ecommerce":
+            $("#typeId").attr("placeholder","E-Commerce");
+            break;
+        case "photosharing":
+            $("#typeId").attr("placeholder","Photo Sharing");
+            break;
+        case "writers":
+            $("#typeId").attr("placeholder","Writers/Authors");
+            break;
+        case "community":
+            $("#typeId").attr("placeholder","Community Building");
+            break;
+        case "mobile":
+            $("#typeId").attr("placeholder","Mobile Device");
+            break;
+        case "blogs":
+            $("#typeId").attr("placeholder","Blogs");
+            break;
+        case "informational":
+            $("#typeId").attr("placeholder","Informational");
+            break;
+        case "online-business":
+            $("#typeId").attr("placeholder","Online Business Brochure/Catalogs");
+            break; 
+        default: 
+            $("#typeId").attr("placeholder","Type")
+    }
+
+    switch (filterFront.category) {
+        case ("architecture"):
+            $("#categoryId").attr("placeholder","Architecture")
+            break;
+        case ("art-illustration"):
+            $("#categoryId").html("Art & Illustration")
+        break;
+        case ("business-corporate"):
+            $("#categoryId").attr("placeholder","Business & Corporate")
+        break;
+        case ("culture-education"):
+            $("#categoryId").attr("placeholder","Culture & Education")
+        break;
+        case ("design-agencies"):
+            $("#categoryId").attr("placeholder","Design Agencies")
+        break;
+        case ("events"):
+            $("#categoryId").attr("placeholder","Events")
+        break;
+        case ("experimental"):
+            $("#categoryId").attr("placeholder","Experimental")
+        break;
+        case ("fashion"):
+            $("#categoryId").attr("placeholder","Fashion")
+        break;
+        case ("film-tv"):
+            $("#categoryId").attr("placeholder","Film & TV")
+        break;
+        case ("food-drink"):
+            $("#categoryId").attr("placeholder","Food & Drink")
+        break;
+        case ("games-entertainment"):
+            $("#categoryId").attr("placeholder","Games & Entertainment")
+        break;
+        case ("hotel/restaurant"):
+            $("#categoryId").attr("placeholder","Hotel/Restaurant")
+        break;
+        case ("institutions"):
+            $("#categoryId").attr("placeholder","Institutions")
+        break;
+        case ("magazine/newspaper"):
+            $("#categoryId").attr("placeholder","Magazine/Newspaper")
+        break;
+        case ("mobile-apps"):
+            $("#categoryId").attr("placeholder","Mobile & Apps")
+        break;
+        case ("music-sound"):
+            $("#categoryId").attr("placeholder","Music & Sound")
+        break;
+        case ("photography"):
+            $("#categoryId").attr("placeholder","Photography")
+        break;
+        case ("promotional"):
+            $("#categoryId").attr("placeholder","Promotional")
+        break;
+        case ("real-estate"):
+            $("#categoryId").attr("placeholder","Real Estate")
+        break;
+        case ("sports"):
+            $("#categoryId").attr("placeholder","Sports")
+        break;
+        case ("startups"):
+            $("#categoryId").attr("placeholder","Startups")
+        break;
+        case ("technology"):
+            $("#categoryId").attr("placeholder","Technology")
+        break;
+        case ("web-interactive"):
+            $("#categoryId").attr("placeholder","Web & Interactive")
+        break;
+        case ("other"):
+            $("#categoryId").attr("placeholder","Other")
+        break;
+
+        default: 
+        $("#categoryId").attr("placeholder","Category")
+    }
+
+
+//Load query
+function loadQry(element) {
+    
+    //Current string
+    let current = window.location.href;
+
+    let qry = element.getAttribute("data-type");
+
+    let filter = element.getAttribute("data-filter");
+
+    let newParam = {};
+
+    newParam[filter] = qry;
+    //This module is a god send
+    location.params(newParam);
+}
 
 //Function to grab info from chosen website
 function getWebsite(element) {

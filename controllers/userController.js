@@ -314,6 +314,7 @@ exports.POST_addWebsite = [
                 console.log(`Saving User`);
                 let newWebThumb = new Website({
                     owner: req.user._id,
+                    country: req.user.country,
                     url,
                     siteName,
                     type,
@@ -826,6 +827,7 @@ exports.POST_first_Setup_Link = [
                 console.log(`Saving User`);
                 let newWebThumb = new Website({
                     owner: req.user._id,
+                    country: req.user.country,
                     url,
                     siteName,
                     type,
