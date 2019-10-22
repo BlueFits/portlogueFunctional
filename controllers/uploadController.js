@@ -45,7 +45,7 @@ exports.GET_first_Setup_Avatar = function(req, res, next) {
     if (err) {return next(err);}
 
     if (!result) {
-      res.render(`firstSetup/setupAvatar`, { errors:[], User: req.user});
+      res.render(`forUsers/firstSetup/setupAvatar`, { errors:[], User: req.user});
       return;
     }
     else {

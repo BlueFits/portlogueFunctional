@@ -24,6 +24,19 @@ WebsiteSchema.virtual("dateDisplay").get(function() {
     return moment(this.date).format("MMMM Do, YYYY");
 });
 
+//Category Display
+WebsiteSchema.virtual("categoryDisplay").get(function() {
+
+    let toDisplay = [];
+    let stringDisplay;
+    for (let val of this.category) {
+        toDisplay.push(val.replace(val[0], val[0].toUpperCase()));
+    }
+    stringDisplay = toDisplay.join(", ");
+    return stringDisplay;
+
+});
+
 //Site name
 WebsiteSchema.virtual("sitenameDisplay").get(function() {
     return this.siteName.toLowerCase().split(" ").map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(" ");
@@ -66,9 +79,6 @@ WebsiteSchema.virtual("typeDisplay").get(function() {
 
     return toDisplay;
 })
-
-
-//Choose how to display category
 
 
 module.exports = mongoose.model("Website", WebsiteSchema);

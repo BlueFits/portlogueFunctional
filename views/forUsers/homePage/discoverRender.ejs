@@ -1,16 +1,62 @@
-<section id="discoverSection">
+<section id="feature-panel">
 
+<div class="feature-overlay">
+    <img id="featured-image" src="/webThumb/<%=webResults[0]._id%>"/>
+</div>
+
+<div class="feature-content">
+    
+    <div class="feature-content-divOne">
+        <div class="feature-content-divOne-moment ">
+            <span><strong>Featured Site</strong></span>
+            <span><%=moment().format("LL")%></5></span>
+        </div>
+
+        <div class="feature-content-divOne-type-category">
+            <span><%=webResults[0].typeDisplay%></span>
+            <span><%=webResults[0].categoryDisplay%></span>
+        </div>
+    </div>
+    <div class="feature-content-divTwo">
+            <h1 onclick="getWebsite(this)" id="featured-sitename" data-website="<%=webResults[0]._id%>"><strong><%=webResults[0].sitenameDisplay%></strong></h1>
+        <div>
+            <a class="feature-content-divTwo-sitename-avatar" href="/users/profile/<%= webResults[0].owner.username %>">
+                <div><img style="height: 100%" src="/publicAvatar/<%=webResults[0].owner.email%>"/></div>
+                <span class="h1-sub">By <%=webResults[0].owner.fullName%></span>
+            </a>
+        </div>
+    </div>
+    <div class="feature-content-divThree">
+            <div class="like-favourite">
+                    <form id="likeForm">
+                        <button class="likeStyle featured" id="likeButton"><img class="nav-icons" src="/assets/icons/icons8-facebook-like-96-white.png"/><span><%=webResults[0].likes%></span></button>
+                    </form>
+                    <form id="favForm">
+                        <button class="favStyle featured" id="favButton"><img class="nav-icons" src="/assets/icons/icons8-heart-96.png"/>Favorite</button>
+                    </form>
+                </div>
+        <div class="feature-content-divThree-description">
+            <span>Description</span>
+            <span class="feature-content-description-container"><%=webResults[0].description ? webResults[0].description : "No Description" %></span>
+        </div>
+    </div>
+
+</div>
+
+</section>
+
+<section id="discoverSection">
 <nav class="discover-nav">
     <div class="for-allign"><!-- For allignment --></div>
                 <ul>
-                    <li class="discover-nav-li"><a href="/discover/new">New</a></li>
-                    <li class="discover-nav-li"><a href="/discover/highest_rated">Highest Rated</a></li>
-                    <li class="discover-nav-li"><a href="/discover/most_viewed">Most Viewed</a></li>
-                    <li class="discover-nav-li"><a href="/discover/friends">Friends</a></li>
+                    <li class="discover-nav-li"><a href="/discover/new#discoverSection">New</a></li>
+                    <li class="discover-nav-li"><a href="/discover/highest_rated#discoverSection">Highest Rated</a></li>
+                    <li class="discover-nav-li"><a href="/discover/most_viewed#discoverSection">Most Viewed</a></li>
+                    <li class="discover-nav-li"><a href="/discover/friends#discoverSection">Friends</a></li>
                 </ul>
     <div class="for-allign">
         <div id="filterIcon" class="filterLabel"><img src="/assets/icons/icons8-filter-96.png" class="nav-icons"/><span class="filter-icon-span">Filters</span></div>
-    </div>
+    </div> 
 </nav>
 <ul class="filter-dropdown">
     <div class="align-filter-dropdown"><!-- For allignment --></div>
@@ -138,13 +184,21 @@
 </section>
 
 <script>
-
 //Initialize websiteDisplay
 let websiteId;
 
 let filterFront = <%-JSON.stringify(filter)%>;
 
-let pageSection = <%-JSON.stringify(pageSection)%>
+let pageSection = <%-JSON.stringify(pageSection)%>;
+
+//Feauture panel
+
+//On hover 
+
+
+//parallax image 
+let featuredImage = document.getElementById("featured-image");
+new simpleParallax(featuredImage, { scale: 1.3 });
 
 switch (pageSection) {
     case "new":
@@ -399,6 +453,24 @@ function getWebsite(element) {
 //Display website now that websiteDisplay has value
 $(".portfolio-thumbnail").on("click", ()=> {
 
+    $("#web-frame").attr("src", `/users/website_hover/${websiteId}`);
+    $(".web-popup").css("z-index", "2");
+    $("body").css("overflow", "hidden");
+
+    console.log("functions ran");
+    //Ajax to increment viewed site and push to user database
+   $.ajax({
+        method: "POST",
+        contentType: "application/json",
+        url: "/users/viewed_sites",
+        data: JSON.stringify({ websiteId }),
+        success: (data) => {
+            //Empty
+        }
+    });
+});
+
+$("#featured-sitename").on("click", ()=> {
     $("#web-frame").attr("src", `/users/website_hover/${websiteId}`);
     $(".web-popup").css("z-index", "2");
     $("body").css("overflow", "hidden");

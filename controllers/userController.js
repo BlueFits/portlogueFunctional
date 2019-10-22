@@ -343,12 +343,11 @@ exports.POST_addWebsite = [
     }
 ]
 
-//Edit Website
+//Edit Website toFix (UPDATE WEB THUMB ON URL CHANGE)
 exports.POST_editWebsite = [
 
     body("description").isLength({ max: 500 }).withMessage("Description has a max of 500 characters"),
 
-    sanitizeBody("url").escape(),
     sanitizeBody("colors").escape(),
 
     function(req, res, next) {
@@ -786,7 +785,7 @@ exports.POST_first_Setup_Link = [
         
         //Check for errors
         if (!errors.isEmpty()) {
-            res.render(`firstSetup/setupLink`, { errors:errors.array(), User:req.user });
+            res.render(`forUsers/firstSetup/setupLink`, { errors:errors.array(), User:req.user });
             return;
         }
         
@@ -860,7 +859,7 @@ exports.POST_first_Setup_Link = [
 
 exports.POST_first_Setup_Avatar = function (req, res, next) {
 
-    res.render(`firstSetup/setupAvatar`, { errors:[], User: req.user, avatar: `/publicAvatar/${req.user.email}`});
+    res.render(`forUsers/firstSetup/setupAvatar`, { errors:[], User: req.user, avatar: `/publicAvatar/${req.user.email}`});
   
 }
 
@@ -886,7 +885,7 @@ exports.POST_first_Setup_Profile = [
         //If any errors occur run the if statement
         if (!errors.isEmpty()) {
             console.log(`there are errors`);
-            res.render(`firstSetup/setupProfile`, { errors: errors.array(), User: req.user });
+            res.render(`forUsers/firstSetup/setupProfile`, { errors: errors.array(), User: req.user });
             return;
         }
 
@@ -930,7 +929,7 @@ exports.POST_first_Setup_CountryandPostal = [
 
         //If any errors occur run the if statement
         if (!errors.isEmpty()) {
-            res.render(`firstSetup/getCountryandPostal`, {errors: errors.array(), User: req.user, selectCountry: require(`../arrayList/arrays`).countryList});
+            res.render(`forUsers/firstSetup/getCountryandPostal`, {errors: errors.array(), User: req.user, selectCountry: require(`../arrayList/arrays`).countryList});
             return;
         }
 

@@ -5,9 +5,6 @@ const { ensureAuthHome, ensureAuth } = require(`../config/authenticate`);
 const routeController = require(`../controllers/routeController`);
 const uploadController = require(`../controllers/uploadController`);
 
-//About page
-router.get("/about", routeController.GET_aboutPage);
-
 //User token confirmation
 router.get(`/confirm/:userToken`, routeController.GET_confirmation);
 
@@ -25,7 +22,7 @@ router.get(`/publicAvatar/:email`, uploadController.GET_publicAvtr);
 router.get(`/publicAvatar/redirect/:id`, routeController.idRedirect);
 
 /* GET home page. */
-router.get('/', ensureAuthHome, routeController.renderHome);
+router.get('/', routeController.checkHome, ensureAuthHome, routeController.renderHome);
 
 //GET home page discover new
 
@@ -40,9 +37,6 @@ router.get(`/discover/highest_rated`, ensureAuth, routeController.GET_discover_h
 
 //GET home page disocver most viewed
 router.get(`/discover/most_viewed`, ensureAuth, routeController.GET_discover_mostViewed);
-
-//GET home page disocver suggestions
-//router.get(`/discover/suggestions`, ensureAuth, routeController.GET_discover_suggestions);
 
 //GET home page disocver history
 

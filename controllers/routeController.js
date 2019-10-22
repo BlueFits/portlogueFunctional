@@ -11,6 +11,7 @@ const User = require(`../models/User`);
 const FriendStatus = require(`../models/friendStatus`);
 const Token = require(`../models/Token`);
 const Website = require("../models/Website");
+const Featured = require("../models/Featured");
 
 //Functions
 const functionCntrl = require(`../controllers/functionsContoller`);
@@ -28,11 +29,11 @@ exports.GET_websiteHover = function(req, res, next) {
         }
 
         if (website.comments.length === 0) {
-            res.render("indivs/websiteDisplay", { moment: moment, website, owner: website.owner, user: req.user, comments: [] });
+            res.render("forUsers/partials/websiteDisplay", { moment: moment, website, owner: website.owner, user: req.user, comments: [] });
         }
 
         else {
-            res.render("indivs/websiteDisplay", { moment: moment, website, owner: website.owner, user: req.user, comments: website.comments.reverse() });
+            res.render("forUsers/partials/websiteDisplay", { moment: moment, website, owner: website.owner, user: req.user, comments: website.comments.reverse() });
         }
 
     });
@@ -131,12 +132,12 @@ exports.GET_profile = function(req, res, next) {
 
                 //Websites are less than 6 disable the next page
                 if (webResults.length < 6) {
-                    res.render(`homePage/profilePage`, { profile, webResults, friendVal, qryNextStat: "disabled", page, layout: `homePage/homeLayout`, User: req.user, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                    res.render(`forUsers/homePage/profilePage`, { profile, webResults, friendVal, qryNextStat: "disabled", page, layout: `forUsers/homePage/homeLayout`, User: req.user, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
                     return;
                 }
                 
                 else {
-                    res.render(`homePage/profilePage`, { profile, webResults, friendVal, qryNextStat: "", page, layout: `homePage/homeLayout`, User: req.user, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                    res.render(`forUsers/homePage/profilePage`, { profile, webResults, friendVal, qryNextStat: "", page, layout: `forUsers/homePage/homeLayout`, User: req.user, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
                     return;
                 }
 
@@ -253,7 +254,7 @@ exports.renderRegister = function(req, res, next) {
 exports.GET_first_Setup_CountryandPostal = function(req, res, next) {
     //Only run when both oare n/a (The user's first time)
     if ((req.user.country === `n/a`) && (req.user.postalCode === `n/a`)) {
-        res.render(`firstSetup/getCountryandPostal`, { errors: [],User: req.user, selectCountry: require(`../arrayList/arrays`).countryList });
+        res.render(`forUsers/firstSetup/getCountryandPostal`, { errors: [],User: req.user, selectCountry: require(`../arrayList/arrays`).countryList });
     }
     else{
         res.redirect(`/users/first_time_setup_profile`);
@@ -266,7 +267,7 @@ exports.GET_first_Setup_Profile = function(req, res, next) {
         console.log(`Setup Profile log ${req.user.occupation.length}`);
         //load occupation array
         let occupationList = require("../arrayList/arrays").occupationList();
-        res.render(`firstSetup/setupProfile`, { errors: [], User: req.user, occupationList });
+        res.render(`forUsers/firstSetup/setupProfile`, { errors: [], User: req.user, occupationList });
     }
     else {
         res.redirect(`/users/first_time_setup_avatar`);
@@ -278,7 +279,7 @@ exports.GET_first_Setup_Link = function(req, res, next) {
     //Produces an array
     Website.find({ owner: req.user._id }).exec((err, websites)=> {
         if (websites.length === 0) {
-            res.render(`firstSetup/setupLink`, {errors: [], User: req.user});
+            res.render(`forUsers/firstSetup/setupLink`, {errors: [], User: req.user});
         }
         else {
             res.redirect("/");
@@ -302,6 +303,18 @@ exports.renderHome = function(req, res, next) {
     }
 
 };
+//Check if user
+exports.checkHome = function(req, res, next) {
+
+    if (!req.user) {
+        res.render("forVisitors/portlogue-about", { layout: "forVisitors/visitorLayout" });
+    }
+
+    else {
+        next();
+    }
+
+}
 
 /* discover new */
 exports.GET_discover_new = function(req, res, next) {
@@ -385,12 +398,12 @@ exports.GET_discover_friends = function(req, res, next) { //error in pageination
                 //toFix quries pagination
                 if (result.friendList.length < 6) {
                     console.log("nokinokie");
-                    res.render(`homePage/friendsRender`, {qryNextStat: "disabled", page, layout: `homePage/homeLayout`, User: req.user, filter: filterQry.portfolioType, qUser: result.friendList, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                    res.render(`forUsers/homePage/friendsRender`, {qryNextStat: "disabled", page, layout: `forUsers/homePage/homeLayout`, User: req.user, filter: filterQry.portfolioType, qUser: result.friendList, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
                     return;
                 }
                 //
                 console.log("okieokie");
-                res.render(`homePage/friendsRender`, {qryNextStat: "", page, layout: `homePage/homeLayout`, User: req.user, qUser: result.friendList, filter: filterQry.portfolioType, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                res.render(`forUsers/homePage/friendsRender`, {qryNextStat: "", page, layout: `forUsers/homePage/homeLayout`, User: req.user, qUser: result.friendList, filter: filterQry.portfolioType, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
                 return;
             }
 
@@ -398,11 +411,11 @@ exports.GET_discover_friends = function(req, res, next) { //error in pageination
 
                 if (result.friendList.length < 6) {
                     console.log("nokinokie2");
-                    res.render(`homePage/friendsRender`, {qryNextStat: "disabled", page, layout: `homePage/homeLayout`, User: req.user, qUser: result.friendList, filter: filterQry.portfolioType, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                    res.render(`foUsers/homePage/friendsRender`, {qryNextStat: "disabled", page, layout: `forUsers/homePage/homeLayout`, User: req.user, qUser: result.friendList, filter: filterQry.portfolioType, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
                     return;
                 }
                 console.log("okiokie2");
-                res.render(`homePage/friendsRender`, {qryNextStat: "", page, layout: `homePage/homeLayout`, User: req.user, qUser: result.friendList, filter: filterQry.portfolioType, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                res.render(`forUsers/homePage/friendsRender`, {qryNextStat: "", page, layout: `forUsers/homePage/homeLayout`, User: req.user, qUser: result.friendList, filter: filterQry.portfolioType, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
                 return;
             }
         });
@@ -430,8 +443,6 @@ exports.GET_search_home = [
         
         //Get rid of spaces
         let searchQry = req.query.q.replace(/\s/g,'').toLowerCase();
-
-        let userId = req.user._id;
 
         //Search Algorithm
         async.parallel({
@@ -464,43 +475,43 @@ exports.GET_search_home = [
             //
             if (results.qryOne.length !== 0) {
                 console.log(`qryOne`);
-                res.render(`searchPage`, {qUsers: results.qryOne, User: req.user, qryFor});
+                res.render(`forUsers/searchPage`, {qUsers: results.qryOne, User: req.user, qryFor});
                 return;
             }
 
             if (results.qryTwo.length !== 0) {
                 console.log(`qry2`);
-                res.render(`searchPage`, {qUsers: results.qryTwo, User: req.user, qryFor});
+                res.render(`forUsers/searchPage`, {qUsers: results.qryTwo, User: req.user, qryFor});
                 return;
             }
 
             if (results.qryThree.length !== 0) {
                 console.log(`qry3`);
-                res.render(`searchPage`, {qUsers: results.qryThree, User: req.user, qryFor});
+                res.render(`forUsers/searchPage`, {qUsers: results.qryThree, User: req.user, qryFor});
                 return;
                 }
 
             if (results.qryFour.length !== 0) {
                 console.log(`qry4`);
-                res.render(`searchPage`, {qUsers: results.qryFour, User: req.user, qryFor});
+                res.render(`forUsers/searchPage`, {qUsers: results.qryFour, User: req.user, qryFor});
                 return;
             }
 
             if (results.qryFive.length !== 0) {
                 console.log(`qry5`);
-                res.render(`searchPage`, {qUsers: results.qryFive, User: req.user, qryFor});
+                res.render(`forUsers/searchPage`, {qUsers: results.qryFive, User: req.user, qryFor});
                 return;
             }
 
             if (results.qrySix.length !== 0) {
                 console.log(`qry6`);
-                res.render(`searchPage`, {qUsers: results.qrySix, User: req.user, qryFor});
+                res.render(`forUsers/searchPage`, {qUsers: results.qrySix, User: req.user, qryFor});
                 return;
             }
 
             else {
                 console.log(`qryNoResult`);
-                res.render(`searchPage`, {qUsers: [], User: req.user, qryFor});
+                res.render(`forUsers/searchPage`, {qUsers: [], User: req.user, qryFor});
                 return;
             }
         });
@@ -585,18 +596,18 @@ exports.GET_settings = function(req, res, next) {
             }
 
             if (arrayExtra.length > 0) {
-                res.render(`settings/${settingTab}`, { occupation: arrayExtra, Websites: [], layout: `homePage/homeLayout`, User: req.user, errors: [], friendRequests: fStatDisplay, selectCountry: require(`../arrayList/arrays`).countryList});
+                res.render(`forUsers/settings/${settingTab}`, { occupation: arrayExtra, Websites: [], layout: `forUsers/homePage/homeLayout`, User: req.user, errors: [], friendRequests: fStatDisplay, selectCountry: require(`../arrayList/arrays`).countryList});
                 return;
             }
 
             //User has no websites
             if (async.websites.length === 0) {
-                res.render(`settings/${settingTab}`, { Websites: [], layout: `homePage/homeLayout`, User: req.user, errors: [], friendRequests: fStatDisplay, selectCountry: require(`../arrayList/arrays`).countryList});
+                res.render(`forUsers/settings/${settingTab}`, { Websites: [], layout: `forUsers/homePage/homeLayout`, User: req.user, errors: [], friendRequests: fStatDisplay, selectCountry: require(`../arrayList/arrays`).countryList});
                 return;
             }
 
             else {
-                res.render(`settings/${settingTab}`, { Websites: async.websites, layout: `homePage/homeLayout`, User: req.user, errors: [], friendRequests: fStatDisplay, selectCountry: require(`../arrayList/arrays`).countryList});
+                res.render(`forUsers/settings/${settingTab}`, { Websites: async.websites, layout: `forUsers/homePage/homeLayout`, User: req.user, errors: [], friendRequests: fStatDisplay, selectCountry: require(`../arrayList/arrays`).countryList});
                 return;
             }
 
@@ -622,11 +633,6 @@ exports.GET_settings = function(req, res, next) {
             renderSettings("settingsWebsite");
             break;
     }
-}
-
-//About page
-exports.GET_aboutPage = function(req, res, next) {
-    res.render("homePage/portlogue-about", {layout: "visitorLayout"});
 }
 
 /* Initialize Functions*/
@@ -657,6 +663,10 @@ let renderDiscover = function (req, res, pageSection, sortSetting, filter) {
             Website.find(filter).populate("owner").skip((page-1) * pagination).limit(pagination).sort(sortSetting).exec(cb);
         },
 
+        featured: (cb)=> {
+            Featured.find({}).populate("website").exec(cb);
+        }
+
     }, function(err, async) {
         if (err) {return next(err);}
 
@@ -671,12 +681,12 @@ let renderDiscover = function (req, res, pageSection, sortSetting, filter) {
         
         //toFix queries pagination
         if (async.websites.length < 6) {
-            res.render(`homePage/discoverRender`, { countryArray: require(`../arrayList/arrays`).countryList,pageSection ,qryNextStat: "disabled", page, filter, layout: `homePage/homeLayout`, User: req.user, webResults: async.websites, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+            res.render(`forUsers/homePage/discoverRender`, { moment: moment, countryArray: require(`../arrayList/arrays`).countryList,pageSection ,qryNextStat: "disabled", page, filter, layout: `forUsers/homePage/homeLayout`, User: req.user, webResults: async.websites, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
             return;
         }
         //
         else {
-            res.render(`homePage/discoverRender`, { countryArray: require(`../arrayList/arrays`).countryList, pageSection ,qryNextStat: "", page, filter, layout: `homePage/homeLayout`, User: req.user, webResults: async.websites, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+            res.render(`forUsers/homePage/discoverRender`, { moment: moment,countryArray: require(`../arrayList/arrays`).countryList, pageSection ,qryNextStat: "", page, filter, layout: `homePage/homeLayout`, User: req.user, webResults: async.websites, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
             return;
         }
     });

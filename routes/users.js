@@ -97,8 +97,6 @@ router.post(`/register`, userController.create_User);
 
 router.get(`/register`, routeController.renderRegister);
 
-/* Verification Route */
-
 /*router.post(`/resend`, userController.resendTokenPOST); */
 
 
