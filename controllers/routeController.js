@@ -483,7 +483,6 @@ exports.GET_about = function (req, res, next) {
 
 exports.GET_visitorAbout = function(req, res, next) {
     function loadAboutGuest(req, res) {
-        console.log("This ran");
         res.render("about", { layout: "forVisitors/homePage/homeLayout" });
     }
 
@@ -659,7 +658,6 @@ exports.GET_discover_friends = function(req, res, next) { //error in pageination
     const page = req.query.page ? parseInt(req.query.page) : 1;
     const filterQry = req.query.filter ? {portfolioType: req.query.filter} : {};
 
-        console.log("didnt run User findbyId YET for "+req.user.username+ " id:"+req.user._id);
     User.findById(req.user._id).populate(`friendList`).skip((page-1) * pagination).limit(pagination).exec((err, result)=> {
         if (err) {return next(err);}
         //
@@ -1073,8 +1071,6 @@ let renderDiscover = function (req, res, pageSection, sortSetting, filter) {
                 fStatDisplay.push(val);
             }
         }
-
-        console.log(async.feature);
 
         //Render Favorites
         if (pageSection === "favorites") {
