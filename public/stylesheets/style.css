@@ -1801,6 +1801,7 @@ h3 {
 
 #featured-sitename {
     cursor: pointer;
+    text-align: center;
 }
 
 .feature-content {
