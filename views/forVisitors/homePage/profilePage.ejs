@@ -1,0 +1,128 @@
+<section class="profile-header">
+
+        <ul class="flash-settings">
+                <% for (let val of error_msg) {%>
+                    <li class="flash-style f-error">
+                            <div class="flash-info">
+                                <span><strong>Error</strong></span>
+                                <span><%=val.msg%></span>
+                            </div>
+                            <div class="flash-close"><img src="/assets/icons/icons8-delete-96.png"/></div>
+                    </li>
+                <% } %>
+                <% for (let val of success_msg) {%>
+                    <li class="flash-style f-success">
+                            <div class="flash-info">
+                                <span><strong>Success</strong></span>
+                                <span><%=val.msg%></span>
+                            </div>
+                            <div class="flash-close"><img src="/assets/icons/icons8-delete-96.png"/></div>
+                    </li>
+                <% } %>        
+            </ul>
+
+    <div class="profile-info">
+        <div class="profile-avatar-wrapper">
+            <img class="profile-avatar" src="/publicAvatar/<%=profile.email%>"/>
+        </div>
+        <span class="profile-fullName"><%=profile.fullName%></span>
+        <div class="profile-location-email">
+            <div>
+                <img class="nav-icons" src="/assets/icons/icons8-marker-96-light.png"/><span><%=profile.countryDisplay%></span>
+            </div>
+            <div>
+                <img class="nav-icons" src="/assets/icons/icons8-new-post-96-lite.png"/><span><%=profile.email%></span>
+            </div>
+        </div>
+        <span class="profile-occupation"><%=profile.occupationFull%></span>
+        <span class="profile-bio"><%=profile.bio%></span>
+    </div>
+
+    <div class="profile-interact">
+
+        <div>
+            <button onclick="directRegister();" class="profile-addFriend" type="submit">Add Friend</button>
+        </div>
+
+        <a class="profile-message-button" href="/willBeImplemented">Message</a>
+
+    </div>
+
+</section>
+
+<section class="profile-website-display">
+
+    <div class="profile-website-topbar">
+        <span><%=webResults.length%> <%= webResults.length === 1 ? "Website" : "Websites"; %></span>
+
+        <a style="display: none;" href="/users/settings?tab=website"><img class="nav-icons" src="/assets/icons/icons8-add-96.png"/><span>Add Website</span></a>
+    </div>
+
+    <div class="discover-results">
+        <ul class="discover-results-ul" id="userQry"><!-- Custom Limited-->
+    
+            <% for(let website of webResults) { %>
+                <li class="portfolio-select">
+                    <span style="display: none;"><%=website._id%></span>
+                    <div>
+                        <div onClick="getWebsite(this);" class="portfolio-thumbnail">
+                            <div class="portfolio-thumbnail-bar"><!--Grey bar--></div>
+                            <div><img class="portfolio-thumbnail-img" src="/webThumb/<%=website._id%>"/></div>
+                        </div>
+                    </div>
+                    <div class="thumbnail-desc">
+                        <div class="profile-name-wrapper">
+                            <a href="/users/profile/<%=website.owner.username%>"><div class="thumb-profile-wrapper"><img class="thumbnail-profile-img" src="/publicAvatar/<%=website.owner.email%>"/></div><%=website.owner.fullName%></a>
+                        </div>
+                        <span class="occupation-flex"><%=website.categoryDisplay%></span>
+                    </div>
+                </li>
+            <% } %>
+    
+        </ul>
+        <div class="pageControl">
+            <form method="POST" action="/newQryPrev">
+                <input type="hidden" value="<%=page%>" name="pageNumber"/>
+                <button class="prevPag" type="submit">Back</button>
+            </form>
+    
+    
+            <form method="POST" action="/newQryNext">
+                <input type="hidden" value="<%=page%>" name="pageNumber"/>
+                <button class="nextPag" type="submit" <%=qryNextStat%>>Next</button>
+            </form>
+        </div>
+    
+        </div>
+
+</section>
+
+
+<script>
+//Direct to register
+function directRegister() {
+    window.location.pathname= "/users/register";
+}
+
+//Initialize websiteDisplay
+let websiteId;
+
+//Function to grab info from chosen website
+function getWebsite(element) {
+    websiteId = element.parentNode.parentNode.childNodes[1].textContent;
+}
+
+//Display website now that websiteDisplay has value
+$(".portfolio-thumbnail").on("click", ()=> {
+    $("#web-frame").attr("src", `/users/website_hover/${websiteId}`);
+    $(".web-popup").css("z-index", "4");
+    $("body").css("overflow", "hidden");
+});
+
+if (`<%=page%>` === `1`) {
+    $(`.prevPag`).attr("disabled","true");
+}
+
+
+
+</script>

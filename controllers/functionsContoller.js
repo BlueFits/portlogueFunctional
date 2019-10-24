@@ -1,3 +1,49 @@
+exports.guestGenerate = function (req, res, next) {
+    //Modules
+    const requestIp = require("request-ip");
+    const geoip = require("geoip-lite");
+    //Model
+    const Guest = require("../models/Guest");
+
+
+    const clientIp = requestIp.getClientIp(req);
+    const geo = geoip.lookup(clientIp);
+
+    console.log(clientIp);
+
+    if (clientIp === "::1" || clientIp === "::ffff:127.0.0.1") {
+        console.log(`-----------------You are in development mode---------------------`);
+        next();
+    }
+    else {
+        let guestInstance = new Guest({
+            ip: clientIp,
+            country: geo.country || "n/a",
+            region: geo.region || "n/a",
+            city: geo.city || "n/a",
+            timezone: geo.timezone || "n/a",
+            referredFrom: req.get("Referrer") || "n/a"
+        });
+
+        Guest.findOne({ ip: clientIp }).exec((err, result)=> {
+
+            if (err) {return next(err);}
+
+            if (result) {
+                console.log("Visiting User");
+                next();
+            }
+
+            else {
+                guestInstance.save((err)=> {
+                    if (err) {return next(err);}
+                    next();
+                });
+            }
+        });
+    }
+}
+
 exports.isEmpty = function(object) {
     for (let val in object) {
         if (object.hasOwnProperty(val)) {

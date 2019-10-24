@@ -12,6 +12,18 @@ const { upload } = require(`../config/multerConfig`);
 //Protect Routes
 const { ensureAuth } = require(`../config/authenticate`);
 
+
+
+/* Quick Fixes*/
+
+//Add to featured user THIS IS A GET BE CAREFUL
+router.get("/feature_add/:webId", ensureAuth, routeController.featureAdd);
+
+//Report route
+router.get(`/report/:username`, ensureAuth, (req, res, next)=> {
+    res.send(`NOT IMPLEMENTED`);
+});
+
 /* Like, Favorite, and Viewed sites */
 
 //Favorite POST request
@@ -23,10 +35,14 @@ router.post("/like_site", ensureAuth, userController.POST_likeSite);
 //Viewed sites
 router.post("/viewed_sites", ensureAuth, userController.POST_viewedSites);
 
+/* Website Popup*/
+
 //Render website hover with req.user and Comments POST request
-router.get("/website_hover/:id", ensureAuth, routeController.GET_websiteHover);
+router.get("/website_hover/:id", routeController.GET_visitorWebsiteHover, ensureAuth, routeController.GET_websiteHover);
 
 router.post("/website_hover/:id", ensureAuth, userController.POST_comment);
+
+/* Website Settings*/
 
 //Website add
 router.post("/add_website", ensureAuth, userController.POST_addWebsite);
@@ -36,6 +52,8 @@ router.post("/edit_website", ensureAuth, userController.POST_editWebsite);
 
 //Website Delete
 router.post("/delete_website", ensureAuth, userController.POST_deleteWebsite);
+
+/* User Settings */
 
 //POST reqest to change password
 router.post("/change_password", ensureAuth, userController.POST_changePassword);
@@ -52,42 +70,30 @@ router.post(`/change_personalInfo`, ensureAuth, userController.POST_personalInfo
 //Account Settings
 router.get(`/settings`, ensureAuth, routeController.GET_settings);
 
-//Report route
-router.get(`/report/:username`, ensureAuth, (req, res, next)=> {
-    res.send(`NOT IMPLEMENTED`);
-});
+/* Profile Route*/
 
-//User profile route
-router.get(`/profile/:username`, ensureAuth, routeController.GET_profile);
+//GET profile
+router.get(`/profile/:username`, routeController.GET_visitorProfile, ensureAuth, routeController.GET_profile);
 
 router.get(`/profile/redirect/:id`, ensureAuth, routeController.GET_id_redirect);
 
-//Liking Profile
-router.post(`/like_website`, ensureAuth, userController.POST_likeSite);
-
-//Redirect Email 
-router.get(`/profile/:email`, ensureAuth, routeController.redirectEmail);
+/* Message routes */
 
 //Send Message
 router.post(`/send_message/:username`, ensureAuth, userController.POST_send_message);
 
 router.get(`/send_message/:username`, ensureAuth, routeController.GET_send_message);
 
+/*Friend Panel */
+
 //Add friend
 router.post(`/confirm_friend`, ensureAuth, userController.POST_confirmFriend);
 
 router.post(`/add_friend`, ensureAuth, userController.POST_addFriend);
 
-
-//Friend Confirm Panel
-
-router.get(`/notifications/:id`, ensureAuth, (req, res, next)=> {
-    res.send(`NOT IMPLEMENTED`);
-});
-
-
 /* Login Routes */
 
+//Post request for login
 router.post(`/login`, passportController.loginUser);
 
 router.get('/login', routeController.renderLogin);
@@ -98,7 +104,6 @@ router.post(`/register`, userController.create_User);
 router.get(`/register`, routeController.renderRegister);
 
 /*router.post(`/resend`, userController.resendTokenPOST); */
-
 
 /* Logout Route */
 
@@ -133,4 +138,5 @@ router.post(`/first_time_setup_link`, ensureAuth, userController.POST_first_Setu
 /* GET request to initial setup Portfolio Link */
 router.get(`/first_time_setup_link`, ensureAuth, routeController.GET_first_Setup_Link);
 
+/* Export Router */
 module.exports = router;

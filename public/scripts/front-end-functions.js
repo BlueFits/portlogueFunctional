@@ -1,7 +1,51 @@
 
 /* Needed outside document ready */
 
+/* Feedback jquery */
+
+$("#got-feedback-button").on("click", ()=> {
+    $("#got-feedback-button").addClass("feedback-button-hide");
+    $("#feedback-container").addClass("feedback-container-active");
+});
+
+$(".feedback-close").on("click", ()=> {
+    $("#got-feedback-button").removeClass("feedback-button-hide");
+    $("#feedback-container").removeClass("feedback-container-active");
+});
+
+$("#feedback-form").on("submit", ()=> {
+    event.preventDefault();
+
+    $(`#feedback-form-submit`).css(`background-color`, "transparent");
+    $(`#feedback-form-submit`).html(`<div class="loaderD"></div>`);
+
+    let email = $("#feedback-email").val();
+
+    let message = $("#feedback-message").val();
+
+
+        $.ajax({
+            url: "/submit_feedback",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({ email, message }),
+            success: (data)=> {
+                //Empty
+                console.log(data);
+                setTimeout(() => {
+                    $(`#feedback-form-submit`).css(`color`, "#3498db");
+                    $(`#feedback-form-submit`).html(`Sent ✓`);
+                }, 2000);
+                setTimeout(() => {
+                    $("#got-feedback-button").removeClass("feedback-button-hide");
+                    $("#feedback-container").removeClass("feedback-container-active");
+                }, 3000);
+            }
+        });
+});
+
 /* Click out jquery */
+
 !function(e,n){var t="function"==typeof require?require:function(e){return{jquery:jQuery}[e]};"object"==typeof exports&&"undefined"!=typeof module?module.exports=n(t):"function"==typeof define&&define.amd?define(["jquery"],n.bind(e,t)):e.jQueryClickout=n(t)}(this,function(e,n,t,r){return function o(n,t,r){function u(c,f){if(!t[c]){if(!n[c]){var l="function"==typeof e&&e;if(!f&&l)return l(c,!0);if(i)return i(c,!0);var a=new Error("Cannot find module '"+c+"'");throw a.code="MODULE_NOT_FOUND",a}var d=t[c]={exports:{}};n[c][0].call(d.exports,function(e){var t=n[c][1][e];return u(t?t:e)},d,d.exports,o,n,t,r)}return t[c].exports}for(var i="function"==typeof e&&e,c=0;c<r.length;c++)u(r[c]);return u}({1:[function(e,n,t){var r=e("jquery"),o=r(document),u={},i=!1;r.event.special.clickout={setup:function(e,n,t){i||(o.on("click.clickout-handler",function(e){r.each(u,function(n,t){var o=!0;r.each(t.elements,function(n,t){r(e.target).closest(t).length&&(o=!1)}),o&&t.handler.call(r(t.elements),e)})}),i=!0)},teardown:function(){u||(o.off("click.clickout-handler"),i=!1)},add:function(e){var n=e.guid;u.hasOwnProperty(n)?u[n].elements.push(this):u[n]={elements:[this],handler:e.handler}},remove:function(e){delete u[e.guid]}}},{jquery:"jquery"}]},{},[1])(1)});
 //# sourceMappingURL=jquery-clickout.min.js.map
 

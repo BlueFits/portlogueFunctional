@@ -7,42 +7,42 @@
 
 <div class="feature-content">
     
-    <div class="feature-content-divOne">
-        <div class="feature-content-divOne-moment ">
-            <span><strong>Featured Site</strong></span>
-            <span><%=moment().format("LL")%></5></span>
+        <div class="feature-content-divOne">
+            <div class="feature-content-divOne-moment ">
+                <span><strong>Featured Site</strong></span>
+                <span><%=moment().format("LL")%></5></span>
+            </div>
+    
+            <div class="feature-content-divOne-type-category">
+                <span><%=feature[0].website.typeDisplay%></span>
+                <span><%=feature[0].website.categoryDisplay%></span>
+            </div>
         </div>
-
-        <div class="feature-content-divOne-type-category">
-            <span><%=feature[0].website.typeDisplay%></span>
-            <span><%=feature[0].website.categoryDisplay%></span>
+        <div class="feature-content-divTwo">
+                <h1 onclick="getWebsite(this)" id="featured-sitename" data-website="<%=feature[0].website._id%>"><strong><%=feature[0].website.sitenameDisplay%></strong></h1>
+            <div>
+                <a class="feature-content-divTwo-sitename-avatar" href="/users/profile/<%= feature[0].website.owner.username %>">
+                    <div><img style="height: 100%" src="/publicAvatar/<%=feature[0].website.owner.email%>"/></div>
+                    <span class="h1-sub">By <%=feature[0].website.owner.fullName%></span>
+                </a>
+            </div>
         </div>
+        <div class="feature-content-divThree">
+                <div class="like-favourite">
+                        <form id="likeForm">
+                            <button onclick="directRegister()" data-website="<%=feature[0].website._id%>" class="likeStyle featured" id="likeButton"><img class="nav-icons" src="/assets/icons/icons8-facebook-like-96-white.png"/><span><%=feature[0].website.likes%></span></button>
+                        </form>
+                        <form id="favForm">
+                            <button  onclick="directRegister()" data-website="<%=feature[0].website._id%>" class="favStyle featured" id="favButton"><img class="nav-icons" src="/assets/icons/icons8-heart-96.png"/>Favorite</button>
+                        </form>
+                    </div>
+            <div class="feature-content-divThree-description">
+                <span>Description</span>
+                <span class="feature-content-description-container"><%=feature[0].website.description ? feature[0].website.description : "No Description" %></span>
+            </div>
+        </div>
+    
     </div>
-    <div class="feature-content-divTwo">
-            <h1 onclick="getWebsite(this)" id="featured-sitename" data-website="<%=feature[0].website._id%>"><strong><%=feature[0].website.sitenameDisplay%></strong></h1>
-        <div>
-            <a class="feature-content-divTwo-sitename-avatar" href="/users/profile/<%= feature[0].website.owner.username %>">
-                <div><img style="height: 100%" src="/publicAvatar/<%=feature[0].website.owner.email%>"/></div>
-                <span class="h1-sub">By <%=feature[0].website.owner.fullName%></span>
-            </a>
-        </div>
-    </div>
-    <div class="feature-content-divThree">
-            <div class="like-favourite">
-                    <form id="likeForm">
-                        <button onclick="getWebsite(this)" data-website="<%=feature[0].website._id%>" class="likeStyle featured" id="likeButton"><img class="nav-icons" src="/assets/icons/icons8-facebook-like-96-white.png"/><span><%=feature[0].website.likes%></span></button>
-                    </form>
-                    <form id="favForm">
-                        <button  onclick="getWebsite(this)" data-website="<%=feature[0].website._id%>" class="favStyle featured" id="favButton"><img class="nav-icons" src="/assets/icons/icons8-heart-96.png"/>Favorite</button>
-                    </form>
-                </div>
-        <div class="feature-content-divThree-description">
-            <span>Description</span>
-            <span class="feature-content-description-container"><%=feature[0].website.description ? feature[0].website.description : "No Description" %></span>
-        </div>
-    </div>
-
-</div>
 
 </section>
 
@@ -53,7 +53,7 @@
                     <li class="discover-nav-li"><a href="/discover/new#discoverSection">New</a></li>
                     <li class="discover-nav-li"><a href="/discover/highest_rated#discoverSection">Highest Rated</a></li>
                     <li class="discover-nav-li"><a href="/discover/most_viewed#discoverSection">Most Viewed</a></li>
-                    <li class="discover-nav-li"><a href="/discover/favorites#discoverSection">Favorites</a></li>
+                    <li class="discover-nav-li"><a href="/users/register">Favorites</a></li>
                 </ul>
     <div class="for-allign">
         <div id="filterIcon" class="filterLabel"><img src="/assets/icons/icons8-filter-96.png" class="nav-icons"/><span class="filter-icon-span">Filters</span></div>
@@ -186,6 +186,7 @@
 
 <script>
 //Initialize websiteDisplay
+
 let websiteId;
 
 let filterFront = <%-JSON.stringify(filter)%>;
@@ -194,7 +195,7 @@ let pageSection = <%-JSON.stringify(pageSection)%>;
 
 let featuredWeb = <%-JSON.stringify(feature[0]._id)%>;
 
-let reqUser = <%-JSON.stringify(User)%>;
+
 
 function filterLi(ulId, inputId) {
 
@@ -254,26 +255,6 @@ for (let val in location.params()) {
         }
     }
 
-//Check if featured site is liked
-for (let val of reqUser.favorites) {
-    if (val.toString() === featuredWeb.toString()) {
-        $("#favButton").html("Added to favorites")
-    }
-}
-
-//Fav button
-$("#favButton").on("click", ()=> {
-
-    if ($("#favButton").html() !== "Added to favorites") {
-        $("#favButton").html("Added to favorites");
-    }
-
-    else {
-        $("#favButton").html("Removed from favorites");
-    }
-
-});
-
 $("#favForm").on("submit", ()=> {
         event.preventDefault();
 
@@ -287,24 +268,6 @@ $("#favForm").on("submit", ()=> {
             }
         });
     });
-
- //Check if featured site is liked
-for (let val of reqUser.likedSites) {
-    if (val.toString() === featuredWeb.toString()) {
-        $("#likeButton").html("Liked")
-    }
-}   
-
-//like button 
-$("#likeButton").on("click", ()=> {
-
-if ($("#likeButton").html() !== "Liked" ) {
-    $("#likeButton").html("Liked");
-}
-else {
-    $("#likeButton").html("Unliked");
-}
-});
 
 $("#likeForm").on("submit", ()=> {
         event.preventDefault();

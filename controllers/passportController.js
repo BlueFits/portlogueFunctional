@@ -14,6 +14,6 @@ exports.loginUser = function(req, res, next) {
 
 exports.logoutUser = function(req, res, next) {
     req.logout();
-    req.flash(`success`, `You are logged out`);
-    res.redirect(`/users/login`);
+    req.flash(`success`, { msg: `You are logged out` });
+    res.redirect(`/`);
 };

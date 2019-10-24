@@ -17,6 +17,7 @@
 </head>
 <body>
     
+    
     <!-- Feedback on all pages -->
     <div id="got-feedback-button">
         <span>Got feedback?</span>
@@ -48,7 +49,35 @@
     </div>
 
     <!-- Emnd of feedback -->
-
+    <!--
+    <ul class="flash-settings">
+            <% for (let val of error_msg) {%>
+                <li class="flash-style f-error">
+                        <div class="flash-info">
+                            <span><strong>Error</strong></span>
+                            <span><%=val.msg%></span>
+                        </div>
+                        <div class="flash-close"><img src="/assets/icons/icons8-delete-96.png"/></div>
+                </li>
+            <% } %>
+            <% for (let val of success_msg) {%>
+                <li class="flash-style f-success">
+                        <div class="flash-info">
+                            <span><strong>Success</strong></span>
+                            <span><%=val.msg%></span>
+                        </div>
+                        <div class="flash-close"><img src="/assets/icons/icons8-delete-96.png"/></div>
+                </li>
+            <% } %>        
+            <li class="flash-style f-success">
+                    <div class="flash-info">
+                        <span><strong>Success</strong></span>
+                        <span></span>
+                    </div>
+                    <div class="flash-close"><img src="/assets/icons/icons8-delete-96.png"/></div>
+            </li>
+    </ul>
+    -->
     <div class="hidden-overlay"><!-- Click to minimize all --></div>
 
 
@@ -64,6 +93,9 @@
                     <li><a href="/"><img style="width: 50px;" src="/assets/icons/logo_noText.svg" alt="portlogue-logo"/></a></li>
                     <li><a href="/about">About</a></li>
                     <li><a href="#">Contact</a></li>
+                    <!--
+                    <li><a href="#">Advertise</a></li>
+                    -->
                 </ul>
             </div>
 
@@ -94,43 +126,10 @@
             </div>
 
             <div class="home-right-nav">
-                <ul>
-                    <li id="friend-drop"><a href="#"><div><img class="nav-icons" src="/assets/icons/icons8-add-user-group-man-man-96.png"/></div></a>
-                        <ul class="add-friend-dropdown">
-                            
-                            <div class="freq-header">
-                                <span><strong>Friend Requests</strong></span>
-                            </div>
-
-                            <% for (let val of friendRequests) { %>
-                        <li class="frequestTab">
-                            <div class="freq-wrapper"><div class="thumb-profile-wrapper"><img class="nav-profile-icon" src="/publicAvatar/<%= val.requestFrom.email %>"/></div><span><%= val.requestFrom.fullName %></span></div>
-                            <div class="freq-response">
-                            <form method="POST" action="/users/confirm_friend">
-                                <input type="hidden" value="accept" name="reqResponse"/>
-                                <input type="hidden" value="<%= val.requestFrom._id %>" name="reqFrom"/>
-                                <input type="hidden" value="<%= val._id %>", name="friendStatId"/>
-                                <button class="freq-response-accept" type="submit">Accept</button>
-                            </form>
-                            <form method="POST" action="/users/confirm_friend">
-                                <input type="hidden" value="decline" name="reqResponse"/>
-                                <input type="hidden" value="<%= val.requestFrom._id %>" name="reqFrom"/>
-                                <input type="hidden" value="<%= val._id %>", name="friendStatId"/>
-                                <button class="freq-response-decline" type="submit">Decline</button>
-                            </form>
-                            </div>
-                        </li>
-                        
-                            <% } %>
-                            
-                        </ul>
-                    </li>
-                    <li><a href="#"><div><img class="nav-icons" src="/assets/icons/icons8-chat-room-96.png"/></div></a></li>
-                    <li><div class="profile-icon-wrapper" style="cursor: pointer;"><img class="nav-profile-icon" src="/publicAvatar/<%=User.email%>" alt="profile-icon"/></div><ul class="home-nav-dropdown">
-                        <li><a href="/users/profile/<%=User.username%>">Profile</a></li>
-                        <li><a href="/users/settings">Account Settings</a></li>
-                        <li><a href="/users/logout">Logout</a></li>
-                    </ul></li>
+                <ul class="visitor-right-nav">
+                    <!-- toFix -->
+                   <li><a href="/users/login">Login</a></li>
+                   <li><a href="/users/register">Sign up</a></li>
                 </ul>
             </div>
         </nav>
@@ -156,41 +155,46 @@
     </section>
 
     <footer>
-            <div class="footer-container">
-                    <div class="footer-desc">
-                            <div><img style="width: 100px; border: 1px solid #e5e5e5; border-radius: 5px 5px 0 0; margin-bottom: 5px; " src="/assets/icons/logo_noText.svg" alt="portlogue-logo"/></div>
-                            <span class="footer-desc-span">Sharing and browsing websites made easy!</span>
-                            <p class="footer-desc-p">Showcase and share your wordpress, wix,
-                                weebly, and shopify websites with portlogue. With Portlogue you can stores all your websites in your profile and displays it to all 
-                                of the portlogue community or any website visitors. Join a community where it's all about 
-                                sharing and exploring websites.</p>
-                            <div class="footer-desc-social">
-                                <!--
-                                <div><img src="#" alt="facebook-icon"></div>
-                                <div><img src="#" alt="youtube-icon"></div>
-                                <div><img src="#" alt="linkedin-icon"></div>
-                                <div><img src="#" alt="twitter-icon"></div>
-                                -->
-                            </div>
-                
-                            <p style="font-size: 16px; color: #7f7f7f;">©2019 PORTLOGUE. All rights reserved.</p>
+        <div class="footer-container">
+                <div class="footer-desc">
+                        <div><img style="width: 100px; border: 1px solid #e5e5e5; border-radius: 5px 5px 0 0; margin-bottom: 5px; " src="/assets/icons/logo_noText.svg" alt="portlogue-logo"/></div>
+                        <span class="footer-desc-span">Sharing and browsing websites made easy!</span>
+                        <p class="footer-desc-p">Showcase and share your wordpress, wix,
+                            weebly, and shopify websites with portlogue. With Portlogue you can stores all your websites in your profile and displays it to all 
+                            of the portlogue community or any website visitors. Join a community where it's all about 
+                            sharing and exploring websites.</p>
+                        <div class="footer-desc-social">
+                            <!--
+                            <div><img src="#" alt="facebook-icon"></div>
+                            <div><img src="#" alt="youtube-icon"></div>
+                            <div><img src="#" alt="linkedin-icon"></div>
+                            <div><img src="#" alt="twitter-icon"></div>
+                            -->
                         </div>
-                    <ul class="footer-links">
-                        <span>Quick Links</span>
-                        <div class="footer-quicks">
-                                <li><a href="/users/login">Login</a></li>
-                                <li><a href="/users/register">Register</a></li>
-                                <li><a href="/users/about">About</a></li>
-                                <li><a href="#">Contact</a></li>
-                        </div>
-                    </ul>       
-                    <div class="empty-spot">
-    
+            
+                        <p style="font-size: 16px; color: #7f7f7f;">©2019 PORTLOGUE. All rights reserved.</p>
                     </div>
-            </div>
-        </footer>
+                <ul class="footer-links">
+                    <span>Quick Links</span>
+                    <div class="footer-quicks">
+                            <li><a href="/users/login">Login</a></li>
+                            <li><a href="/users/register">Register</a></li>
+                            <li><a href="/users/about">About</a></li>
+                            <li><a href="#">Contact</a></li>
+                    </div>
+                </ul>       
+                <div class="empty-spot">
+
+                </div>
+        </div>
+    </footer>
 
 <script>
+
+//Direct to register
+function directRegister() {
+    window.location.pathname= "/users/register";
+}
 
 $("#got-feedback-button").on("click", ()=> {
     $("#got-feedback-button").addClass("feedback-button-hide");

@@ -3,6 +3,7 @@ const { body } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 const async = require(`async`);
 const moment = require("moment");
+const requestIp = require("request-ip");
 
 
 
@@ -11,10 +12,109 @@ const User = require(`../models/User`);
 const FriendStatus = require(`../models/friendStatus`);
 const Token = require(`../models/Token`);
 const Website = require("../models/Website");
-const Featured = require("../models/Featured");
+const Feature = require("../models/Feature");
+const Feedback = require("../models/Feedback");
+const Guest = require("../models/Guest");
 
 //Functions
 const functionCntrl = require(`../controllers/functionsContoller`);
+
+/* Quick Fixes */
+
+//Add to feature
+exports.featureAdd = function (req, res, next) {
+
+    console.log(req.params.webId);
+    let toFeature = new Feature({
+        website: req.params.webId,
+    });
+
+    toFeature.save((err)=> {
+        if (err) {return next(err);}
+        res.redirect("/");
+    });
+}
+
+//Get for messages
+exports.GET_send_message = function(req, res, next) {
+    res.send(`NOT IMPLEMENTED`); //toFix
+}
+
+
+//id redirect
+exports.GET_id_redirect = function(req, res, next) {
+    User.findById(req.params.id).exec((err, result)=> {
+        if (err) {return next(err)};
+        res.redirect(`/users/profile/${result.username}`);
+    });
+}
+
+//Email redirect
+/*
+exports.redirectEmail = function(req, res, next) {
+    User.findOne({"email": req.params.email}).exec((err, results)=>{
+        if (err) throw "routeController > redirectEmail";
+
+        if (!results) {
+            res.send(`USER NOT FOUND`); //toFix
+        }
+
+        else {
+            res.redirect(`/users/profile/${results.username}`);
+        }
+
+    });
+}
+*/
+
+//Id redirect avatar
+exports.idRedirect = function(req, res, next) {
+    User.findById(req.params.id).exec((err, result)=> {
+        res.redirect(`/publicAvatar/${result.email}`);
+    });
+}
+
+/* Asset Renders */
+
+//GET user web thumb 
+exports.GET_webthumb =  function(req, res, next) {
+
+    Website.findById(req.params.id).exec((err, result) => {
+        if (err) {res.sendStatus(404); return;}
+        
+        if (result) {
+            res.contentType(result.webThumb.contentType);
+            res.send(result.webThumb.data);
+            return;
+        }
+        else {
+            res.send(`NO IMAGES FOUND`); //toFIX
+        }
+
+    });
+
+};
+
+/* Feedback */
+
+//Send Feedback
+exports.POST_sendFeedback = function(req, res, next) {
+
+    let { email, message } = req.body;
+
+    let feedbackForm = new Feedback({
+        email,
+        feedback: message
+    });
+
+    feedbackForm.save((err)=> {
+        if (err) {return next(err);}
+        res.send("Saved Feedback");
+    });
+
+}
+
+/* Website popup*/
 
 //Website Hover and website views
 exports.GET_websiteHover = function(req, res, next) {
@@ -39,59 +139,88 @@ exports.GET_websiteHover = function(req, res, next) {
     });
 }
 
-//GET user web thumb 
-exports.GET_webthumb =  function(req, res, next) {
+exports.GET_visitorWebsiteHover = function (req, res, next) {
+    if (!req.user) {
+        let websiteId = req.params.id;
 
-    Website.findById(req.params.id).exec((err, result) => {
-        if (err) {res.sendStatus(404); return;}
-        
-        if (result) {
-            res.contentType(result.webThumb.contentType);
-            res.send(result.webThumb.data);
-            return;
-        }
-        else {
-            res.send(`NO IMAGES FOUND`); //toFIX
-        }
+        async.parallel({
+            guest: function(cb) {
+                if (requestIp.getClientIp(req) === "::1" || requestIp.getClientIp(req) === "::ffff:127.0.0.1") {
+                    return cb(null, "development mode");
+                }
+                else {
+                    Guest.findOne({ ip: requestIp.getClientIp(req) }).exec(cb);
 
-    });
+                }
+            },
+            website: function(cb) {
+                Website.findById(websiteId).populate("owner").populate({ path: "comments", populate: { path: "user" } }).exec(cb);
+            }
+        }, (err, async)=> {
 
-};
+            if (err) {return next(err);}
+            //toFix
+            if (async.guest === "development mode") {
+                console.log(`-----------------You are in development mode---------------------`);
+                if (async.website.comments.length === 0) {
+                    res.render("forVisitors/partials/websiteDisplay", { moment: moment, website: async.website, owner: async.website.owner, comments: [] });
+                    return;
+                }
+                else {
+                    res.render("forVisitors/partials/websiteDisplay", { moment: moment, website: async.website, owner: async.website.owner, comments: async.website.comments.reverse() });
+                    return
+                }
+            }
 
+            let guestCheck = false;
+            //Check if guest has seen the site
+            for (let site of async.guest.viewedSite) {
+                if (site.toString() === async.website._id.toString()) {
+                    guestCheck = true;
+                }
+            }
 
+            if (!guestCheck) {
+                let guestArrayCopy = [...async.guest.viewedSite];
 
-//Get for messages
-exports.GET_send_message = function(req, res, next) {
-    res.send(`NOT IMPLEMENTED`); //toFix
+                guestArrayCopy.push(async.website._id);
+
+                let guestInstance = {
+                    $set: {
+                        viewedSite: guestArrayCopy
+                    }
+                };
+
+                Guest.findByIdAndUpdate(async.guest._id, guestInstance, {}, (err)=> {
+                    if (err) {return next(err);}
+                    let websiteInstance = {
+                        $set: {
+                            views: async.website.likes + 1
+                        }
+                    };
+                    Website.findByIdAndUpdate(async.website._id, websiteInstance, {}, (err)=> {
+                        if (err) {return next(err);};
+                    });
+                })
+            }
+
+            if (async.website.comments.length === 0) {
+                res.render("forVisitors/partials/websiteDisplay", { moment: moment, website: async.website, owner: async.website.owner, comments: [] });
+                return;
+            }
+            else {
+                res.render("forVisitors/partials/websiteDisplay", { moment: moment, website: async.website, owner: async.website.owner, comments: async.website.comments.reverse() });
+                return;
+            }
+
+        });        
+    }
+    else {
+        next();
+    }
 }
 
-
-
-//Email redirect
-exports.redirectEmail = function(req, res, next) {
-    User.findOne({"email": req.params.email}).exec((err, results)=>{
-        if (err) throw "routeController > redirectEmail";
-
-        if (!results) {
-            res.send(`USER NOT FOUND`); //toFix
-        }
-
-        else {
-            res.redirect(`/users/profile/${results.username}`);
-        }
-
-    });
-}
-
-
-//Id redirect avatar
-exports.idRedirect = function(req, res, next) {
-    User.findById(req.params.id).exec((err, result)=> {
-        res.redirect(`/publicAvatar/${result.email}`);
-    });
-}
-
-
+/* Profile Page */
 
 //User profile page
 exports.GET_profile = function(req, res, next) {
@@ -145,7 +274,6 @@ exports.GET_profile = function(req, res, next) {
         })
     
     }
-
     //Query for user's profile
     User.findOne({ username: req.params.username }).populate("websites").exec((err, userProfile)=> {
         if (err) {return next(err);}
@@ -230,15 +358,47 @@ exports.GET_profile = function(req, res, next) {
     })
 }
 
-//id redirect
-exports.GET_id_redirect = function(req, res, next) {
-    User.findById(req.params.id).exec((err, result)=> {
-        if (err) {return next(err)};
-        res.redirect(`/users/profile/${result.username}`);
-    });
+//Profile Page for visitors
+exports.GET_visitorProfile = function (req, res, next) {
+    if (!req.user) {
+        //Query for user's profile
+        User.findOne({ username: req.params.username }).populate("websites").exec((err, userProfile)=> {
+            if (err) {return next(err);}
+
+            if (!userProfile) {
+                res.send("Profile does not exist");
+            }
+
+            else {
+                //requried vars for pagination
+            const pagination = req.query.pagination ? parseInt(req.query.pagination) : 6;
+            const page = req.query.page ? parseInt(req.query.page) : 1;
+
+            Website.find({ owner: userProfile._id }).populate("owner").skip((page-1) * pagination).limit(pagination).sort({date: -1}).exec((err, webResults)=> {
+                if (err) throw `routeController > GET_discover_new`;      
+
+                    //Websites are less than 6 disable the next page
+                    if (webResults.length < 6) {
+                        res.render(`forVisitors/homePage/profilePage`, { profile: userProfile, webResults, qryNextStat: "disabled", page, layout: `forVisitors/homePage/homeLayout`});
+                        return;
+                    }
+                    
+                    else {
+                        res.render(`firVisitors/homePage/profilePage`, { profile: userProfile, webResults, qryNextStat: "", page, layout: `forVisitors/homePage/homeLayout`});
+                        return;
+                    }
+
+            })
+            }
+        })
+    }
+    else {
+        next();
+    }
+
 }
 
-
+/* Login and Register */
 
 //Login Route
 exports.renderLogin = function(req, res, next) {
@@ -250,7 +410,89 @@ exports.renderRegister = function(req, res, next) {
     res.render(`register`, requiredObjects.registerLocals);
 };
 
-//GET function for first time setup
+/* Confirmation */
+
+//User confirmation
+exports.GET_confirmation = function(req, res, next) {
+
+    const userToken = req.params.userToken;
+
+    //Find the account
+    Token.findOne({"token": userToken}).populate(`_userId`).exec((err, result)=> {
+
+        if (err) {return next(err);}
+
+        if (!result) {
+            res.sendStatus(404);
+        }
+
+        else {
+
+            User.findById(result._userId._id).exec((err, userRes)=> {
+                if (err) {return next(err);}
+
+                if (userRes.isVerified === true) {
+                    res.send("Token Expired");
+                    return;
+                }
+    
+                let userUpdate ={
+                    $set: {
+                        isVerified: true
+                    }
+                };
+    
+                User.findByIdAndUpdate(userRes._id, userUpdate, {}, (err, udpateRes)=> {
+                    if (err) {return next(err);}
+
+                    Token.findByIdAndDelete(result._id, (err, deleteRes)=> {
+                        if (err) {return next(err);}
+                        req.flash(`success`, `Account has been successfully created`);
+                        res.redirect(`/users/login`);
+                    });
+                    
+                });
+    
+            });
+
+        }
+    });
+}
+
+/* About Page */
+
+exports.GET_about = function (req, res, next) {    
+
+    async.parallel({
+        fstat: function(cb) {
+            FriendStatus.find({"requestTo": req.user._id}).populate("requestFrom").exec(cb);
+        }
+    },(err, async)=> {
+        //Friend Status display
+        let fStatDisplay = [];
+
+        for (let val of async.fstat) {
+            if (val.status === 1) {
+                fStatDisplay.push(val);
+            }
+        }
+        res.render("about", { layout: `forUsers/homePage/homeLayout`, User: req.user, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user) });
+    });
+
+}
+
+exports.GET_visitorAbout = function(req, res, next) {
+    function loadAboutGuest(req, res) {
+        console.log("This ran");
+        res.render("about", { layout: "forVisitors/homePage/homeLayout" });
+    }
+
+    (!req.user) ? loadAboutGuest(req, res) : next();
+}
+
+/* First time setup */
+
+//Country and postal code setup
 exports.GET_first_Setup_CountryandPostal = function(req, res, next) {
     //Only run when both oare n/a (The user's first time)
     if ((req.user.country === `n/a`) && (req.user.postalCode === `n/a`)) {
@@ -261,6 +503,7 @@ exports.GET_first_Setup_CountryandPostal = function(req, res, next) {
     }
 };
 
+//Profile setup
 exports.GET_first_Setup_Profile = function(req, res, next) {
     //Only run on user's very first login
     if ((req.user.emailDisplay === `n/a`) && (req.user.occupation.length === 0)) {
@@ -274,6 +517,7 @@ exports.GET_first_Setup_Profile = function(req, res, next) {
     }
 };
 
+//Website link first time setup
 exports.GET_first_Setup_Link = function(req, res, next) {
 
     //Produces an array
@@ -288,6 +532,8 @@ exports.GET_first_Setup_Link = function(req, res, next) {
 
 };
 
+/* Home Page */
+
 //Home Page Route toFix
 exports.renderHome = function(req, res, next) {
 
@@ -295,7 +541,6 @@ exports.renderHome = function(req, res, next) {
     if ( (req.user.country === "n/a") || (req.user.emailDisplay === "n/a") ) {
         res.redirect(`/users/first_time_setup`);
     }
-
     //Proceed Normally
     else {
         let { type, category, colors, country } = req.query;
@@ -303,11 +548,13 @@ exports.renderHome = function(req, res, next) {
     }
 
 };
+
 //Check if user
 exports.checkHome = function(req, res, next) {
 
     if (!req.user) {
-        res.render("forVisitors/portlogue-about", { layout: "forVisitors/visitorLayout" });
+        let { type, category, colors, country } = req.query;
+        discoverVisitor(req, res, "new", {date: -1}, { type, category, colors, country });
     }
 
     else {
@@ -316,7 +563,7 @@ exports.checkHome = function(req, res, next) {
 
 }
 
-/* discover new */
+//Discover new
 exports.GET_discover_new = function(req, res, next) {
 
     let { type, category, colors, country } = req.query;
@@ -324,18 +571,16 @@ exports.GET_discover_new = function(req, res, next) {
 
 };
 
-exports.POST_newQryNext = function(req, res, next) {
+exports.GET_visitorNew = function (req, res, next) {
 
-    let { pageSection, type, category, colors, country, pageNumber } = req.body;
-    res.redirect(`/discover/${pageSection}?type=${type}&category?=${category}&colors?=${colors}&country=${country}&page=${(parseInt(pageNumber)  - 1)}`); //toFix: Backing from the first page results to an error
+    if (!req.user) {
+        let { type, category, colors, country } = req.query;
+        discoverVisitor(req, res, "new", {date: -1}, { type, category, colors, country });
+    }
+    else {
+        next();
+    }
 
-}
-
-exports.POST_newQryPrev = function(req, res, next) {
-
-    let { pageSection, type, category, colors, country, pageNumber } = req.body;
-
-    res.redirect(`/discover/${pageSection}?type=${type}&category?=${category}&colors?=${colors}&country=${country}&page=${(parseInt(pageNumber)  - 1)}`); //toFix: Backing from the first page results to an error
 }
 
 //Discover Highest rated
@@ -346,6 +591,20 @@ exports.GET_discover_highestRated = function(req, res, next) {
     renderDiscover(req, res, "highest_rated", {likes: -1}, { type, category, colors, country });
 };
 
+//Visitor Highest Rated
+exports.GET_visitorHighestRated = function (req, res, next) {
+
+    if (!req.user) {
+        let { type, category, colors, country } = req.query;
+
+        discoverVisitor(req, res, "highest_rated", {likes: -1}, { type, category, colors, country });
+    }
+    else {
+        next();
+    }
+
+}
+
 //Discover Highest Views
 exports.GET_discover_mostViewed = function(req, res, next) {
 
@@ -354,7 +613,45 @@ exports.GET_discover_mostViewed = function(req, res, next) {
     renderDiscover(req, res, "most_viewed", {views: -1}, { type, category, colors, country });
 };
 
-//Friends Display
+exports.GET_visitorMostViewed = function (req, res, next) {
+    if (!req.user) {
+        let { type, category, colors, country } = req.query;
+        discoverVisitor(req, res, "most_viewed", {views: -1}, { type, category, colors, country });
+    }
+    else {
+        next();
+    }
+}
+
+//Favorites Render
+exports.GET_favorites = function(req, res, next) {
+
+    let { type, category, colors, country } = req.query;
+
+    renderDiscover(req, res, "favorites", {}, { type, category, colors, country });
+}
+
+/* Pagination  */
+
+//Next
+exports.POST_newQryNext = function(req, res, next) {
+
+    let { pageSection, type, category, colors, country, pageNumber } = req.body;
+    res.redirect(`/discover/${pageSection}?type=${type}&category?=${category}&colors?=${colors}&country=${country}&page=${(parseInt(pageNumber)  - 1)}`); //toFix: Backing from the first page results to an error
+
+}
+
+//Back
+exports.POST_newQryPrev = function(req, res, next) {
+
+    let { pageSection, type, category, colors, country, pageNumber } = req.body;
+
+    res.redirect(`/discover/${pageSection}?type=${type}&category?=${category}&colors?=${colors}&country=${country}&page=${(parseInt(pageNumber)  - 1)}`); //toFix: Backing from the first page results to an error
+}
+
+/* Friends Display*/
+
+//toFix
 exports.GET_discover_friends = function(req, res, next) { //error in pageination  page=2 toFix
 
     //requried vars for pagination
@@ -431,6 +728,8 @@ exports.POST_friendsQryNext = function(req, res, next) {
 exports.POST_friendsQryPrev = function(req, res, next) {
     res.redirect(`/discover/friends?filter=${req.body.filter}&page=${(parseInt(req.body.pageNumber)  - 1)}`); //toFix: Backing from the first page results to an error
 }
+
+/* Search Page */
 
 //Search home
 exports.GET_search_home = [
@@ -518,54 +817,99 @@ exports.GET_search_home = [
     }
 ];
 
+//Visitor Search
+exports.GET_visitorSearch = [
 
-//User confirmation
-exports.GET_confirmation = function(req, res, next) {
+body(`q`).trim(),
 
-    const userToken = req.params.userToken;
+sanitizeBody(`q`).unescape(),
+(req, res, next) => {
 
-    //Find the account
-    Token.findOne({"token": userToken}).populate(`_userId`).exec((err, result)=> {
+    if (!req.user) {
 
-        if (err) {return next(err);}
+        //Get rid of spaces
+    let searchQry = req.query.q.replace(/\s/g,'').toLowerCase();
 
-        if (!result) {
-            res.sendStatus(404);
+    //Search Algorithm
+    async.parallel({
+
+        qryOne: (cb) => {
+            User.find({ "fullName": searchQry }).populate(`friendRequests`).exec(cb);
+        },
+        qryTwo: (cb) => {
+            User.find({"firstName":searchQry}).populate(`friendRequests`).exec(cb);
+        },
+        qryThree: (cb) => {
+            User.find({"lastName":searchQry}).populate(`friendRequests`).exec(cb);
+        },
+        qryFour: (cb) => {
+            User.find({"email":searchQry}).populate(`friendRequests`).exec(cb);
+        },
+        qryFive: (cb) => {
+            User.find({"username":req.query.q}).populate(`friendRequests`).exec(cb); //Case sensitive Search
+        },
+        qrySix: (cb) => {
+            Website.find({"type": searchQry}).populate("owner").populate(`friendRequests`).exec(cb);
+        }
+
+    }, function(err, results) {
+
+        if (err) {return next(err);}      
+
+        let qryFor = req.query.q.charAt(0).toUpperCase() + req.query.q.slice(1)
+
+        //
+        if (results.qryOne.length !== 0) {
+            console.log(`qryOne`);
+            res.render(`forVisitors/searchPage`, {qUsers: results.qryOne, qryFor});
+            return;
+        }
+
+        if (results.qryTwo.length !== 0) {
+            console.log(`qry2`);
+            res.render(`forVisitors/searchPage`, {qUsers: results.qryTwo, qryFor});
+            return;
+        }
+
+        if (results.qryThree.length !== 0) {
+            console.log(`qry3`);
+            res.render(`forVisitors/searchPage`, {qUsers: results.qryThree, qryFor});
+            return;
+            }
+
+        if (results.qryFour.length !== 0) {
+            console.log(`qry4`);
+            res.render(`forVisitors/searchPage`, {qUsers: results.qryFour, qryFor});
+            return;
+        }
+
+        if (results.qryFive.length !== 0) {
+            console.log(`qry5`);
+            res.render(`forVisitors/searchPage`, {qUsers: results.qryFive, qryFor});
+            return;
+        }
+
+        if (results.qrySix.length !== 0) {
+            console.log(`qry6`);
+            res.render(`forVisitors/searchPage`, {qUsers: results.qrySix, qryFor});
+            return;
         }
 
         else {
-
-            User.findById(result._userId._id).exec((err, userRes)=> {
-                if (err) {return next(err);}
-
-                if (userRes.isVerified === true) {
-                    res.send("Token Expired");
-                    return;
-                }
-    
-                let userUpdate ={
-                    $set: {
-                        isVerified: true
-                    }
-                };
-    
-                User.findByIdAndUpdate(userRes._id, userUpdate, {}, (err, udpateRes)=> {
-                    if (err) {return next(err);}
-
-                    Token.findByIdAndDelete(result._id, (err, deleteRes)=> {
-                        if (err) {return next(err);}
-                        req.flash(`success`, `Account has been successfully created`);
-                        res.redirect(`/users/login`);
-                    });
-                    
-                });
-    
-            });
-
+            console.log(`qryNoResult`);
+            res.render(`forVisitors/searchPage`, {qUsers: [], qryFor});
+            return;
         }
     });
-}
+    }
 
+    else {
+        next();
+    }
+}
+]
+
+/* Settings render */
 exports.GET_settings = function(req, res, next) {
     //render setting page with friendStat
     function renderSettings(settingTab, arrayExtra = []) {
@@ -635,16 +979,16 @@ exports.GET_settings = function(req, res, next) {
     }
 }
 
-/* Initialize Functions*/
 
-let renderDiscover = function (req, res, pageSection, sortSetting, filter) {
+/* Initialize Functions*/
+let discoverVisitor = function(req, res, pageSection, sortSetting, filter) {
+
     //requried vars for pagination
     const pagination = req.query.pagination ? parseInt(req.query.pagination) : 6;
     const page = req.query.page ? parseInt(req.query.page) : 1;
 
     //Check objects for undefined and delete
     for (let prop in filter) {
-        console.log(prop);
         if (filter[prop] === undefined) {
             delete filter[prop];
         }
@@ -653,6 +997,50 @@ let renderDiscover = function (req, res, pageSection, sortSetting, filter) {
     if (filter === undefined) {
            filter = {};
     }
+
+    async.parallel({
+
+        websites: (cb)=> {
+            Website.find(filter).populate("owner").skip((page-1) * pagination).limit(pagination).sort(sortSetting).exec(cb);
+        },
+
+        feature: (cb)=> {
+            Feature.find({}).populate({ path: "website", populate: { path: "owner" } }).exec(cb);
+        },
+
+    }, function(err, async) {
+        if (err) {return next(err);}
+
+        //toFix queries pagination
+        if (async.websites.length < 6) {
+            res.render(`forVisitors/homePage/discoverRender`, { feature: async.feature, moment: moment,countryArray: require(`../arrayList/arrays`).countryList, pageSection, qryNextStat: "disabled", page, filter, layout: `forVisitors/homePage/homeLayout`, webResults: async.websites,});
+            return;
+        }
+        //
+        else {
+            res.render(`forVisitors/homePage/discoverRender`, { feature: async.feature, moment: moment,countryArray: require(`../arrayList/arrays`).countryList, pageSection, qryNextStat: "", page, filter, layout: `forVisitors/homePage/homeLayout`, webResults: async.websites,});
+            return;
+        }
+    });
+
+}
+
+let renderDiscover = function (req, res, pageSection, sortSetting, filter) {
+    //requried vars for pagination
+    const pagination = req.query.pagination ? parseInt(req.query.pagination) : 6;
+    const page = req.query.page ? parseInt(req.query.page) : 1;
+
+    //Check objects for undefined and delete
+    for (let prop in filter) {
+        if (filter[prop] === undefined) {
+            delete filter[prop];
+        }
+    }
+    //All undefineds are deleted
+    if (filter === undefined) {
+           filter = {};
+    }
+
     async.parallel({
 
         fStat: (cb)=> {
@@ -663,8 +1051,15 @@ let renderDiscover = function (req, res, pageSection, sortSetting, filter) {
             Website.find(filter).populate("owner").skip((page-1) * pagination).limit(pagination).sort(sortSetting).exec(cb);
         },
 
-        featured: (cb)=> {
-            Featured.find({}).populate("website").exec(cb);
+        feature: (cb)=> {
+            Feature.find({}).populate({ path: "website", populate: { path: "owner" } }).exec(cb);
+        },
+
+        user: (cb)=> {
+            User.findById(req.user._id).populate({ 
+                path: "favorites", 
+                populate: { path: "owner" } 
+            }).exec(cb);
         }
 
     }, function(err, async) {
@@ -678,15 +1073,32 @@ let renderDiscover = function (req, res, pageSection, sortSetting, filter) {
                 fStatDisplay.push(val);
             }
         }
+
+        console.log(async.feature);
+
+        //Render Favorites
+        if (pageSection === "favorites") {
+            console.log(async.user.favorites);
+            //toFix queries pagination
+            if (req.user.favorites.length < 6) {
+                res.render(`forUsers/homePage/discoverRender`, { feature: async.feature, moment: moment, countryArray: require(`../arrayList/arrays`).countryList,pageSection ,qryNextStat: "disabled", page, filter, layout: `forUsers/homePage/homeLayout`, User: req.user, webResults: async.user.favorites, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                return;
+            }
+            //
+            else {
+                res.render(`forUsers/homePage/discoverRender`, { feature: async.feature, moment: moment,countryArray: require(`../arrayList/arrays`).countryList, pageSection ,qryNextStat: "", page, filter, layout: `forUsers/homePage/homeLayout`, User: req.user, webResults: async.user.favorites, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                return;
+            }
+        }
         
         //toFix queries pagination
         if (async.websites.length < 6) {
-            res.render(`forUsers/homePage/discoverRender`, { moment: moment, countryArray: require(`../arrayList/arrays`).countryList,pageSection ,qryNextStat: "disabled", page, filter, layout: `forUsers/homePage/homeLayout`, User: req.user, webResults: async.websites, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+            res.render(`forUsers/homePage/discoverRender`, { feature: async.feature, moment: moment, countryArray: require(`../arrayList/arrays`).countryList,pageSection ,qryNextStat: "disabled", page, filter, layout: `forUsers/homePage/homeLayout`, User: req.user, webResults: async.websites, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
             return;
         }
         //
         else {
-            res.render(`forUsers/homePage/discoverRender`, { moment: moment,countryArray: require(`../arrayList/arrays`).countryList, pageSection ,qryNextStat: "", page, filter, layout: `homePage/homeLayout`, User: req.user, webResults: async.websites, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+            res.render(`forUsers/homePage/discoverRender`, { feature: async.feature, moment: moment,countryArray: require(`../arrayList/arrays`).countryList, pageSection ,qryNextStat: "", page, filter, layout: `forUsers/homePage/homeLayout`, User: req.user, webResults: async.websites, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
             return;
         }
     });

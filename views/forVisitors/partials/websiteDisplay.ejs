@@ -1,0 +1,104 @@
+<!-- Make body transparent for hover -->
+<style>
+    body {
+        background-color: transparent;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        color: #7f7f7f;
+    }
+</style>
+
+<section id="hover-section">
+
+        <div id="hover-overlay" onclick="parent.closeHover();"><!-- Black overlay -->
+            <span id="close-hover"><img class="nav-icons" src="/assets/icons/icons8-delete-96.png"/></span>
+        </div>
+
+        <div class="website-view">
+            <div class="website-topbar">
+                <span><a target="_blank" href="<%=website.url%>" target="_blank"><%=website.url%></a></span>
+                <span><%=website.views%> views</span>
+            </div>
+            <iframe id="profile-iframe"
+                title="Inline Frame"
+                width="100%;"
+                height="100%"
+                scrolling="yes"
+                src="<%=website.url%>">
+            </iframe>
+        </div>
+
+        <div id="hover-interact">
+
+            <div class="hover-head">
+                <div class="hover-header">
+                    <a target="_parent" href="/users/profile/<%=owner.username%>" class="hover-avatar-wrapper"><img style="height:100%;" src="/publicAvatar/<%=owner.email%>"/></a>
+                    <span class="sitename-fullname">
+                        <span><h3><%-website.sitenameDisplay%></h3></span>
+                        <a target="_parent" href="/users/profile/<%=owner.username%>" class="h3-sub hover-head-fullname">By <span style="color:#3498db;"><%=owner.fullName%></span></a>
+                    </span>
+                </div>
+
+                <div class="like-favourite">
+                    <form id="likeForm">
+                        <button class="likeStyle" id="likeButton"><img class="nav-icons" src="/assets/icons/icons8-facebook-like-96.png"/><span><%=website.likes%></span></button>
+                    </form>
+                    <form id="favForm">
+                        <button class="favStyle" id="favButton"><img class="nav-icons" src="/assets/icons/icons8-heart-96-dark.png"/>Favorite</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="hover-description">
+                <span><%=website.description%></span>
+            </div>
+
+            <div class="comment-post">
+                <span>Comments</span>
+            </div>
+
+            <ul id="comment-render">
+
+                <span id="no-comment-placeholder" style="text-align: center;"><%- comments.length === 0 ? "There are no comments": ""%></span>
+                <% for (let val of comments) {%>
+                    <li>
+                        <a target="_parent" href="/users/profile/<%=val.user.username%>" class="hover-avatar-wrapper" style="width: 40px; height: 40px;"><img style="height: 100%" src="/publicAvatar/<%=val.user.email%>"/></a>
+                        <div class="comment-head">
+                            <div>
+                                <a target="_parent" class="comment-head-fullname" href="/users/profile/<%=val.user.username%>"><strong><%=val.user.fullName%></strong></a>
+                                <span><%=val.comment%></span>
+                            </div>
+                            <div class="comment-foot">
+                                <span style="font-size: 14px;"><%= moment(val.date).fromNow() %></span>
+                            </div>
+                        </div>
+                    </li>
+                <% } %>
+            </ul> 
+
+        </div>
+
+</section>
+
+<script>
+
+    /* Initialize Variables */
+
+    //Grab website id
+    let websiteId = <%-JSON.stringify(website._id)%>;
+    //Website info
+    let webLikes = <%- JSON.stringify(website.likes) %>;
+
+    /* Front end changes */
+
+    $("#likeButton").on("click", ()=> {
+        parent.directRegister();
+    });
+
+    $("#favButton").on("click", ()=> {
+        parent.directRegister();
+    });
+
+</script>
