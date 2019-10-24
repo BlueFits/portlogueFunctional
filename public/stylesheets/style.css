@@ -2229,12 +2229,13 @@ h3 {
 
 /* FOOTER */
 footer {
-    background-color :#fff;
+    background-color : black;
     width: 100%;
     padding: 30px 30px;
     display: flex;
     align-items: center;
-    color: #7f7f7f;
+    color: #fff;
+    height: 150px;
 }
 
 .footer-container {
@@ -2263,6 +2264,7 @@ footer ul {
 .footer-desc-p {
     font-size: 16px;
     margin-top: 10px;
+    width: 360px;
 }
 
 .footer-desc-social {
@@ -2291,6 +2293,10 @@ footer ul {
     font-size: 18px;
     border-right: 1px solid #bbbbbb;
     padding: 0 10px;
+}
+
+.footer-quicks > li > a:hover {
+    color: #ffffff;
 }
 
 .footer-quicks > li:last-of-type {

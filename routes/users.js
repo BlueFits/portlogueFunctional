@@ -16,9 +16,6 @@ const { ensureAuth } = require(`../config/authenticate`);
 
 /* Quick Fixes*/
 
-//Add to featured user THIS IS A GET BE CAREFUL
-router.get("/feature_add/:webId", ensureAuth, routeController.featureAdd);
-
 //Report route
 router.get(`/report/:username`, ensureAuth, (req, res, next)=> {
     res.send(`NOT IMPLEMENTED`);
