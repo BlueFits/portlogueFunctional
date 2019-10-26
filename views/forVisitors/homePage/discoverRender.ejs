@@ -241,16 +241,6 @@ function loadQry(element) {
     location.params(newParam);
 }
 
-$.ajax({
-    url: '/',
-    type: 'GET',
-    contentType: "application/json",
-    data: viewport,
-    success: function(data) {
-        
-    }
-  });
-
 //Function to grab info from chosen website
 function getWebsite(element) {
     websiteId = element.getAttribute("data-website");
