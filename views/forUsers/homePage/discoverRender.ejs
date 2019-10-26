@@ -143,7 +143,7 @@
         <% for(let website of webResults) { %>
             <li class="portfolio-select">
                 <div>
-                    <div onClick="getWebsite(this);" data-website="<%=website._id%>" class="portfolio-thumbnail">
+                    <div onClick="getWebsite(this);" data-website="<%=website._id%>" data-url="<%=website.url%>" class="portfolio-thumbnail">
                         <div class="portfolio-thumbnail-bar"><!--Grey bar--></div>
                         <div><img class="portfolio-thumbnail-img" src="/webThumb/<%=website._id%>"/></div>
                     </div>
@@ -188,11 +188,15 @@
 //Initialize websiteDisplay
 let websiteId;
 
+let webUrl;
+
 let filterFront = <%-JSON.stringify(filter)%>;
 
 let pageSection = <%-JSON.stringify(pageSection)%>;
 
 let featuredWeb = <%-JSON.stringify(feature[0].website._id)%>;
+
+let featuredUrl = <%-JSON.stringify(feature[0].website.url)%>;
 
 let reqUser = <%-JSON.stringify(User)%>;
 
@@ -236,6 +240,7 @@ function loadQry(element) {
 //Function to grab info from chosen website
 function getWebsite(element) {
     websiteId = element.getAttribute("data-website");
+    webUrl = element.getAttribute("data-url");
 }
 
 if (pageSection === "favorites") {
@@ -588,7 +593,7 @@ $(".portfolio-thumbnail").on("click", ()=> {
         }
     });
 });
-});
+
 
 /* Quick Fix */
 
