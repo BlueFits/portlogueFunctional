@@ -161,7 +161,6 @@ exports.GET_visitorWebsiteHover = function (req, res, next) {
             if (err) {return next(err);}
             //toFix
             if (async.guest === "development mode") {
-                console.log(`-----------------You are in development mode---------------------`);
                 if (async.website.comments.length === 0) {
                     res.render("forVisitors/partials/websiteDisplay", { moment: moment, website: async.website, owner: async.website.owner, comments: [] });
                     return;

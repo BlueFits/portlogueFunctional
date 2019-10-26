@@ -10,6 +10,7 @@ const GuestSchema = new Schema({
     timezone: { type: String, default: "n/a" },
     referredFrom: { type: String, default: "n/a" },
     viewedSite: [{ type: Schema.Types.ObjectId, ref: "Website" }],
+    viewport: { type: String },
     date: { type: Date, required: true, default: Date.now, expires: 43200 }
 });
 

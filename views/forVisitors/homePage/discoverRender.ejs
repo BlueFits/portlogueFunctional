@@ -199,7 +199,10 @@ let featuredWeb = <%-JSON.stringify(feature[0]._id)%>;
 
 let featuredUrl = <%-JSON.stringify(feature[0].website.url)%>;
 
-
+let viewport = {
+    width: window.innerWidth,
+    height: window.innerHeight
+}
 
 function filterLi(ulId, inputId) {
 
@@ -237,6 +240,16 @@ function loadQry(element) {
     //This module is a god send
     location.params(newParam);
 }
+
+$.ajax({
+    url: '/',
+    type: 'GET',
+    contentType: "application/json",
+    data: viewport,
+    success: function(data) {
+        
+    }
+  });
 
 //Function to grab info from chosen website
 function getWebsite(element) {

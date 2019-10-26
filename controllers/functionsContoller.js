@@ -9,10 +9,9 @@ exports.guestGenerate = function (req, res, next) {
     const clientIp = requestIp.getClientIp(req);
     const geo = geoip.lookup(clientIp);
 
-    console.log(clientIp);
-
     if (clientIp === "::1" || clientIp === "::ffff:127.0.0.1") {
-        console.log(`-----------------You are in development mode---------------------`);
+        console.log(`-----------------You are in development mode guestGENERATE---------------------`);
+        console.log(req.query);
         next();
     }
     else {
@@ -22,6 +21,7 @@ exports.guestGenerate = function (req, res, next) {
             region: geo.region || "n/a",
             city: geo.city || "n/a",
             timezone: geo.timezone || "n/a",
+            viewport: req.query.width+"x"+req.query.height,
             referredFrom: req.get("Referrer") || "n/a"
         });
 
