@@ -350,11 +350,20 @@ switch (pageSection) {
 
 //Web popup on click if feature
 $("#featured-sitename").on("click", ()=> {
-    $("#web-frame").attr("src", `/users/website_hover/${websiteId}`);
-    $(".web-popup").css("z-index", "4");
-    $("body").css("overflow", "hidden");
+    //Check if mobile toFix
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
+         // Take the user to a different screen here.
+         let win = window.open(featuredUrl, "_blank");
+         win.focus();
+    }
 
-    console.log("functions ran");
+    else {
+        $("#web-frame").attr("src", `/users/website_hover/${websiteId}`);
+        $(".web-popup").css("z-index", "4");
+        $("body").css("overflow", "hidden");
+        console.log("functions ran");
+    }
+
     //Ajax to increment viewed site and push to user database
    $.ajax({
         method: "POST",
@@ -554,12 +563,20 @@ $("#countryDiscId").on("clickout", ()=> {
 
 //Display website now that websiteDisplay has value
 $(".portfolio-thumbnail").on("click", ()=> {
+    //Check if mobile toFix
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
+         // Take the user to a different screen here.
+         let win = window.open(webUrl, "_blank");
+         win.focus();
+    }
 
-    $("#web-frame").attr("src", `/users/website_hover/${websiteId}`);
-    $(".web-popup").css("z-index", "4");
-    $("body").css("overflow", "hidden");
+    else {
+        $("#web-frame").attr("src", `/users/website_hover/${websiteId}`);
+        $(".web-popup").css("z-index", "4");
+        $("body").css("overflow", "hidden");
+        console.log("functions ran");
+    }
 
-    console.log("functions ran");
     //Ajax to increment viewed site and push to user database
    $.ajax({
         method: "POST",
@@ -570,6 +587,7 @@ $(".portfolio-thumbnail").on("click", ()=> {
             //Empty
         }
     });
+});
 });
 
 /* Quick Fix */
