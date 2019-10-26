@@ -931,7 +931,7 @@ h3 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-height: 75vh;
+    min-height: 100vh;
 }
 
 .settings-options > div {
