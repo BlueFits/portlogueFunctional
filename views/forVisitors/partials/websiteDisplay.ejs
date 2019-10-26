@@ -90,6 +90,13 @@
     let websiteId = <%-JSON.stringify(website._id)%>;
     //Website info
     let webLikes = <%- JSON.stringify(website.likes) %>;
+    //Website URL
+    let webUrl = <%- JSON.stringify(website.url) %>;
+
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
+    // Take the user to a different screen here.
+        top.window.location.href=webUrl;
+    }
 
     /* Front end changes */
 
@@ -100,5 +107,6 @@
     $("#favButton").on("click", ()=> {
         parent.directRegister();
     });
+
 
 </script>
