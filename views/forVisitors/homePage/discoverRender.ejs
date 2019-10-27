@@ -1,50 +1,56 @@
+<% if (feature.length > 0){ %>
 
-<section id="feature-panel">
+    <section id="feature-panel">
 
-<div class="feature-overlay">
-    <img id="featured-image" src="/webThumb/<%=feature[0].website._id%>"/>
-</div>
-
-<div class="feature-content">
-    
-        <div class="feature-content-divOne">
-            <div class="feature-content-divOne-moment ">
-                <span><strong>Featured Site</strong></span>
-                <span><%=moment().format("LL")%></5></span>
+            <div class="feature-overlay">
+                <img id="featured-image" src="/webThumb/<%=feature[selected].website._id%>"/>
             </div>
-    
-            <div class="feature-content-divOne-type-category">
-                <span><%=feature[0].website.typeDisplay%></span>
-                <span><%=feature[0].website.categoryDisplay%></span>
-            </div>
-        </div>
-        <div class="feature-content-divTwo">
-                <h1 onclick="getWebsite(this)" id="featured-sitename" data-website="<%=feature[0].website._id%>"><strong><%=feature[0].website.sitenameDisplay%></strong></h1>
-            <div>
-                <a class="feature-content-divTwo-sitename-avatar" href="/users/profile/<%= feature[0].website.owner.username %>">
-                    <div><img style="height: 100%" src="/publicAvatar/<%=feature[0].website.owner.email%>"/></div>
-                    <span class="h1-sub">By <%=feature[0].website.owner.fullName%></span>
-                </a>
-            </div>
-        </div>
-        <div class="feature-content-divThree">
-                <div class="like-favourite">
-                        <form id="likeForm">
-                            <button onclick="directRegister()" data-website="<%=feature[0].website._id%>" class="likeStyle featured" id="likeButton"><img class="nav-icons" src="/assets/icons/icons8-facebook-like-96-white.png"/><span><%=feature[0].website.likes%></span></button>
-                        </form>
-                        <form id="favForm">
-                            <button  onclick="directRegister()" data-website="<%=feature[0].website._id%>" class="favStyle featured" id="favButton"><img class="nav-icons" src="/assets/icons/icons8-heart-96.png"/>Favorite</button>
-                        </form>
+            
+            <div class="feature-content">
+                
+                    <div class="feature-content-divOne">
+                        <div class="feature-content-divOne-moment ">
+                            <span><strong>Featured Site</strong></span>
+                            <span><%=moment().format("LL")%></5></span>
+                        </div>
+                
+                        <div class="feature-content-divOne-type-category">
+                                            <!-- toFix -->
+                            <span><%=feature[selected].website.typeDisplay%></span>
+                            <span><%=feature[selected].website.categoryDisplay%></span>
+                        </div>
                     </div>
-            <div class="feature-content-divThree-description">
-                <span>Description</span>
-                <span class="feature-content-description-container"><%=feature[0].website.description ? feature[0].website.description : "No Description" %></span>
-            </div>
-        </div>
-    
-    </div>
+                    <div class="feature-content-divTwo">
+                            <h1 onclick="getWebsite(this)" id="featured-sitename" data-website="<%=feature[selected].website._id%>"><strong><%=feature[selected].website.sitenameDisplay%></strong></h1>
+                        <div>
+                            <a class="feature-content-divTwo-sitename-avatar" href="/users/profile/<%= feature[selected].website.owner.username %>">
+                                <div><img style="height: 100%" src="/publicAvatar/<%=feature[selected].website.owner.email%>"/></div>
+                                <span class="h1-sub">By <%=feature[selected].website.owner.fullName%></span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="feature-content-divThree">
+                            <div class="like-favourite">
+                                    <form id="likeForm">
+                                        <button onclick="directRegister()" data-website="<%=feature[selected].website._id%>" class="likeStyle featured" id="likeButton"><img class="nav-icons" src="/assets/icons/icons8-facebook-like-96-white.png"/><span><%=feature[selected].website.likes%></span></button>
+                                    </form>
+                                    <form id="favForm">
+                                        <button  onclick="directRegister()" data-website="<%=feature[selected].website._id%>" class="favStyle featured" id="favButton"><img class="nav-icons" src="/assets/icons/icons8-heart-96.png"/>Favorite</button>
+                                    </form>
+                                </div>
+                        <div class="feature-content-divThree-description">
+                            <span>Description</span>
+                            <span class="feature-content-description-container"><%=feature[selected].website.description ? feature[selected].website.description : "No Description" %></span>
+                        </div>
+                    </div>
+                
+                </div>
+            
+            </section>
 
-</section>
+<% } else{ %>
+    <!-- Nothing-->
+<% } %>
 
 <section id="discoverSection">
 <nav class="discover-nav">
@@ -66,44 +72,102 @@
         <li>
             <span><input onkeyup="filterLi('typeId-dropdown','typeId')" id="typeId"/></span>
             <ul id="typeId-dropdown" class="sub-dropdown">
-                    <li onclick="loadQry(this)" data-type="portfolio" data-filter="type" class="qry-type"><span>Portfolio</span></li>
-                    <li onclick="loadQry(this)" data-type="ecommerce" data-filter="type" class="qry-type"><span>E-Commerce</span></li>
-                    <li onclick="loadQry(this)" data-type="photosharing" data-filter="type" class="qry-type"><span>Photo Sharing</span></li>
-                    <li onclick="loadQry(this)" data-type="writers" data-filter="type" class="qry-type"><span>Writers/Authors</span></li>
-                    <li onclick="loadQry(this)" data-type="community" data-filter="type" class="qry-type"><span>Community Building</span></li>
-                    <li onclick="loadQry(this)" data-type="mobile" data-filter="type" class="qry-type"><span>Mobile Device</span></li>
-                    <li onclick="loadQry(this)" data-type="blogs" data-filter="type" class="qry-type"><span>Blogs</span></li>
-                    <li onclick="loadQry(this)" data-type="informational" data-filter="type" class="qry-type"><span>Informational</span></li>
-                    <li onclick="loadQry(this)" data-type="online-business" data-filter="type" class="qry-type"><span>Online Business Brochure/Catalogs</span></li>
+                    <li onclick="loadQry(this)" data-type="3d-illustration" data-filter="style" class="qry-type"><span>3-dimensional Illustration</span></li>
+                    <li onclick="loadQry(this)" data-type="retro" data-filter="style" class="qry-type"><span>Retro</span></li>
+                    <li onclick="loadQry(this)" data-type="cartoons-illustrations" data-filter="style" class="qry-type"><span>Cartoons & Illustrations</span></li>
+                    <li onclick="loadQry(this)" data-type="unique-typography" data-filter="style" class="qry-type"><span>Unique Typography</span></li>
+                    <li onclick="loadQry(this)" data-type="material" data-filter="style" class="qry-type"><span>Material</span></li>
+                    <li onclick="loadQry(this)" data-type="two-tone-color" data-filter="style" class="qry-type"><span>Two Tone color</span></li>
+                    <li onclick="loadQry(this)" data-type="photo-realism" data-filter="style" class="qry-type"><span>Photo-Realism</span></li>
+                    <li onclick="loadQry(this)" data-type="transparency" data-filter="style" class="qry-type"><span>Transparency</span></li>
+                    <li onclick="loadQry(this)" data-type="grunge" data-filter="style" class="qry-type"><span>Grunge</span></li>
+                    <li onclick="loadQry(this)" data-type="abstract" data-filter="style" class="qry-type"><span>Abstract</span></li>
+                    <li onclick="loadQry(this)" data-type="semi-flat" data-filter="style" class="qry-type"><span>Semi-Flat</span></li>
+                    <li onclick="loadQry(this)" data-type="card-design" data-filter="style" class="qry-type"><span>Card Design</span></li>
+                    <li onclick="loadQry(this)" data-type="Isometric" data-filter="style" class="qry-type"><span>Isometric</span></li>
+                    <li onclick="loadQry(this)" data-type="freehand-drawing" data-filter="style" class="qry-type"><span>Freehand Drawing</span></li>
+                    <li onclick="loadQry(this)" data-type="minimalist" data-filter="style" class="qry-type"><span>Minimalist</span></li>
+                    <li onclick="loadQry(this)" data-type="other" data-filter="style" class="qry-type"><span>Other</span></li>
             </ul>
         </li>
         <li>
-                <span><input onkeyup="filterLi('categoryId-dropdown','categoryId')" id="categoryId"/></span>
+                <span><input onkeyup="filterLiTech('categoryId-dropdown','categoryId')" id="categoryId"/></span>
             <ul id="categoryId-dropdown" class="sub-dropdown">
-                    <li onclick="loadQry(this)" data-type="architecture" data-filter="category" class="qry-type"><span>Architecture</span></li>
-                    <li onclick="loadQry(this)" data-type="art-illustration" data-filter="category" class="qry-type"><span>Art & Illustration</span></li>
-                    <li onclick="loadQry(this)" data-type="business-corporate" data-filter="category" class="qry-type"><span>Business & Corporate</span></li>
-                    <li onclick="loadQry(this)" data-type="culture-education" data-filter="category" class="qry-type"><span>Culture & Education</span></li>
-                    <li onclick="loadQry(this)" data-type="design-agencies" data-filter="category" class="qry-type"><span>Design Agencies</span></li>
-                    <li onclick="loadQry(this)" data-type="events" data-filter="category" class="qry-type"><span>Events</span></li>
-                    <li onclick="loadQry(this)" data-type="experimental" data-filter="category" class="qry-type"><span>Experimental</span></li>
-                    <li onclick="loadQry(this)" data-type="fashion" data-filter="category" class="qry-type"><span>Fashion</span></li>
-                    <li onclick="loadQry(this)" data-type="film-tv" data-filter="category" class="qry-type"><span>Film & TV</span></li>
-                    <li onclick="loadQry(this)" data-type="food-drink" data-filter="category" class="qry-type"><span>Food & Drink</span></li>
-                    <li onclick="loadQry(this)" data-type="games-entertainment" data-filter="category" class="qry-type"><span>Games & Entertainment</span></li>
-                    <li onclick="loadQry(this)" data-type="hotel/restaurant" data-filter="category" class="qry-type"><span>Hotel/Restaurant</span></li>
-                    <li onclick="loadQry(this)" data-type="institutions" data-filter="category" class="qry-type"><span>Institutions</span></li>
-                    <li onclick="loadQry(this)" data-type="magazine/newspaper/blog" data-filter="category" class="qry-type"><span>Magazine/Newspaper</span></li>
-                    <li onclick="loadQry(this)" data-type="mobile-apps" data-filter="category" class="qry-type"><span>Mobile & Apps</span></li>                    
-                    <li onclick="loadQry(this)" data-type="music-sound" data-filter="category" class="qry-type"><span>Music & Sound</span></li>
-                    <li onclick="loadQry(this)" data-type="photography" data-filter="category" class="qry-type"><span>Photography</span></li>
-                    <li onclick="loadQry(this)" data-type="promotional" data-filter="category" class="qry-type"><span>Promotional</span></li>
-                    <li onclick="loadQry(this)" data-type="real-estate" data-filter="category" class="qry-type"><span>Real Estate</span></li>
-                    <li onclick="loadQry(this)" data-type="sports" data-filter="category" class="qry-type"><span>Sports</span></li>
-                    <li onclick="loadQry(this)" data-type="startups" data-filter="category" class="qry-type"><span>Startups</span></li>
-                    <li onclick="loadQry(this)" data-type="technology" data-filter="category" class="qry-type"><span>Technology</span></li>
-                    <li onclick="loadQry(this)" data-type="web-interactive" data-filter="category" class="qry-type"><span>Web & Interactive</span></li>
-                    <li onclick="loadQry(this)" data-type="other" data-filter="category" class="qry-type"><span>Other</span></li>
+                    <li onclick="loadQry(this)" data-type="angularjs" data-filter="category" class="qry-type">AngularJS</li>
+                    <li onclick="loadQry(this)" data-type="apache" data-filter="category" class="qry-type">Apache</li>
+                    <li onclick="loadQry(this)" data-type="barbajs" data-filter="category" class="qry-type">Barba.js</li>
+                    <li onclick="loadQry(this)" data-type="backbonejs" data-filter="category" class="qry-type">Backbone.js</li>
+                    <li onclick="loadQry(this)" data-type="bootstrap" data-filter="category" class="qry-type">Bootstrap</li>
+                    <li onclick="loadQry(this)" data-type="css-framework" data-filter="category" class="qry-type">CSS Framework</li>
+                    <li onclick="loadQry(this)" data-type="css3" data-filter="category" class="qry-type">CSS3</li>
+                    <li onclick="loadQry(this)" data-type="cloudfare" data-filter="category" class="qry-type">CloudFare</li>
+                    <li onclick="loadQry(this)" data-type="craft-cms" data-filter="category" class="qry-type">Craft CMS</li>
+                    <li onclick="loadQry(this)" data-type="createjs" data-filter="category" class="qry-type">CreateJS</li>
+                    <li onclick="loadQry(this)" data-type="d3" data-filter="category" class="qry-type">D3</li>
+                    <li onclick="loadQry(this)" data-type="debian" data-filter="category" class="qry-type">Debian</li>
+                    <li onclick="loadQry(this)" data-type="demandware" data-filter="category" class="qry-type"value="demandware">Demandware</li>
+                    <li onclick="loadQry(this)" data-type="drupal" data-filter="category" class="qry-type"value="drupal">Drupal</li>
+                    <li onclick="loadQry(this)" data-type="express" data-filter="category" class="qry-type"value="express">Express</li>
+                    <li onclick="loadQry(this)" data-type="facebook-api" data-filter="category" class="qry-type"value="facebook-api">Facebook API</li>
+                    <li onclick="loadQry(this)" data-type="fastclick" data-filter="category" class="qry-type"value="fastclick">FastClick</li>
+                    <li onclick="loadQry(this)" data-type="firebase" data-filter="category" class="qry-type"value="firebase">Firebase</li>
+                    <li onclick="loadQry(this)" data-type="font-awasome" data-filter="category" class="qry-type"value="font-awesome">Font Awesome</li>
+                    <li onclick="loadQry(this)" data-type="glsl" data-filter="category" class="qry-type"value="glsl">GLSL</li>
+                    <li onclick="loadQry(this)" data-type="gsap-animation" data-filter="category" class="qry-type"value="gsap-animation">GSAP Animation</li>
+                    <li onclick="loadQry(this)" data-type="google-app-engine" data-filter="category" class="qry-type"value="google-app-engine">Google App Engine</li>
+                    <li onclick="loadQry(this)" data-type="google-font-api" data-filter="category" class="qry-type"value="google-font-api">Google Font API</li>
+                    <li onclick="loadQry(this)" data-type="html5" data-filter="category" class="qry-type"value="html5">HTML5</li>
+                    <li onclick="loadQry(this)" data-type="hammerjs" data-filter="category" class="qry-type"value="hammerjs">Hammer.JS</li>
+                    <li onclick="loadQry(this)" data-type="handlebars" data-filter="category" class="qry-type"value="handlebars">HandleBars</li>
+                    <li onclick="loadQry(this)" data-type="iis" data-filter="category" class="qry-type"value="iis">IIS</li>
+                    <li onclick="loadQry(this)" data-type="ink" data-filter="category" class="qry-type"value="ink">Ink</li>
+                    <li onclick="loadQry(this)" data-type="knockout" data-filter="category" class="qry-type"value="knockout">Knockout</li>
+                    <li onclick="loadQry(this)" data-type="laravel" data-filter="category" class="qry-type"value="laravel">Laravel</li>
+                    <li onclick="loadQry(this)" data-type="lo-dash" data-filter="category" class="qry-type"value="">Lo-dash</li>
+                    <li onclick="loadQry(this)" data-type="magento" data-filter="category" class="qry-type"value="magento">Magento</li>
+                    <li onclick="loadQry(this)" data-type="mediaelementjs" data-filter="category" class="qry-type"value="mediaelementjs">MediaElement.js</li>
+                    <li onclick="loadQry(this)" data-type="microsoft-asp-net" data-filter="category" class="qry-type"value="microsoft-asp-net">Microsoft ASP.NET</li>
+                    <li onclick="loadQry(this)" data-type="modernizr" data-filter="category" class="qry-type"value="modernizr">Modernizr</li>
+                    <li onclick="loadQry(this)" data-type="nginx" data-filter="category" class="qry-type"value="nginx">Nginx</li>
+                    <li onclick="loadQry(this)" data-type="nodejs" data-filter="category" class="qry-type"value="nodejs">Node.js</li>
+                    <li onclick="loadQry(this)" data-type="nuxtjs" data-filter="category" class="qry-type"value="nuxtjs">Nuxt.js</li>
+                    <li onclick="loadQry(this)" data-type="owl-carousel" data-filter="category" class="qry-type"value="owl-carousel">OWL Carousel</li>
+                    <li onclick="loadQry(this)" data-type="optimizely" data-filter="category" class="qry-type"value="optimizely">Optimizely</li>
+                    <li onclick="loadQry(this)" data-type="php" data-filter="category" class="qry-type"value="php">PHP</li>
+                    <li onclick="loadQry(this)" data-type="pixijs" data-filter="category" class="qry-type"value="pixijs">PixiJS</li>
+                    <li onclick="loadQry(this)" data-type="reactjs" data-filter="category" class="qry-type"value="reactjs">ReactJS</li>
+                    <li onclick="loadQry(this)" data-type="requirejs" data-filter="category" class="qry-type"value="requirejs">RequireJS</li>
+                    <li onclick="loadQry(this)" data-type="revealjs" data-filter="category" class="qry-type"value="revealjs">Reveal.js</li>
+                    <li onclick="loadQry(this)" data-type="ruby" data-filter="category" class="qry-type"value="ruby">Ruby</li>
+                    <li onclick="loadQry(this)" data-type="svg" data-filter="category" class="qry-type"value="svg">SVG</li>
+                    <li onclick="loadQry(this)" data-type="shopify" data-filter="category" class="qry-type"value="shopify">Shopify</li>
+                    <li onclick="loadQry(this)" data-type="skrollrjs" data-filter="category" class="qry-type"value="skrollrjs">Skrollr.js</li>
+                    <li onclick="loadQry(this)" data-type="snapsvg" data-filter="category" class="qry-type"value="snapsvg">Snap.svg</li>
+                    <li onclick="loadQry(this)" data-type="socketio" data-filter="category" class="qry-type"value="socketio">Socket.io</li>
+                    <li onclick="loadQry(this)" data-type="soundmanager" data-filter="category" class="qry-type"value="soundmanager">SoundManager</li>
+                    <li onclick="loadQry(this)" data-type="spinjs" data-filter="category" class="qry-type"value="spinjs">Spin.js</li>
+                    <li onclick="loadQry(this)" data-type="threejs" data-filter="category" class="qry-type"value="threejs">Three.js</li>
+                    <li onclick="loadQry(this)" data-type="twitter-api" data-filter="category" class="qry-type"value="twitter-api">Twitter API</li>
+                    <li onclick="loadQry(this)" data-type="typekit" data-filter="category" class="qry-type"value="typekit">Typekit</li>
+                    <li onclick="loadQry(this)" data-type="ubuntu" data-filter="category" class="qry-type"value="ubuntu">Ubuntu</li>
+                    <li onclick="loadQry(this)" data-type="underscorejs" data-filter="category" class="qry-type"value="underscorejs">Underscore.js</li>
+                    <li onclick="loadQry(this)" data-type="vr" data-filter="category" class="qry-type"value="vr">VR</li>
+                    <li onclick="loadQry(this)" data-type="varnish" data-filter="category" class="qry-type"value="varnish">Varnish</li>
+                    <li onclick="loadQry(this)" data-type="velocityjs" data-filter="category" class="qry-type"value="velocityjs">Velocity.js</li>
+                    <li onclick="loadQry(this)" data-type="videojs" data-filter="category" class="qry-type"value="videojs">VideoJS</li>
+                    <li onclick="loadQry(this)" data-type="vuejs" data-filter="category" class="qry-type"value="vuejs">Vue.js</li>
+                    <li onclick="loadQry(this)" data-type="webgl" data-filter="category" class="qry-type"value="webgl">WebGL</li>
+                    <li onclick="loadQry(this)" data-type="websockets" data-filter="category" class="qry-type"value="websockets">WebSockets</li>
+                    <li onclick="loadQry(this)" data-type="webvr" data-filter="category" class="qry-type"value="webvr">WebVR</li>
+                    <li onclick="loadQry(this)" data-type="owebpackther" data-filter="category" class="qry-type"value="webpack">Webpack</li>
+                    <li onclick="loadQry(this)" data-type="woocommerce" data-filter="category" class="qry-type"value="woocommerce">WooCommerce</li>
+                    <li onclick="loadQry(this)" data-type="wordpress" data-filter="category" class="qry-type"value="wordpress">Wordpress</li>
+                    <li onclick="loadQry(this)" data-type="yepnope" data-filter="category" class="qry-type"value="yepnope">Yepnope</li>
+                    <li onclick="loadQry(this)" data-type="youtube-api" data-filter="category" class="qry-type"value="youtube-api">Youtube API</li>
+                    <li onclick="loadQry(this)" data-type="zepto" data-filter="category" class="qry-type"value="zepto">Zepto</li>
+                    <li onclick="loadQry(this)" data-type="jquery" data-filter="category" class="qry-type"value="jquery">jQuery</li>
+                    <li onclick="loadQry(this)" data-type="tweenjs" data-filter="category" class="qry-type"value="tweenjs">tween.js</li>
+                    <li onclick="loadQry(this)" data-type="other" data-filter="category" class="qry-type"value="Other">Other</li>
             </ul>
         </li>
         <li>
@@ -191,13 +255,14 @@ let websiteId;
 
 let webUrl;
 
+let selected = <%-JSON.stringify( selected )%>;
+
 let filterFront = <%-JSON.stringify(filter)%>;
 
 let pageSection = <%-JSON.stringify(pageSection)%>;
 
-let featuredWeb = <%-JSON.stringify(feature[0]._id)%>;
-
-let featuredUrl = <%-JSON.stringify(feature[0].website.url)%>;
+//Need WEb and URL
+let feature = <%- JSON.stringify(feature) %>;
 
 let viewport = {
     width: window.innerWidth,
@@ -215,6 +280,26 @@ let input, filter, ul, li, a, i, txtValue;
 
     for (i = 0; i < li.length; i++) {
         a = li[i].getElementsByTagName("span")[0];
+        txtValue = a.innerHTML || a.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+        } else {
+            li[i].style.display = "none";
+        }
+    }
+}
+
+function filterLiTech(ulId, inputId) {
+
+let input, filter, ul, li, a, i, txtValue;
+
+    ul = document.getElementById(ulId);
+    input = document.getElementById(inputId);
+    filter = input.value.toUpperCase();
+    li = ul.getElementsByTagName("li");
+
+    for (i = 0; i < li.length; i++) {
+        a = li[i];
         txtValue = a.innerHTML || a.innerText;
         if (txtValue.toUpperCase().indexOf(filter) > -1) {
             li[i].style.display = "";
@@ -324,7 +409,7 @@ $("#featured-sitename").on("click", ()=> {
     //Check if mobile toFix
     if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
          // Take the user to a different screen here.
-         let win = window.open(featuredUrl, "_blank");
+         let win = window.open(feature[selected].website.url, "_blank");
          win.focus();
     }
 
@@ -420,39 +505,60 @@ $("#countryDiscId").on("clickout", ()=> {
             $("#colorDiscId").attr("placeholder", "Color");
     }
 
-    switch (filterFront.type) {
-        case "portfolio":
-            $("#typeId").attr("placeholder","Portfolio");
+    switch (filterFront.style) {
+        case "3d-illustration":
+            $("#typeId").attr("placeholder","3-dimensional Illustration");
             break;
-        case "ecommerce":
-            $("#typeId").attr("placeholder","E-Commerce");
+        case "retro":
+            $("#typeId").attr("placeholder","Retro");
             break;
-        case "photosharing":
-            $("#typeId").attr("placeholder","Photo Sharing");
+        case "cartoons-illustrations":
+            $("#typeId").attr("placeholder","Cartoons & Illustrations");
             break;
-        case "writers":
-            $("#typeId").attr("placeholder","Writers/Authors");
+        case "unique-typography":
+            $("#typeId").attr("placeholder","Unique Typography");
             break;
-        case "community":
-            $("#typeId").attr("placeholder","Community Building");
+        case "material":
+            $("#typeId").attr("placeholder","Material");
             break;
-        case "mobile":
-            $("#typeId").attr("placeholder","Mobile Device");
+        case "two-tone-color":
+            $("#typeId").attr("placeholder","Two Tone color");
             break;
-        case "blogs":
-            $("#typeId").attr("placeholder","Blogs");
+        case "photo-realism":
+            $("#typeId").attr("placeholder","Photo-Realism");
             break;
-        case "informational":
-            $("#typeId").attr("placeholder","Informational");
+        case "transparency":
+            $("#typeId").attr("placeholder","Transparency");
             break;
-        case "online-business":
-            $("#typeId").attr("placeholder","Online Business Brochure/Catalogs");
-            break; 
+        case "grunge":
+            $("#typeId").attr("placeholder","Grunge");
+            break;
+        case "abstract":
+            $("#typeId").attr("placeholder","Abstract");
+            break;
+        case "semi-flat":
+            $("#typeId").attr("placeholder","Semi-Flat");
+            break;
+        case "card-design":
+            $("#typeId").attr("placeholder","Card Design");
+            break;
+        case "isometric":
+            $("#typeId").attr("placeholder","Isometric");
+            break;
+        case "freehand-drawing":
+            $("#typeId").attr("placeholder","Freehand Drawing");
+            break;
+        case "minimalist":
+            $("#typeId").attr("placeholder","Minimalist");
+            break;
+        case "other":
+            $("#typeId").attr("placeholder","Other");
+            break;
         default: 
-            $("#typeId").attr("placeholder","Type")
+            $("#typeId").attr("placeholder","Style")
     }
 
-    switch (filterFront.category) {
+    switch (filterFront.technologies) {
         case ("architecture"):
             $("#categoryId").attr("placeholder","Architecture")
             break;

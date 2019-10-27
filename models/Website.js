@@ -8,9 +8,9 @@ const WebsiteSchema = new Schema({
     country: { type: String, lowercase: true },
     url: { type:String, required: true, lowercase: true },
     siteName: { type: String, required: true, lowercase: true },
-    type: { type: String, required: true, lowercase: true },
+    style: [{ type: String, required: true, lowercase: true }],
     colors: [{ type: String, required: false, lowercase: true }],
-    category:[{ type: String, lowercase: true }],
+    technologies:[{ type: String, lowercase: true }],
     description: { type: String, required: false, max: 500 },
     comments: [{ type: Schema.Types.ObjectId, ref: "Comments" }],
     likes: { type: Number, default: 0, min: 0 },
@@ -25,6 +25,7 @@ WebsiteSchema.virtual("dateDisplay").get(function() {
 });
 
 //Category Display
+/*
 WebsiteSchema.virtual("categoryDisplay").get(function() {
 
     let toDisplay = [];
@@ -36,13 +37,14 @@ WebsiteSchema.virtual("categoryDisplay").get(function() {
     return stringDisplay;
 
 });
-
+*/
 //Site name
 WebsiteSchema.virtual("sitenameDisplay").get(function() {
     return this.siteName.toLowerCase().split(" ").map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(" ");
 });
 
 //Website type
+/*
 WebsiteSchema.virtual("typeDisplay").get(function() {
 
     let toDisplay = null;
@@ -79,6 +81,6 @@ WebsiteSchema.virtual("typeDisplay").get(function() {
 
     return toDisplay;
 })
-
+*/
 
 module.exports = mongoose.model("Website", WebsiteSchema);

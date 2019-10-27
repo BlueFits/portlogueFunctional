@@ -81,6 +81,7 @@ exports.POST_favorite = function(req, res, next) {
 //Liking websites
 exports.POST_likeSite = function(req, res, next) {
     const { websiteId } = req.body;
+    
     User.findById(req.user._id).populate("likedSites").exec((err, user)=> {
         if (err) {return next(err);}
 
@@ -91,7 +92,7 @@ exports.POST_likeSite = function(req, res, next) {
             let liked = false;
 
             for (let val of user.likedSites) {
-                if (val._id.toString() === websiteId.toString()) {
+                if (val._id.toString() === website._id.toString()) {
                     liked = true;
                 }
             }

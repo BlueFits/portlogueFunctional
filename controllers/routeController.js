@@ -541,8 +541,8 @@ exports.renderHome = function(req, res, next) {
     }
     //Proceed Normally
     else {
-        let { type, category, colors, country } = req.query;
-        renderDiscover(req, res, "new", {date: -1}, { type, category, colors, country });
+        let { style, technologies, colors, country } = req.query;
+        renderDiscover(req, res, "new", {date: -1}, { style, technologies, colors, country });
     }
 
 };
@@ -551,8 +551,8 @@ exports.renderHome = function(req, res, next) {
 exports.checkHome = function(req, res, next) {
 
     if (!req.user) {
-        let { type, category, colors, country } = req.query;
-        discoverVisitor(req, res, "new", {date: -1}, { type, category, colors, country });
+        let { style, technologies, colors, country } = req.query;
+        discoverVisitor(req, res, "new", {date: -1}, { style, technologies, colors, country });
     }
 
     else {
@@ -564,16 +564,16 @@ exports.checkHome = function(req, res, next) {
 //Discover new
 exports.GET_discover_new = function(req, res, next) {
 
-    let { type, category, colors, country } = req.query;
-    renderDiscover(req, res, "new", {date: -1}, { type, category, colors, country });
+    let { style, technologies, colors, country } = req.query;
+    renderDiscover(req, res, "new", {date: -1}, { style, technologies, colors, country });
 
 };
 
 exports.GET_visitorNew = function (req, res, next) {
 
     if (!req.user) {
-        let { type, category, colors, country } = req.query;
-        discoverVisitor(req, res, "new", {date: -1}, { type, category, colors, country });
+        let { style, technologies, colors, country } = req.query;
+        discoverVisitor(req, res, "new", {date: -1}, { style, technologies, colors, country });
     }
     else {
         next();
@@ -584,18 +584,18 @@ exports.GET_visitorNew = function (req, res, next) {
 //Discover Highest rated
 exports.GET_discover_highestRated = function(req, res, next) {
 
-    let { type, category, colors, country } = req.query;
+    let { style, technologies, colors, country } = req.query;
 
-    renderDiscover(req, res, "highest_rated", {likes: -1}, { type, category, colors, country });
+    renderDiscover(req, res, "highest_rated", {likes: -1}, { style, technologies, colors, country });
 };
 
 //Visitor Highest Rated
 exports.GET_visitorHighestRated = function (req, res, next) {
 
     if (!req.user) {
-        let { type, category, colors, country } = req.query;
+        let { style, technologies, colors, country } = req.query;
 
-        discoverVisitor(req, res, "highest_rated", {likes: -1}, { type, category, colors, country });
+        discoverVisitor(req, res, "highest_rated", {likes: -1}, { style, technologies, colors, country });
     }
     else {
         next();
@@ -606,15 +606,15 @@ exports.GET_visitorHighestRated = function (req, res, next) {
 //Discover Highest Views
 exports.GET_discover_mostViewed = function(req, res, next) {
 
-    let { type, category, colors, country } = req.query;
+    let { style, technologies, colors, country } = req.query;
 
-    renderDiscover(req, res, "most_viewed", {views: -1}, { type, category, colors, country });
+    renderDiscover(req, res, "most_viewed", {views: -1}, { style, technologies, colors, country });
 };
 
 exports.GET_visitorMostViewed = function (req, res, next) {
     if (!req.user) {
-        let { type, category, colors, country } = req.query;
-        discoverVisitor(req, res, "most_viewed", {views: -1}, { type, category, colors, country });
+        let { style, technologies, colors, country } = req.query;
+        discoverVisitor(req, res, "most_viewed", {views: -1}, { style, technologies, colors, country });
     }
     else {
         next();
@@ -624,9 +624,9 @@ exports.GET_visitorMostViewed = function (req, res, next) {
 //Favorites Render
 exports.GET_favorites = function(req, res, next) {
 
-    let { type, category, colors, country } = req.query;
+    let { style, technologies, colors, country } = req.query;
 
-    renderDiscover(req, res, "favorites", {}, { type, category, colors, country });
+    renderDiscover(req, res, "favorites", {}, { style, technologies, colors, country });
 }
 
 /* Pagination  */
@@ -634,88 +634,24 @@ exports.GET_favorites = function(req, res, next) {
 //Next
 exports.POST_newQryNext = function(req, res, next) {
 
-    let { pageSection, type, category, colors, country, pageNumber } = req.body;
-    res.redirect(`/discover/${pageSection}?type=${type}&category?=${category}&colors?=${colors}&country=${country}&page=${(parseInt(pageNumber)  - 1)}`); //toFix: Backing from the first page results to an error
+    let { pageSection, style, technologies, colors, country, pageNumber } = req.body;
+    res.redirect(`/discover/${pageSection}?style=${style}&technologies?=${technologies}&colors?=${colors}&country=${country}&page=${(parseInt(pageNumber)  - 1)}`); //toFix: Backing from the first page results to an error
 
 }
 
 //Back
 exports.POST_newQryPrev = function(req, res, next) {
 
-    let { pageSection, type, category, colors, country, pageNumber } = req.body;
+    let { pageSection, style, technologies, colors, country, pageNumber } = req.body;
 
-    res.redirect(`/discover/${pageSection}?type=${type}&category?=${category}&colors?=${colors}&country=${country}&page=${(parseInt(pageNumber)  - 1)}`); //toFix: Backing from the first page results to an error
+    res.redirect(`/discover/${pageSection}?style=${style}&technologies?=${technologies}&colors?=${colors}&country=${country}&page=${(parseInt(pageNumber)  - 1)}`); //toFix: Backing from the first page results to an error
 }
 
 /* Friends Display*/
 
 //toFix
 exports.GET_discover_friends = function(req, res, next) { //error in pageination  page=2 toFix
-
-    //requried vars for pagination
-    const pagination = req.query.pagination ? parseInt(req.query.pagination) : 6;
-    const page = req.query.page ? parseInt(req.query.page) : 1;
-    const filterQry = req.query.filter ? {portfolioType: req.query.filter} : {};
-
-    User.findById(req.user._id).populate(`friendList`).skip((page-1) * pagination).limit(pagination).exec((err, result)=> {
-        if (err) {return next(err);}
-        //
-        //toFix
-        if (result === null) {
-            res.send("505 Error. We will fix this in a bit.");
-            return;
-        }
-
-        console.log("ran User.findById " + result.username);
-        FriendStatus.find({"requestTo": req.user._id}).populate(`requestFrom`).exec((err, fstatRes)=> {
-            if (err) {
-                console.log(`renderHome> fstatRes`) 
-                return next(err);
-            }
-
-            console.log("Ran FriendStatus");
-
-            let fStatDisplay = [];
-
-            for (let val of fstatRes) {
-                if (val.status === 1) {
-                    fStatDisplay.push(val);
-                }
-                else {
-                            
-                }
-            }
-
-            if (fstatRes.length === 0) {
-                console.log(`No requests`);
-
-                //toFix quries pagination
-                if (result.friendList.length < 6) {
-                    console.log("nokinokie");
-                    res.render(`forUsers/homePage/friendsRender`, {qryNextStat: "disabled", page, layout: `forUsers/homePage/homeLayout`, User: req.user, filter: filterQry.portfolioType, qUser: result.friendList, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
-                    return;
-                }
-                //
-                console.log("okieokie");
-                res.render(`forUsers/homePage/friendsRender`, {qryNextStat: "", page, layout: `forUsers/homePage/homeLayout`, User: req.user, qUser: result.friendList, filter: filterQry.portfolioType, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
-                return;
-            }
-
-            else {
-
-                if (result.friendList.length < 6) {
-                    console.log("nokinokie2");
-                    res.render(`foUsers/homePage/friendsRender`, {qryNextStat: "disabled", page, layout: `forUsers/homePage/homeLayout`, User: req.user, qUser: result.friendList, filter: filterQry.portfolioType, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
-                    return;
-                }
-                console.log("okiokie2");
-                res.render(`forUsers/homePage/friendsRender`, {qryNextStat: "", page, layout: `forUsers/homePage/homeLayout`, User: req.user, qUser: result.friendList, filter: filterQry.portfolioType, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
-                return;
-            }
-        });
-
-        //
-    })
+res.send("Hazah");
 };
 
 exports.POST_friendsQryNext = function(req, res, next) {
@@ -759,7 +695,7 @@ exports.GET_search_home = [
                 User.find({"username":req.query.q}).populate(`friendRequests`).exec(cb); //Case sensitive Search
             },
             qrySix: (cb) => {
-                Website.find({"type": searchQry}).populate("owner").populate(`friendRequests`).exec(cb);
+                Website.find({"style": searchQry}).populate("owner").populate(`friendRequests`).exec(cb);
             }
 
         }, function(err, results) {
@@ -846,7 +782,7 @@ sanitizeBody(`q`).unescape(),
             User.find({"username":req.query.q}).populate(`friendRequests`).exec(cb); //Case sensitive Search
         },
         qrySix: (cb) => {
-            Website.find({"type": searchQry}).populate("owner").populate(`friendRequests`).exec(cb);
+            Website.find({"style": searchQry}).populate("owner").populate(`friendRequests`).exec(cb);
         }
 
     }, function(err, results) {
@@ -1008,14 +944,16 @@ let discoverVisitor = function(req, res, pageSection, sortSetting, filter) {
     }, function(err, async) {
         if (err) {return next(err);}
 
+        let selected = Math.floor(Math.random()*(async.feature.length));
+
         //toFix queries pagination
         if (async.websites.length < 6) {
-            res.render(`forVisitors/homePage/discoverRender`, { feature: async.feature, moment: moment,countryArray: require(`../arrayList/arrays`).countryList, pageSection, qryNextStat: "disabled", page, filter, layout: `forVisitors/homePage/homeLayout`, webResults: async.websites,});
+            res.render(`forVisitors/homePage/discoverRender`, { selected, feature: async.feature, moment: moment,countryArray: require(`../arrayList/arrays`).countryList, pageSection, qryNextStat: "disabled", page, filter, layout: `forVisitors/homePage/homeLayout`, webResults: async.websites,});
             return;
         }
         //
         else {
-            res.render(`forVisitors/homePage/discoverRender`, { feature: async.feature, moment: moment,countryArray: require(`../arrayList/arrays`).countryList, pageSection, qryNextStat: "", page, filter, layout: `forVisitors/homePage/homeLayout`, webResults: async.websites,});
+            res.render(`forVisitors/homePage/discoverRender`, { selected, feature: async.feature, moment: moment,countryArray: require(`../arrayList/arrays`).countryList, pageSection, qryNextStat: "", page, filter, layout: `forVisitors/homePage/homeLayout`, webResults: async.websites,});
             return;
         }
     });
@@ -1071,29 +1009,31 @@ let renderDiscover = function (req, res, pageSection, sortSetting, filter) {
             }
         }
 
+        let selected = Math.floor(Math.random()*(async.feature.length));
+
         //Render Favorites
         if (pageSection === "favorites") {
             console.log(async.user.favorites);
             //toFix queries pagination
             if (req.user.favorites.length < 6) {
-                res.render(`forUsers/homePage/discoverRender`, { feature: async.feature, moment: moment, countryArray: require(`../arrayList/arrays`).countryList,pageSection ,qryNextStat: "disabled", page, filter, layout: `forUsers/homePage/homeLayout`, User: req.user, webResults: async.user.favorites, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                res.render(`forUsers/homePage/discoverRender`, { selected, feature: async.feature, moment: moment, countryArray: require(`../arrayList/arrays`).countryList,pageSection ,qryNextStat: "disabled", page, filter, layout: `forUsers/homePage/homeLayout`, User: req.user, webResults: async.user.favorites, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
                 return;
             }
             //
             else {
-                res.render(`forUsers/homePage/discoverRender`, { feature: async.feature, moment: moment,countryArray: require(`../arrayList/arrays`).countryList, pageSection ,qryNextStat: "", page, filter, layout: `forUsers/homePage/homeLayout`, User: req.user, webResults: async.user.favorites, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+                res.render(`forUsers/homePage/discoverRender`, { selected, feature: async.feature, moment: moment,countryArray: require(`../arrayList/arrays`).countryList, pageSection ,qryNextStat: "", page, filter, layout: `forUsers/homePage/homeLayout`, User: req.user, webResults: async.user.favorites, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
                 return;
             }
         }
         
         //toFix queries pagination
         if (async.websites.length < 6) {
-            res.render(`forUsers/homePage/discoverRender`, { feature: async.feature, moment: moment, countryArray: require(`../arrayList/arrays`).countryList,pageSection ,qryNextStat: "disabled", page, filter, layout: `forUsers/homePage/homeLayout`, User: req.user, webResults: async.websites, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+            res.render(`forUsers/homePage/discoverRender`, { selected, feature: async.feature, moment: moment, countryArray: require(`../arrayList/arrays`).countryList,pageSection ,qryNextStat: "disabled", page, filter, layout: `forUsers/homePage/homeLayout`, User: req.user, webResults: async.websites, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
             return;
         }
         //
         else {
-            res.render(`forUsers/homePage/discoverRender`, { feature: async.feature, moment: moment,countryArray: require(`../arrayList/arrays`).countryList, pageSection ,qryNextStat: "", page, filter, layout: `forUsers/homePage/homeLayout`, User: req.user, webResults: async.websites, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
+            res.render(`forUsers/homePage/discoverRender`, { selected, feature: async.feature, moment: moment,countryArray: require(`../arrayList/arrays`).countryList, pageSection ,qryNextStat: "", page, filter, layout: `forUsers/homePage/homeLayout`, User: req.user, webResults: async.websites, friendRequests: fStatDisplay, userHistory: functionCntrl.userHistory(req.user)});
             return;
         }
     });
