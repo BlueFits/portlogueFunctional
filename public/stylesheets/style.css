@@ -288,7 +288,7 @@ h3 {
 
 .setup-wrapper {
     min-height: 100vh;
-    width: 100%;
+    width: 100vw;
 
     display: flex;
     flex-direction: column;
@@ -2727,6 +2727,26 @@ footer ul {
     .register-form {
         position: relative;
         left: 50px;
+    }
+    .country-1-div select,
+    .country-2-div input {
+        width: 90vw;
+    }
+
+    .country-2-div textarea {
+        width: 90vw;
+    }
+    .setup-button {
+        width: 90vw;
+    }
+
+    .h1-sub {
+        width: 90vw;
+    }
+    .portlogue-setup-icon {
+        position: absolute;
+        left: 25vw;
+        border: 1px solid orange;
     }
 
 }
