@@ -66,7 +66,7 @@
         <li>
             <span><input onkeyup="filterLi('typeId-dropdown','typeId')" id="typeId"/></span>
             <ul id="typeId-dropdown" class="sub-dropdown">
-                    <li onclick="loadQry(this)" data-type="personal" data-filter="type" class="qry-type"><span>Personal</span></li>
+                    <li onclick="loadQry(this)" data-type="portfolio" data-filter="type" class="qry-type"><span>Portfolio</span></li>
                     <li onclick="loadQry(this)" data-type="ecommerce" data-filter="type" class="qry-type"><span>E-Commerce</span></li>
                     <li onclick="loadQry(this)" data-type="photosharing" data-filter="type" class="qry-type"><span>Photo Sharing</span></li>
                     <li onclick="loadQry(this)" data-type="writers" data-filter="type" class="qry-type"><span>Writers/Authors</span></li>
@@ -455,8 +455,8 @@ $("#countryDiscId").on("clickout", ()=> {
     }
 
     switch (filterFront.type) {
-        case "personal":
-            $("#typeId").attr("placeholder","Personal");
+        case "portfolio":
+            $("#typeId").attr("placeholder","Portfolio");
             break;
         case "ecommerce":
             $("#typeId").attr("placeholder","E-Commerce");

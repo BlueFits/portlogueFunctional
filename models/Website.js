@@ -48,8 +48,8 @@ WebsiteSchema.virtual("typeDisplay").get(function() {
     let toDisplay = null;
 
     switch (this.type) {
-        case "personal":
-            toDisplay = "Personal Website";
+        case "portfolio":
+            toDisplay = "Portfolio Website";
             break;
         case "ecommerce":
             toDisplay = "E-commerce";
