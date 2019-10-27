@@ -767,9 +767,9 @@ exports.POST_first_Setup_Link = [
     
     //Validate Fields
     body(`url`).isURL().withMessage(`The link you have entered is invalid`),
-    body(`type`).isLength({ min: 1}).trim().withMessage(`Please choose a website type`),
+    body(`styles`).isLength({ min: 1}).trim().withMessage(`Need at least one website style`),
     body("siteName").isLength({ min: 1 }).trim().withMessage("Website name is required"),
-    body("category").isLength({ min: 1 }).trim().withMessage("Need at least one category"),
+    body("technologies").isLength({ min: 1 }).trim().withMessage("Need at least one category"),
     body("colors").isLength({ min: 1 }).trim().withMessage("Need at least one color"),
     body("description").isLength({ max: 500 }).optional({ checkFalsy: true }).withMessage("Max of 500 chars"),
 
