@@ -541,8 +541,8 @@ exports.renderHome = function(req, res, next) {
     }
     //Proceed Normally
     else {
-        let { style, technologies, colors, country } = req.query;
-        renderDiscover(req, res, "new", {date: -1}, { style, technologies, colors, country });
+        let { styles, technologies, colors, country } = req.query;
+        renderDiscover(req, res, "new", {date: -1}, { styles, technologies, colors, country });
     }
 
 };
@@ -551,8 +551,8 @@ exports.renderHome = function(req, res, next) {
 exports.checkHome = function(req, res, next) {
 
     if (!req.user) {
-        let { style, technologies, colors, country } = req.query;
-        discoverVisitor(req, res, "new", {date: -1}, { style, technologies, colors, country });
+        let { styles, technologies, colors, country } = req.query;
+        discoverVisitor(req, res, "new", {date: -1}, { styles, technologies, colors, country });
     }
 
     else {
@@ -564,16 +564,16 @@ exports.checkHome = function(req, res, next) {
 //Discover new
 exports.GET_discover_new = function(req, res, next) {
 
-    let { style, technologies, colors, country } = req.query;
-    renderDiscover(req, res, "new", {date: -1}, { style, technologies, colors, country });
+    let { styles, technologies, colors, country } = req.query;
+    renderDiscover(req, res, "new", {date: -1}, { styles, technologies, colors, country });
 
 };
 
 exports.GET_visitorNew = function (req, res, next) {
 
     if (!req.user) {
-        let { style, technologies, colors, country } = req.query;
-        discoverVisitor(req, res, "new", {date: -1}, { style, technologies, colors, country });
+        let { styles, technologies, colors, country } = req.query;
+        discoverVisitor(req, res, "new", {date: -1}, { styles, technologies, colors, country });
     }
     else {
         next();
@@ -584,18 +584,18 @@ exports.GET_visitorNew = function (req, res, next) {
 //Discover Highest rated
 exports.GET_discover_highestRated = function(req, res, next) {
 
-    let { style, technologies, colors, country } = req.query;
+    let { styles, technologies, colors, country } = req.query;
 
-    renderDiscover(req, res, "highest_rated", {likes: -1}, { style, technologies, colors, country });
+    renderDiscover(req, res, "highest_rated", {likes: -1}, { styles, technologies, colors, country });
 };
 
 //Visitor Highest Rated
 exports.GET_visitorHighestRated = function (req, res, next) {
 
     if (!req.user) {
-        let { style, technologies, colors, country } = req.query;
+        let { styles, technologies, colors, country } = req.query;
 
-        discoverVisitor(req, res, "highest_rated", {likes: -1}, { style, technologies, colors, country });
+        discoverVisitor(req, res, "highest_rated", {likes: -1}, { styles, technologies, colors, country });
     }
     else {
         next();
@@ -606,15 +606,15 @@ exports.GET_visitorHighestRated = function (req, res, next) {
 //Discover Highest Views
 exports.GET_discover_mostViewed = function(req, res, next) {
 
-    let { style, technologies, colors, country } = req.query;
+    let { styles, technologies, colors, country } = req.query;
 
-    renderDiscover(req, res, "most_viewed", {views: -1}, { style, technologies, colors, country });
+    renderDiscover(req, res, "most_viewed", {views: -1}, { styles, technologies, colors, country });
 };
 
 exports.GET_visitorMostViewed = function (req, res, next) {
     if (!req.user) {
-        let { style, technologies, colors, country } = req.query;
-        discoverVisitor(req, res, "most_viewed", {views: -1}, { style, technologies, colors, country });
+        let { styles, technologies, colors, country } = req.query;
+        discoverVisitor(req, res, "most_viewed", {views: -1}, { styles, technologies, colors, country });
     }
     else {
         next();
@@ -624,9 +624,9 @@ exports.GET_visitorMostViewed = function (req, res, next) {
 //Favorites Render
 exports.GET_favorites = function(req, res, next) {
 
-    let { style, technologies, colors, country } = req.query;
+    let { styles, technologies, colors, country } = req.query;
 
-    renderDiscover(req, res, "favorites", {}, { style, technologies, colors, country });
+    renderDiscover(req, res, "favorites", {}, { styles, technologies, colors, country });
 }
 
 /* Pagination  */
@@ -634,17 +634,17 @@ exports.GET_favorites = function(req, res, next) {
 //Next
 exports.POST_newQryNext = function(req, res, next) {
 
-    let { pageSection, style, technologies, colors, country, pageNumber } = req.body;
-    res.redirect(`/discover/${pageSection}?style=${style}&technologies?=${technologies}&colors?=${colors}&country=${country}&page=${(parseInt(pageNumber)  - 1)}`); //toFix: Backing from the first page results to an error
+    let { pageSection, styles, technologies, colors, country, pageNumber } = req.body;
+    res.redirect(`/discover/${pageSection}?styles=${styles}&technologies?=${technologies}&colors?=${colors}&country=${country}&page=${(parseInt(pageNumber)  - 1)}`); //toFix: Backing from the first page results to an error
 
 }
 
 //Back
 exports.POST_newQryPrev = function(req, res, next) {
 
-    let { pageSection, style, technologies, colors, country, pageNumber } = req.body;
+    let { pageSection, styles, technologies, colors, country, pageNumber } = req.body;
 
-    res.redirect(`/discover/${pageSection}?style=${style}&technologies?=${technologies}&colors?=${colors}&country=${country}&page=${(parseInt(pageNumber)  - 1)}`); //toFix: Backing from the first page results to an error
+    res.redirect(`/discover/${pageSection}?styles=${styles}&technologies?=${technologies}&colors?=${colors}&country=${country}&page=${(parseInt(pageNumber)  - 1)}`); //toFix: Backing from the first page results to an error
 }
 
 /* Friends Display*/
@@ -695,7 +695,7 @@ exports.GET_search_home = [
                 User.find({"username":req.query.q}).populate(`friendRequests`).exec(cb); //Case sensitive Search
             },
             qrySix: (cb) => {
-                Website.find({"style": searchQry}).populate("owner").populate(`friendRequests`).exec(cb);
+                Website.find({"styles": searchQry}).populate("owner").populate(`friendRequests`).exec(cb);
             }
 
         }, function(err, results) {
@@ -782,7 +782,7 @@ sanitizeBody(`q`).unescape(),
             User.find({"username":req.query.q}).populate(`friendRequests`).exec(cb); //Case sensitive Search
         },
         qrySix: (cb) => {
-            Website.find({"style": searchQry}).populate("owner").populate(`friendRequests`).exec(cb);
+            Website.find({"styles": searchQry}).populate("owner").populate(`friendRequests`).exec(cb);
         }
 
     }, function(err, results) {

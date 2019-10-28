@@ -257,8 +257,8 @@ exports.POST_addWebsite = [
     body("siteName").isLength({ min: 1 }).withMessage("Site name is required"),
     body("url").isURL().withMessage("Invalid url"),
     body("description").isLength({ max: 500 }).withMessage("Description has a max of 500 characters"),
-    body("type").isLength({ min: 1 }).withMessage("Wepsite type is required"),
-    body("category").isLength({ min:1 }).withMessage("Need at least one category"),
+    body("styles").isLength({ min: 1 }).withMessage("Need at least one style"),
+    body("technologies").isLength({ min:1 }).withMessage("Need at least one technology"),
     body("colors").isLength({ min: 1 }).withMessage("Need at least one color"),
 
     sanitizeBody("colors").escape(),
@@ -267,7 +267,7 @@ exports.POST_addWebsite = [
 
         let errors = validationResult(req);
 
-        let { siteName, url, description, type, category, colors } = req.body;
+        let { siteName, url, description, styles, technologies, colors } = req.body;
 
         if (!errors.isEmpty()) {
             req.flash("error", errors.array());
@@ -275,8 +275,6 @@ exports.POST_addWebsite = [
         }
 
         else {
-
-            console.log(`${siteName} : ${url} : ${description} : ${type} : ${category} : ${colors}`);
 
             //
 
@@ -303,13 +301,17 @@ exports.POST_addWebsite = [
             snap().then((cb)=> {
 
                 //turn category and colors into an array
-                let categoryCopy = category;
+                let stylesCopy = styles;
+
+                let technologiesCopy = technologies;
 
                 let colorsCopy = colors;
 
-                let categoryArray = categoryCopy.toString().split(",");
+                let technologiesArray = technologiesCopy.toString().split(",");
 
                 let colorsArray = colorsCopy.toString().split(",");
+
+                let stylesArray = stylesCopy.toString().split(",")
 
                 
                 console.log(`Saving User`);
@@ -318,9 +320,9 @@ exports.POST_addWebsite = [
                     country: req.user.country,
                     url,
                     siteName,
-                    type,
+                    styles: stylesArray,
                     colors: colorsArray,
-                    category: categoryArray,
+                    technologies: technologiesArray,
                     description,
                     webThumb: { data: fs.readFileSync(path.join(__dirname, `../${siteNameCopy}-webthumbnail`)), contentType:`image/jpeg` },
                 });
@@ -355,9 +357,9 @@ exports.POST_editWebsite = [
         
         let errors = validationResult(req);
 
-        let { websiteId, siteName, url, description, type, category, colors } = req.body;
+        let { websiteId, siteName, url, description, styles, technologies, colors } = req.body;
 
-        if ( (!siteName && !url && !description && !type && !category && !colors) ) {
+        if ( (!siteName && !url && !description && !styles && !technologies && !colors) ) {
             req.flash("error", [{ msg: "No changes made" }]);
             res.redirect(req.get("Referrer"));
             return
@@ -375,25 +377,33 @@ exports.POST_editWebsite = [
                 if (err) {return next(err);}
 
                 //turn category and colors into an array
-                let categoryCopy = category || null;
+                let stylesCopy = styles || null;
+
+                let technologiesCopy = technologies || null;
 
                 let colorsCopy = colors || null;
 
-                let categoryArray = null;
+                let stylesArray = null;
+
+                let technologiesArray = null;
 
                 let colorsArray = null;
 
-                (!categoryCopy) ? console.log("Category Undefined") : categoryArray = categoryCopy.toString().split(",") ;
+                (!technologiesCopy) ? console.log("Category Undefined") : technologiesArray = technologiesCopy.toString().split(",") ;
 
                 (!colorsCopy) ? console.log("Colors Undefined") : colorsArray = colorsCopy.toString().split(",");
+
+                (!stylesCopy) ? console.log("Styles Undefined") : stylesArray = stylesCopy.toString().split(",");
+
+                console.log(`styles: ${styles} stylesArray: ${stylesArray}`);
 
                 let webUpdate = {
                     $set: {
                         siteName: siteName || website.siteName,
                         url: url || website.url,
                         description: description || website.description,
-                        type: type || website.type,
-                        category: categoryArray || website.category,
+                        styles:  stylesArray || website.styles,
+                        technologies: technologiesArray || website.technologies,
                         colors: colorsArray || website.colors
                     }
                 };
@@ -769,7 +779,7 @@ exports.POST_first_Setup_Link = [
     body(`url`).isURL().withMessage(`The link you have entered is invalid`),
     body(`styles`).isLength({ min: 1}).trim().withMessage(`Need at least one website style`),
     body("siteName").isLength({ min: 1 }).trim().withMessage("Website name is required"),
-    body("technologies").isLength({ min: 1 }).trim().withMessage("Need at least one category"),
+    body("technologies").isLength({ min: 1 }).trim().withMessage("Need at least one technology"),
     body("colors").isLength({ min: 1 }).trim().withMessage("Need at least one color"),
     body("description").isLength({ max: 500 }).optional({ checkFalsy: true }).withMessage("Max of 500 chars"),
 
@@ -782,7 +792,7 @@ exports.POST_first_Setup_Link = [
         let errors = validationResult(req);
 
         //Deconstruct
-        let { url, type, siteName, category, colors, description } = req.body;
+        let { url, styles, siteName, technologies, colors, description } = req.body;
         
         //Check for errors
         if (!errors.isEmpty()) {
@@ -809,19 +819,24 @@ exports.POST_first_Setup_Link = [
                             '--single-process'
                           ],
                     }
+                    
                 });
                 console.log(`capture website ran`);
             }; 
             snap().then((cb)=> {
 
                 //turn category and colors into an array
-                let categoryCopy = category;
+                let stylesCopy = styles;
+
+                let technologiesCopy = technologies;
 
                 let colorsCopy = colors;
 
-                let categoryArray = categoryCopy.toString().split(",");
+                let technologiesArray = technologiesCopy.toString().split(",");
 
                 let colorsArray = colorsCopy.toString().split(",");
+
+                let stylesArray = stylesCopy.toString().split(",")
 
                 
                 console.log(`Saving User`);
@@ -830,9 +845,9 @@ exports.POST_first_Setup_Link = [
                     country: req.user.country,
                     url,
                     siteName,
-                    type,
+                    styles: stylesArray,
                     colors: colorsArray,
-                    category: categoryArray,
+                    technologies: technologiesArray,
                     description,
                     webThumb: { data: fs.readFileSync(path.join(__dirname, `../${siteNameCopy}-webthumbnail`)), contentType:`image/jpeg` },
                 });

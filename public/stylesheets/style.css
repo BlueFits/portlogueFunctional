@@ -2744,9 +2744,7 @@ footer ul {
         width: 90vw;
     }
     .portlogue-setup-icon {
-        position: absolute;
-        left: 25vw;
-        border: 1px solid orange;
+        display: none;
     }
 
 }

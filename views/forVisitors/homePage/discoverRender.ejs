@@ -16,8 +16,8 @@
                 
                         <div class="feature-content-divOne-type-category">
                                             <!-- toFix -->
-                            <span><%=feature[selected].website.typeDisplay%></span>
-                            <span><%=feature[selected].website.categoryDisplay%></span>
+                            <span><%=feature[selected].website.stylesDisplay%></span>
+                            <span><%=feature[selected].website.technologiesDisplay%></span>
                         </div>
                     </div>
                     <div class="feature-content-divTwo">
@@ -72,22 +72,21 @@
         <li>
             <span><input onkeyup="filterLi('typeId-dropdown','typeId')" id="typeId"/></span>
             <ul id="typeId-dropdown" class="sub-dropdown">
-                    <li onclick="loadQry(this)" data-type="3d-illustration" data-filter="style" class="qry-type"><span>3-dimensional Illustration</span></li>
-                    <li onclick="loadQry(this)" data-type="retro" data-filter="style" class="qry-type"><span>Retro</span></li>
-                    <li onclick="loadQry(this)" data-type="cartoons-illustrations" data-filter="style" class="qry-type"><span>Cartoons & Illustrations</span></li>
-                    <li onclick="loadQry(this)" data-type="unique-typography" data-filter="style" class="qry-type"><span>Unique Typography</span></li>
-                    <li onclick="loadQry(this)" data-type="material" data-filter="style" class="qry-type"><span>Material</span></li>
-                    <li onclick="loadQry(this)" data-type="two-tone-color" data-filter="style" class="qry-type"><span>Two Tone color</span></li>
-                    <li onclick="loadQry(this)" data-type="photo-realism" data-filter="style" class="qry-type"><span>Photo-Realism</span></li>
-                    <li onclick="loadQry(this)" data-type="transparency" data-filter="style" class="qry-type"><span>Transparency</span></li>
-                    <li onclick="loadQry(this)" data-type="grunge" data-filter="style" class="qry-type"><span>Grunge</span></li>
-                    <li onclick="loadQry(this)" data-type="abstract" data-filter="style" class="qry-type"><span>Abstract</span></li>
-                    <li onclick="loadQry(this)" data-type="semi-flat" data-filter="style" class="qry-type"><span>Semi-Flat</span></li>
-                    <li onclick="loadQry(this)" data-type="card-design" data-filter="style" class="qry-type"><span>Card Design</span></li>
-                    <li onclick="loadQry(this)" data-type="Isometric" data-filter="style" class="qry-type"><span>Isometric</span></li>
-                    <li onclick="loadQry(this)" data-type="freehand-drawing" data-filter="style" class="qry-type"><span>Freehand Drawing</span></li>
-                    <li onclick="loadQry(this)" data-type="minimalist" data-filter="style" class="qry-type"><span>Minimalist</span></li>
-                    <li onclick="loadQry(this)" data-type="other" data-filter="style" class="qry-type"><span>Other</span></li>
+                    <li onclick="loadQry(this)" data-type="3d-illustration" data-filter="styles" class="qry-type"><span>3-dimensional Illustration</span></li>
+                    <li onclick="loadQry(this)" data-type="retro" data-filter="styles" class="qry-type"><span>Retro</span></li>
+                    <li onclick="loadQry(this)" data-type="cartoons-illustrations" data-filter="styles" class="qry-type"><span>Cartoons & Illustrations</span></li>
+                    <li onclick="loadQry(this)" data-type="unique-typography" data-filter="styles" class="qry-type"><span>Unique Typography</span></li>
+                    <li onclick="loadQry(this)" data-type="material" data-filter="styles" class="qry-type"><span>Material</span></li>
+                    <li onclick="loadQry(this)" data-type="two-tone-color" data-filter="styles" class="qry-type"><span>Two Tone color</span></li>
+                    <li onclick="loadQry(this)" data-type="photo-realism" data-filter="styles" class="qry-type"><span>Photo-Realism</span></li>
+                    <li onclick="loadQry(this)" data-type="transparency" data-filter="styles" class="qry-type"><span>Transparency</span></li>
+                    <li onclick="loadQry(this)" data-type="grunge" data-filter="styles" class="qry-type"><span>Grunge</span></li>
+                    <li onclick="loadQry(this)" data-type="abstract" data-filter="styles" class="qry-type"><span>Abstract</span></li>
+                    <li onclick="loadQry(this)" data-type="semi-flat" data-filter="styles" class="qry-type"><span>Semi-Flat</span></li>
+                    <li onclick="loadQry(this)" data-type="card-design" data-filter="styles" class="qry-type"><span>Card Design</span></li>
+                    <li onclick="loadQry(this)" data-type="Isometric" data-filter="styles" class="qry-type"><span>Isometric</span></li>
+                    <li onclick="loadQry(this)" data-type="freehand-drawing" data-filter="styles" class="qry-type"><span>Freehand Drawing</span></li>
+                    <li onclick="loadQry(this)" data-type="minimalist" data-filter="styles" class="qry-type"><span>Minimalist</span></li>
             </ul>
         </li>
         <li>
@@ -167,7 +166,6 @@
                     <li onclick="loadQry(this)" data-type="zepto" data-filter="technologies" class="qry-type"value="zepto">Zepto</li>
                     <li onclick="loadQry(this)" data-type="jquery" data-filter="technologies" class="qry-type"value="jquery">jQuery</li>
                     <li onclick="loadQry(this)" data-type="tweenjs" data-filter="technologies" class="qry-type"value="tweenjs">tween.js</li>
-                    <li onclick="loadQry(this)" data-type="other" data-filter="technologies" class="qry-type"value="Other">Other</li>
             </ul>
         </li>
         <li>
@@ -216,7 +214,7 @@
                     <div class="profile-name-wrapper">
                         <a href="/users/profile/<%=website.owner.username%>"><div class="thumb-profile-wrapper"><img class="thumbnail-profile-img" src="/publicAvatar/<%=website.owner.email%>"/></div><%=website.owner.fullName%></a>
                     </div>
-                    <span class="occupation-flex"><%=website.typeDisplay%></span>
+                    <span class="occupation-flex"><%=website.stylesDisplay%></span>
                 </div>
             </li>
         <% } %>
@@ -471,7 +469,7 @@ $("#countryDiscId").on("clickout", ()=> {
 
 //Render web properly
 
-    switch (filterFront.style) {
+    switch (filterFront.styles) {
         case "3d-illustration":
             $("#typeId").attr("placeholder","3-dimensional Illustration");
             break;

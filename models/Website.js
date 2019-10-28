@@ -8,7 +8,7 @@ const WebsiteSchema = new Schema({
     country: { type: String, lowercase: true },
     url: { type:String, required: true, lowercase: true },
     siteName: { type: String, required: true, lowercase: true },
-    style: [{ type: String, required: true, lowercase: true }],
+    styles: [{ type: String, required: true, lowercase: true }],
     colors: [{ type: String, required: false, lowercase: true }],
     technologies:[{ type: String, lowercase: true }],
     description: { type: String, required: false, max: 500 },
@@ -25,62 +25,35 @@ WebsiteSchema.virtual("dateDisplay").get(function() {
 });
 
 //Category Display
-/*
-WebsiteSchema.virtual("categoryDisplay").get(function() {
+
+WebsiteSchema.virtual("stylesDisplay").get(function() {
 
     let toDisplay = [];
     let stringDisplay;
-    for (let val of this.category) {
+    for (let val of this.styles) {
         toDisplay.push(val.replace(val[0], val[0].toUpperCase()));
     }
     stringDisplay = toDisplay.join(", ");
     return stringDisplay;
 
 });
-*/
+
+WebsiteSchema.virtual("technologiesDisplay").get(function() {
+
+    let toDisplay = [];
+    let stringDisplay;
+    for (let val of this.technologies) {
+        toDisplay.push(val.replace(val[0], val[0].toUpperCase()));
+    }
+    stringDisplay = toDisplay.join(", ");
+    return stringDisplay;
+
+});
+
 //Site name
 WebsiteSchema.virtual("sitenameDisplay").get(function() {
     return this.siteName.toLowerCase().split(" ").map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(" ");
 });
 
-//Website type
-/*
-WebsiteSchema.virtual("typeDisplay").get(function() {
-
-    let toDisplay = null;
-
-    switch (this.type) {
-        case "portfolio":
-            toDisplay = "Portfolio Website";
-            break;
-        case "ecommerce":
-            toDisplay = "E-commerce";
-            break;
-        case "photosharing":
-            toDisplay = "Photo Sharing Website";
-            break;
-        case "writers":
-            toDisplay = "Writers/Authors Website";
-            break;
-        case "community":
-            toDisplay = "Community Building Website";
-            break;
-        case "mobile":
-            toDisplay ="Mobile Device Website";
-            break;
-        case "blogs":
-            toDisplay ="Blog";
-            break
-        case "informational":
-            toDisplay ="Informational Website";
-            break;
-        case "online-business":
-            toDisplay ="Online Business Brochure/Catalog";
-            break;    
-    }
-
-    return toDisplay;
-})
-*/
 
 module.exports = mongoose.model("Website", WebsiteSchema);
