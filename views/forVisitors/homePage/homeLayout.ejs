@@ -50,36 +50,6 @@
         </div>
     </div>
 
-    <!-- Emnd of feedback -->
-    <!--
-    <ul class="flash-settings">
-            <% for (let val of error_msg) {%>
-                <li class="flash-style f-error">
-                        <div class="flash-info">
-                            <span><strong>Error</strong></span>
-                            <span><%=val.msg%></span>
-                        </div>
-                        <div class="flash-close"><img src="/assets/icons/icons8-delete-96.png"/></div>
-                </li>
-            <% } %>
-            <% for (let val of success_msg) {%>
-                <li class="flash-style f-success">
-                        <div class="flash-info">
-                            <span><strong>Success</strong></span>
-                            <span><%=val.msg%></span>
-                        </div>
-                        <div class="flash-close"><img src="/assets/icons/icons8-delete-96.png"/></div>
-                </li>
-            <% } %>        
-            <li class="flash-style f-success">
-                    <div class="flash-info">
-                        <span><strong>Success</strong></span>
-                        <span></span>
-                    </div>
-                    <div class="flash-close"><img src="/assets/icons/icons8-delete-96.png"/></div>
-            </li>
-    </ul>
-    -->
     <div class="hidden-overlay"><!-- Click to minimize all --></div>
 
 
@@ -104,23 +74,21 @@
             <div class="home-search">
                     <div class="home-search-form">
                             <form method="GET" action="/search">
-                                <button type="submit"><img class="nav-icons" src="/assets/icons/icons8-search-filled-96.png" alt="search-icon"/></button>
-                                <input type="text" placeholder="Search users" name="q"/>
+                                <button style="display: flex; align-items: center;" type="submit"><img class="nav-icons" src="/assets/icons/icons8-search-filled-96.png" alt="search-icon"/></button>
+                                <input style="position: relative; top: 2px;" type="text" placeholder="Search users" name="q"/>
                             </form>
                             
                             <div class="home-quick-search">
                                 
                                 <div id="qs-dropdown">
                                     
-                                    <div><p>Top Searches</p><img class="nav-icons" src="/assets/icons/icons8-expand-arrow-96.png" alt="arrow-down"/></div>
+                                    <div><p style="position: relative; top: 2px;">Top Searches</p><img class="nav-icons" src="/assets/icons/icons8-expand-arrow-96.png" alt="arrow-down"/></div>
                                 
                                     <ul class="home-quick-dropdown">
-                                        <li><a href="/search?q=personal">Personal</a></li>
-                                        <li><a href="/search?q=ecommerce">E-commerce</a></li>
-                                        <li><a href="/search?q=photosharing">Photo Sharing</a></li>
-                                        <li><a href="/search?q=mobile">Mobile Device</a></li>
-
-
+                                        <li><a href="/search?q=vuejs">Vue.js</a></li>
+                                        <li><a href="/search?q=reactjs">React.js</a></li>
+                                        <li><a href="/search?q=angularjs">Angular.js</a></li>
+                                        <li><a href="/search?q=ruby">Ruby</a></li>
                                     </ul>
                                 </div>
                             </div>
