@@ -18,9 +18,7 @@ router.get("/about", routeController.GET_visitorAbout, ensureAuth, routeControll
 router.get("/feature_add/:webId", routeController.featureAdd);
 
 //Will be implemented
-router.get(`/willBeImplemented`, (req, res, next)=> {
-    res.send(`Hazah`);
-});
+router.get(`/willBeImplemented`, routeController.willBeImplemented);
 
 /* Site asset Renders */
 

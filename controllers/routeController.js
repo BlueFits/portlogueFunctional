@@ -21,6 +21,13 @@ const functionCntrl = require(`../controllers/functionsContoller`);
 
 /* Quick Fixes */
 
+//Will Be Implemented
+exports.willBeImplemented = function(req, res, next) {
+
+    res.render("willBeImplemented");
+
+}
+
 //Add to feature
 exports.featureAdd = function (req, res, next) {
 
@@ -651,7 +658,7 @@ exports.POST_newQryPrev = function(req, res, next) {
 
 //toFix
 exports.GET_discover_friends = function(req, res, next) { //error in pageination  page=2 toFix
-res.send("Hazah");
+res.send("Will Be Implemented");
 };
 
 exports.POST_friendsQryNext = function(req, res, next) {
