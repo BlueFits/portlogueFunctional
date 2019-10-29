@@ -257,7 +257,6 @@ exports.POST_addWebsite = [
     body("siteName").isLength({ min: 1 }).withMessage("Site name is required"),
     body("url").isURL().withMessage("Invalid url"),
     body("description").isLength({ max: 500 }).withMessage("Description has a max of 500 characters"),
-    body("styles").isLength({ min: 1 }).withMessage("Need at least one style"),
     body("technologies").isLength({ min:1 }).withMessage("Need at least one technology"),
     body("colors").isLength({ min: 1 }).withMessage("Need at least one color"),
 
@@ -320,7 +319,7 @@ exports.POST_addWebsite = [
                     country: req.user.country,
                     url,
                     siteName,
-                    styles: stylesArray,
+                    styles: stylesArray || [],
                     colors: colorsArray,
                     technologies: technologiesArray,
                     description,
@@ -777,7 +776,6 @@ exports.POST_first_Setup_Link = [
     
     //Validate Fields
     body(`url`).isURL().withMessage(`The link you have entered is invalid`),
-    body(`styles`).isLength({ min: 1}).trim().withMessage(`Need at least one website style`),
     body("siteName").isLength({ min: 1 }).trim().withMessage("Website name is required"),
     body("technologies").isLength({ min: 1 }).trim().withMessage("Need at least one technology"),
     body("colors").isLength({ min: 1 }).trim().withMessage("Need at least one color"),
@@ -845,7 +843,7 @@ exports.POST_first_Setup_Link = [
                     country: req.user.country,
                     url,
                     siteName,
-                    styles: stylesArray,
+                    styles: stylesArray || [],
                     colors: colorsArray,
                     technologies: technologiesArray,
                     description,
